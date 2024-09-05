@@ -5,14 +5,17 @@
 
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
+\usepackage{csquotes} % recommended to fix warning
 \usepackage[style=alphabetic]{biblatex}
-\addbibresource{sample.bib}
+\addbibresource{sources.bib}
 
 \usepackage{float}
 
 \usepackage{tikz}
+\usetikzlibrary{matrix, positioning}
 
 \title{Pentomino Pathfinding}
 \author{Steven Nguyen (icecream17)}
@@ -20,15 +23,17 @@
 \begin{document}
 \maketitle
 
+Table of contents is near the end.
 % \begin{abstract}
 % Your abstract.
 % \end{abstract}
 
 \section{Introduction}
 
-\cite{deckard1} posed the following problem: Consider an $m \times n$ rectangular grid of squares.
-We want to place up to a set of twelve pentominoes (see Figure \ref{fig:pentominoes}) and endpoints $A$ and $B$
-on the grid such that the $a(m, n)$ = length of (the shortest orthogonal-path between $A$ and $B$) is maximized.
+\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares,
+place a subset of the twelve pentominoes (see Figure \ref{fig:pentominoes}), and endpoints A and B on the grid \textcolor{gray}{without overlaps} such that $\#^{p}_{n, m}$ = the length of (the shortest \textcolor{gray}{nonempty} path between $A$ and $B$) is maximized.
+
+The above notation is for the length of a particular path $p$; for the maximum such path, the notation is $\#_{n, m}$, and when $n = m$, the notation is $\#_n$.
 
 \begin{figure}[!h]
     \centering
@@ -42,8 +47,8 @@ on the grid such that the $a(m, n)$ = length of (the shortest orthogonal-path be
 
 \subsection{No pentominoes}
 
-A pentomino has 5 squares, so it cannot fit into, say, 1 or 4 squares. In the third case, 9 total squares minus 1 pentomino is 4 squares, so the 
-For 1 and 2, $n \times n < 5$, so no pentomino can fit: $a(1) = 1, a(2) = 3$
+For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit: $\#_1 = 1, \#_2 = 3$.
+For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal: $\#_3 = 5$.
 
 \begin{tikzpicture}
 \draw[step=1cm,black,very thin] (0,0) grid (1,1);
@@ -53,17 +58,13 @@ For 1 and 2, $n \times n < 5$, so no pentomino can fit: $a(1) = 1, a(2) = 3$
 \draw (2.5,0.5) node{1};
 \draw (3.5,0.5) node{2};
 \draw (3.5,1.5) node{3};
-\end{tikzpicture}
 
-For n=3, we have 9 squares and adding a pentomino would restrict the total squares to 4, so the length 5 path is optimal.
-
-\begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (3,3);
-\draw (0.5,0.5) node{1};
-\draw (1.5,0.5) node{2};
-\draw (2.5,0.5) node{3};
-\draw (2.5,1.5) node{4};
-\draw (2.5,2.5) node{5};
+\draw[step=1cm,black,very thin] (5,0) grid (8,3);
+\draw (5.5,0.5) node{1};
+\draw (6.5,0.5) node{2};
+\draw (7.5,0.5) node{3};
+\draw (7.5,1.5) node{4};
+\draw (7.5,2.5) node{5};
 \end{tikzpicture}
 
 % \subsection{How to include Figures}
@@ -137,6 +138,8 @@ For n=3, we have 9 squares and adding a pentomino would restrict the total squar
 % \subsection{Good luck!}
 
 % We hope you find Overleaf useful, and do take a look at our \href{https://www.overleaf.com/learn}{help library} for more tutorials and user guides! Please also let us know if you have any feedback using the Contact Us link at the bottom of the Overleaf menu --- or use the contact form at \url{https://www.overleaf.com/contact}.
+
+\tableofcontents
 
 \printbibliography
 
