@@ -18,7 +18,38 @@
 
 
 \refsection{0}
-  \datalist[entry]{anyt/global//global/global/global}
+  \datalist[entry]{ndt/global//global/global/global}
+    \entry{sheet}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=7d61983c34edc2a8cabbea71c4732f62}{%
+           family={Community},
+           familyi={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{fullhash}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{fullhashraw}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{bibnamehash}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{authorbibnamehash}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{authornamehash}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{authorfullhash}{7d61983c34edc2a8cabbea71c4732f62}
+      \strng{authorfullhashraw}{7d61983c34edc2a8cabbea71c4732f62}
+      \field{labelalpha}{Com24}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{3}
+      \field{month}{9}
+      \field{title}{Pentomino Pathfinding}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://docs.google.com/spreadsheets/d/1NrbqWmnBLMtHH253q_v89bMYSuoPE7hDFr8g5VTbGMI/edit
+      \endverb
+      \verb{url}
+      \verb https://docs.google.com/spreadsheets/d/1NrbqWmnBLMtHH253q_v89bMYSuoPE7hDFr8g5VTbGMI/edit
+      \endverb
+    \endentry
     \entry{v1}{online}{}{}
       \name{author}{1}{}{%
         {{hash=4dedf0d8dbd76c2dd0727dce94e2dc00}{%
@@ -33,13 +64,16 @@
       \strng{authornamehash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
       \strng{authorfullhash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
       \strng{authorfullhashraw}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \field{extraname}{1}
       \field{labelalpha}{Dec24}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extraalpha}{1}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{2}
       \field{month}{8}
+      \field{number}{1}
       \field{title}{Pentomino Facts}
       \field{year}{2024}
       \field{dateera}{ce}
@@ -48,6 +82,40 @@
       \endverb
       \verb{url}
       \verb https://youtu.be/LPDAzHpSyAo?t=700
+      \endverb
+    \endentry
+    \entry{v2}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=4dedf0d8dbd76c2dd0727dce94e2dc00}{%
+           family={Deckard},
+           familyi={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{fullhash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{fullhashraw}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{bibnamehash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{authorbibnamehash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{authornamehash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{authorfullhash}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \strng{authorfullhashraw}{4dedf0d8dbd76c2dd0727dce94e2dc00}
+      \field{extraname}{2}
+      \field{labelalpha}{Dec24}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{2}
+      \field{month}{9}
+      \field{number}{2}
+      \field{title}{More Pentomino Pathfinding}
+      \field{year}{2024}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://youtu.be/39YYZcwCuv0
+      \endverb
+      \verb{url}
+      \verb https://youtu.be/39YYZcwCuv0
       \endverb
     \endentry
     \entry{pentominoes}{misc}{}{}
@@ -73,7 +141,7 @@
       \field{labeltitlesource}{title}
       \field{day}{21}
       \field{month}{7}
-      \field{note}{CC BY-SA 4.0 \url{https://creativecommons.org/licenses/by-sa/4.0}, via Wikimedia Commons; latest uploaded on day}
+      \field{note}{CC BY-SA 4.0 \url{https://creativecommons.org/licenses/by-sa/4.0}, via Wikimedia Commons; latest uploaded on day (13:43 UTC)}
       \field{title}{All 18 Pentominoes}
       \field{year}{2008}
       \field{dateera}{ce}
