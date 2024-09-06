@@ -19,37 +19,6 @@
 
 \refsection{0}
   \datalist[entry]{anyt/global//global/global/global}
-    \entry{sheet}{online}{}{}
-      \name{author}{1}{}{%
-        {{hash=7d61983c34edc2a8cabbea71c4732f62}{%
-           family={Community},
-           familyi={C\bibinitperiod}}}%
-      }
-      \strng{namehash}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{fullhash}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{fullhashraw}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{bibnamehash}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{authorbibnamehash}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{authornamehash}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{authorfullhash}{7d61983c34edc2a8cabbea71c4732f62}
-      \strng{authorfullhashraw}{7d61983c34edc2a8cabbea71c4732f62}
-      \field{labelalpha}{Com24}
-      \field{sortinit}{C}
-      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{day}{3}
-      \field{month}{9}
-      \field{title}{Pentomino Pathfinding}
-      \field{year}{2024}
-      \field{dateera}{ce}
-      \verb{urlraw}
-      \verb https://docs.google.com/spreadsheets/d/1NrbqWmnBLMtHH253q_v89bMYSuoPE7hDFr8g5VTbGMI/edit
-      \endverb
-      \verb{url}
-      \verb https://docs.google.com/spreadsheets/d/1NrbqWmnBLMtHH253q_v89bMYSuoPE7hDFr8g5VTbGMI/edit
-      \endverb
-    \endentry
     \entry{v1}{online}{}{}
       \name{author}{1}{}{%
         {{hash=4dedf0d8dbd76c2dd0727dce94e2dc00}{%
@@ -79,6 +48,40 @@
       \endverb
       \verb{url}
       \verb https://youtu.be/LPDAzHpSyAo?t=700
+      \endverb
+    \endentry
+    \entry{pentominoes}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=41d1c3a7d95929d32356df82b7d61186}{%
+           family={Nonenmacher},
+           familyi={N\bibinitperiod},
+           given={R.\bibnamedelimi A.},
+           giveni={R\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{fullhash}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{fullhashraw}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{bibnamehash}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{authorbibnamehash}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{authornamehash}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{authorfullhash}{41d1c3a7d95929d32356df82b7d61186}
+      \strng{authorfullhashraw}{41d1c3a7d95929d32356df82b7d61186}
+      \field{labelalpha}{Non08}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{21}
+      \field{month}{7}
+      \field{note}{CC BY-SA 4.0 \url{https://creativecommons.org/licenses/by-sa/4.0}, via Wikimedia Commons; latest uploaded on day}
+      \field{title}{All 18 Pentominoes}
+      \field{year}{2008}
+      \field{dateera}{ce}
+      \verb{urlraw}
+      \verb https://commons.wikimedia.org/wiki/File:All_18_Pentominoes.svg
+      \endverb
+      \verb{url}
+      \verb https://commons.wikimedia.org/wiki/File:All_18_Pentominoes.svg
       \endverb
     \endentry
   \enddatalist

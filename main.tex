@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{svg}
 
 \usepackage{csquotes} % recommended to fix warning
 \usepackage[style=alphabetic]{biblatex}
@@ -16,6 +17,19 @@
 
 \usepackage{tikz}
 \usetikzlibrary{matrix, positioning}
+
+\definecolor{colorI}{HTML}{EEAAAA}
+\definecolor{colorF}{HTML}{DDBB99}
+\definecolor{colorL}{HTML}{CCCC88}
+\definecolor{colorP}{HTML}{BBDD99}
+\definecolor{colorN}{HTML}{AAEEAA}
+\definecolor{colorT}{HTML}{99DDBB}
+\definecolor{colorU}{HTML}{88CCCC}
+\definecolor{colorV}{HTML}{99BBDD}
+\definecolor{colorW}{HTML}{AAAAEE}
+\definecolor{colorX}{HTML}{BB99DD}
+\definecolor{colorY}{HTML}{CC88CC}
+\definecolor{colorZ}{HTML}{DD99BB}
 
 \title{Pentomino Pathfinding}
 \author{Steven Nguyen (icecream17)}
@@ -30,16 +44,16 @@ Table of contents is near the end.
 
 \section{Introduction}
 
-\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares,
-place a subset of the twelve pentominoes (see Figure \ref{fig:pentominoes}), and endpoints A and B on the grid \textcolor{gray}{without overlaps} such that $\#^{p}_{n, m}$ = the length of (the shortest \textcolor{gray}{nonempty} path between $A$ and $B$) is maximized.
+\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares, place a subset of the twelve pentominoes (see Figure \ref{fig:pentominoes}), and endpoints A and B on the grid \textcolor{gray}{without overlaps} such that $\#^{p}_{n, m}$ = the length of (the shortest \textcolor{gray}{nonempty} path between $A$ and $B$) is maximized.
 
 The above notation is for the length of a particular path $p$; for the maximum such path, the notation is $\#_{n, m}$, and when $n = m$, the notation is $\#_n$.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\linewidth]{pentominoes.png}
-    \caption{The twelve pentominoes \cite{sheet};
-    from top left clockwise they are named I, L, Y, W, V, T, P, U, Z, X, F, N}
+    \includesvg[width=0.5\linewidth]{All_18_Pentominoes.svg}
+    \caption{The twelve pentominoes and their reflections \cite{pentominoes};
+    from left-to-right they are named I, F, L, P, N, T, U, V, W, X, Y, Z,
+    where F, L, P, N, Y, Z are chiral and have their reflections shown.}
     \label{fig:pentominoes}
 \end{figure}
 
@@ -51,20 +65,53 @@ For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit: $\#_1 = 1, \#_2 = 
 For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal: $\#_3 = 5$.
 
 \begin{tikzpicture}
-\draw[step=1cm,black,very thin] (0,0) grid (1,1);
-\draw (0.5,0.5) node{1};
+    \draw[step=1cm,black,very thin] (0,0) grid (1,1);
+    \draw (0.5,0.5) node{1};
 
-\draw[step=1cm,black,very thin] (2,0) grid (4,2);
-\draw (2.5,0.5) node{1};
-\draw (3.5,0.5) node{2};
-\draw (3.5,1.5) node{3};
+    \draw[step=1cm,black,very thin] (2,0) grid (4,2);
+    \draw (2.5,0.5) node{1};
+    \draw (3.5,0.5) node{2};
+    \draw (3.5,1.5) node{3};
 
-\draw[step=1cm,black,very thin] (5,0) grid (8,3);
-\draw (5.5,0.5) node{1};
-\draw (6.5,0.5) node{2};
-\draw (7.5,0.5) node{3};
-\draw (7.5,1.5) node{4};
-\draw (7.5,2.5) node{5};
+    \draw[step=1cm,black,very thin] (5,0) grid (8,3);
+    \draw (5.5,0.5) node{1};
+    \draw (6.5,0.5) node{2};
+    \draw (7.5,0.5) node{3};
+    \draw (7.5,1.5) node{4};
+    \draw (7.5,2.5) node{5};
+\end{tikzpicture}
+
+Similar reasoning holds for $n = 2, m <= 6$: there is a path of length $m + 1 <= 7$, while $2m - 5 <= m + 1 <= 7$, so you cannot do any better than placing nothing. It turns out there is enough room for the I piece, and so there are two solutions ignoring symmetry:
+
+\begin{tikzpicture}
+    \draw[step=1cm,black,very thin] (0,0) grid (6,2);
+    \draw (0.5,0.5) node{1};
+    \draw (1.5,0.5) node{2};
+    \draw (2.5,0.5) node{3};
+    \draw (3.5,0.5) node{4};
+    \draw (4.5,0.5) node{5};
+    \draw (5.5,0.5) node{6};
+    \draw (5.5,1.5) node{7};
+
+    \draw[step=1cm,black,very thin] (7,0) grid (13,2);
+    \draw (7.5,0.5) node{1};
+    \draw (8.5,0.5) node{2};
+    \draw (9.5,0.5) node{3};
+    \draw (10.5,0.5) node{4};
+    \draw (11.5,0.5) node{5};
+    \draw (12.5,0.5) node{6};
+    \draw (12.5,1.5) node{7};
+    \filldraw[fill=colorI] (7,1) rectangle (12,2);
+\end{tikzpicture}
+
+And finally, $\#1,n = n$:
+
+\begin{tikzpicture}
+    \draw[step=1cm,black,very thin] (0,0) grid (1,1);
+    \draw[step=1cm,black,very thin] (2,0) grid (3,1);
+    \draw (0.5,0.5) node{1};
+    \draw (1.5,0.5) node{$\cdots$};
+    \draw (2.5,0.5) node{$n$};
 \end{tikzpicture}
 
 % \subsection{How to include Figures}
@@ -81,7 +128,7 @@ For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is o
 
 % \subsection{How to add Tables}
 
-% Use the table and tabular environments for basic tables --- see Table~\ref{tab:widgets}, for example. For more information, please see this help article on \href{https://www.overleaf.com/learn/latex/tables}{tables}. 
+% Use the table and tabular environments for basic tables --- see Table~\ref{tab:widgets}, for example. For more information, please see this help article on \href{https://www.overleaf.com/learn/latex/tables}{tables}.
 
 % \begin{table}
 % \centering
@@ -97,7 +144,7 @@ For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is o
 
 % Comments can be added to your project by highlighting some text and clicking ``Add comment'' in the top right of the editor pane. To view existing comments, click on the Review menu in the toolbar above. To reply to a comment, click on the Reply button in the lower right corner of the comment. You can close the Review pane by clicking its name on the toolbar when you're done reviewing for the time being.
 
-% Track changes are available on all our \href{https://www.overleaf.com/user/subscription/plans}{premium plans}, and can be toggled on or off using the option at the top of the Review pane. Track changes allow you to keep track of every change made to the document, along with the person making the change. 
+% Track changes are available on all our \href{https://www.overleaf.com/user/subscription/plans}{premium plans}, and can be toggled on or off using the option at the top of the Review pane. Track changes allow you to keep track of every change made to the document, along with the person making the change.
 
 % \subsection{How to add Lists}
 
@@ -129,7 +176,7 @@ For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is o
 
 % \subsection{How to change the document language and spell check settings}
 
-% Overleaf supports many different languages, including multiple different languages within one document. 
+% Overleaf supports many different languages, including multiple different languages within one document.
 
 % To configure the document language, simply edit the option provided to the babel package in the preamble at the top of this example project. To learn more about the different options, please visit this help article on \href{https://www.overleaf.com/learn/latex/International_language_support}{international language support}.
 
