@@ -15,6 +15,8 @@
 \addbibresource{sources.bib}
 
 \usepackage{float}
+\usepackage{booktabs}
+\usepackage{marginnote}
 % \usepackage{subcaption}
 
 \usepackage{tikz}
@@ -86,11 +88,11 @@
 
 \section{Introduction}
 
-\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares, place a subset of the twelve pentominoes (see Figure \ref{fig:pentominoes}), and endpoints A and B on the grid \minordetail{without overlaps} such that $\#^{p}_{n, m}$ = the length of (the shortest \minordetail{nonempty, orthogonal} path between $A$ and $B$) is maximized.
+\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares, place a subset of the twelve pentominoes (Figure \ref{fig:pentominoes}), and endpoints A and B on the grid \minordetail{without overlaps} such that $\#^{p}_{n, m}$ = the length of (the shortest \minordetail{nonempty, orthogonal} path between $A$ and $B$) is maximized.
 
 The above notation is for the maximum length of any path given some placements $p$; the maximum length given all possible placements is denoted by $\#_{n, m}$, and when $n = m$, the notation is $\#_n$.
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \includesvg[width=0.5\linewidth]{All_18_Pentominoes.svg}
     \caption{The twelve pentominoes and their reflections \cite{pentominoes};
@@ -104,9 +106,7 @@ The above notation is for the maximum length of any path given some placements $
 
 
 
-\section{Small grids}
-
-\subsection{No pentominoes}
+\section{No pentominoes}
 
 For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit.
 For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal. (Figure \ref{fig:no123})
@@ -135,7 +135,7 @@ For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is o
 
 Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1 \le 7$, while $2m - 5 \le m + 1 \le 7$, so you cannot do any better than placing nothing. It turns out there is enough room for the I piece, and so there are two solutions ignoring symmetry:
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (6,2);
@@ -165,7 +165,7 @@ Two squares are \newterm{adjacent} iff they are one square diagonally or orthogo
 \end{definition}
 
 \begin{definition}[Platter]
-A \newterm{platter} is a (set of adjacent squares) not adjacent to another square. (I don't use the term "shape" because two squares diagonally adjacent doesn't really fit into most people's intuitions).% For this definition, the outside wall is considered a cycle of squares and can be part of the platter. (Doesn't work because holes and caves and convex)
+A \newterm{platter} is a (set of adjacent squares) not adjacent to another square. (I don't use the term ``shape'' because two squares diagonally adjacent doesn't really fit into most people's intuitions).% For this definition, the outside wall is considered a cycle of squares and can be part of the platter. (Doesn't work because holes and caves and convex)
 \end{definition}
 
 \begin{definition}[Outside]
@@ -213,7 +213,7 @@ Then the rectangle may be removed: $\#^{p}_{n, m} \le \#^{p - r}_{n, m}$
 The rectangle satisfies \ref{lem:Border removal}, since $adj(r)$ is zero, one, or two straight lines of squares by construction.
 \end{proof}
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (4,4);
@@ -233,7 +233,7 @@ And so, $\#_{1, n} = n$
 The only piece that could possibly fit is the I piece, which is removable thanks to Lemma \ref{lem:Rectangle cut}.
 \end{proof}
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (1,1);
@@ -248,7 +248,8 @@ The only piece that could possibly fit is the I piece, which is removable thanks
 
 
 
-\subsection{One pentomino}
+
+\section{One pentomino}
 
 We know that Lemma \ref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner.
 
@@ -266,9 +267,35 @@ Informally, $adj(P)$ forms a staircase-like shape. So any path along $adj(P)$ wi
 This construction may be rotated and reflected.
 \end{note}
 
+\begin{theorem}[Cut corner removal]
+\label{th:Cut corner removal}
+
+This extends Theorem \ref{th:Corner removal} to potentially apply to each "side" (i.e. subgrid border) of a platter that cuts the grid into subgrids.
+\end{theorem}
+
+\begin{proof}
+For each subgrid $s$, try applying Theorem \ref{th:Corner removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\border(P)_s$, so this is valid.
+\end{proof}
+
+\begin{note}
+If Theorem \ref{th:Corner removal} applies to the entire border, then as a result the whole platter can be removed, since no path within any of the subgrids can be improved.
+\end{note}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (6,2);
+        \draw (0.5,0.5) node{$N$};
+        \draw (1.5,0.5) node{$N$};
+        \draw (2.5,0.5) node{$N$};
+        \filldraw[fill=colorN] (0,1) -- (3,1) -- (3,0) -- (5,0) -- (5,1) -- (4,1) -- (4,2) -- (0,2) -- cycle;
+    \end{tikzpicture}
+    \caption{Example for Theorem \ref{th:Cut corner removal}: \minordetail{The pentomino} N divides the grid into two. For the purposes of the subgrid on the right, N may as well also include the subgrid on the left (marked with three $N$'s). This new platter satisfies Theorem \ref{th:Corner removal}.}
+\end{figure}
 
 
-\subsubsection{\texorpdfstring{$2 \times n$}{2 \texttimes n} grids}
+
+\subsection{\texorpdfstring{$2 \times n$}{2 \texttimes n} grids}
 
 %\begin{definition}[Bound]
 %A platter's \newterm{bound} are the squares of its border adjacent to some square that is outside and not part of the border. $\bound(P) = \border(P) \cap \adj(\outside(P) \setminus \border(P))$
@@ -310,26 +337,11 @@ This construction may be rotated and reflected.
 %\begin{definition}[Convex]
 %A platter is \newterm{convex} iff it has no caves.
 %\end{definition}
-%
-%\begin{corollary}[Convex bound]
-%\label{cor:Convex bound}
-%
-%Lemma \ref{lem:Rectangle cut} extends to any shape, so long as the following statement holds: "the shortest path between any two squares along the border, if it exists, cannot get shorter upon removing the platter". This could be a similar construction to the rectangle blockage, but it extends more generally to include, for example, some placements of pentominoes at the corner.
-%\end{corollary}
 Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, P, N, U, and Y.
 
-\begin{corollary}[2-wide platters in $2 \times n$ areas are eliminable]
-\label{cor:2xn elim}
-L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas.
-\end{corollary}
+By Theorem \ref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas, so only I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
 
-\begin{proof}
-These pentominoes have one or more $2 \times 1$ areas, which will be converted into walls. In each subgrid formed, the remainder of \minordetail{the pentomino's} squares satisfy Theorem \ref{th:Corner removal}.\footnote{Proving the statement for platters in general is left as an exercise to the reader. Also, since we are subtracting a set of squares from the pentomino, one horrible way to describe this is a "difference of squares".}
-\end{proof}
-
-Only \minordetail{the pentomino} I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 -- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
-
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (6,2);
@@ -350,7 +362,89 @@ Only \minordetail{the pentomino} I is left. While placing I on the corner does n
     \caption{$\#_{2, n} = n + 2$ (where $7 \le n$). \cite{sheet}}
 \end{figure}
 
-\subsubsection{\texorpdfstring{$3 \times n$}{3 \texttimes n} grids}
+\subsection{\texorpdfstring{$3 \times n$}{3 \texttimes n} grids}
+
+\begin{theorem}[Ways to orient a pentomino]
+\label{th:Pentomino orientations}
+
+A square has 4 symmetries, so a platter has at most 8 orientations, ignoring location within a grid. However, some pentominoes have one or more symmetries, which reduce the possible orientations (Table \ref{tab:pentomino orientations}).
+
+    \begin{table}[htbp]
+        \centering
+        \caption{Number of ways to orient each pentomino. \cite[0:41]{v1}}
+        \begin{tabular}{ccc}
+            \toprule
+            Pentomino & Symmetries & Orientations \\
+            \midrule
+            X & 4 & 1 \\
+            I & 2 & 2 \\
+            T & 1 & 4 \\
+            U & 1 & 4 \\
+            V & 1 & 4 \\
+            W & 1 & 4 \\
+            Z & 1 & 4 \\
+            F & 0 & 8 \\
+            L & 0 & 8 \\
+            P & 0 & 8 \\
+            N & 0 & 8 \\
+            Y & 0 & 8 \\
+            \bottomrule
+        \end{tabular}
+        \label{tab:pentomino orientations}
+    \end{table}
+\end{theorem}
+
+\begin{corollary}
+Theorem \ref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P and T, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, so we can reduce the number of orientations by a factor of four; the maximum number of orientations goes from eight to two. (Figure \ref{fig:Reduced orientations})
+\end{corollary}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}
+        \begin{scope}[xshift=1cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (11,3);
+            \filldraw[fill=colorV] (0,0) -- (3,0) -- (3,1) -- (1,1) -- (1,3) -- (0,3) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[fill=colorW] (0,0) -- (2,0) -- (2,1) -- (3,1) -- (3,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=8cm]
+            \filldraw[fill=colorZ] (0,0) -- (2,0) -- (2,2) -- (3,2) -- (3,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[yshift=-4cm]
+            \draw[step=1cm,black,very thin] (-1,0) grid (14,3);
+            \filldraw[fill=colorP] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,2) -- (0,2) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[fill=colorP] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (2,2) -- (2,0) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=7cm]
+            \filldraw[fill=colorT] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (3,2) -- (3,1) -- (1,1) -- (1,0) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=11cm]
+            \filldraw[fill=colorT] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[shift={(3cm,4cm)}]
+            \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+            \filldraw[fill=colorF] (0,0) -- (1,0) -- (1,1) -- (3,1) -- (3,2) -- (2,2) -- (2,3) -- (1,3) -- (1,2) -- (0,2) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[fill=colorF] (0,0) -- (0,1) -- (1,1) -- (1,3) -- (2,3) -- (2,2) -- (3,2) -- (3,1) -- (2,1) -- (2,0) -- cycle;
+            \end{scope}
+        \end{scope}
+    \end{tikzpicture}
+    \caption{All orientations of F, V, W, Z, P, and T in a $3 \times n$ after reducing by symmetry. The left side of both F's are ignorable, as well as \minordetail{both sides of} the right P and T.}
+    \label{fig:Reduced orientations}
+\end{figure}
+
+Additionally, considering Figure \ref{fig:Reduced orientations}, the second F is strictly worse than the first F, since after filling in the ignorable subgrid, the first F practically replaces a wall with an empty square when compared to the second F.
 
 \begin{property}[Cycle inefficiency]
 \label{prop:cycineff}
@@ -358,7 +452,7 @@ Only \minordetail{the pentomino} I is left. While placing I on the corner does n
 If there is a cycle of empty squares in a grid, the path will not use all empty squares.
 \end{property}
 
-For $3 \times n$ grids, all pentominoes fit, but V, W, and Z can be removed in a generalization of Corollary \ref{cor:2xn elim}. In the case of a $3 \times 4$ grid, we have solutions with 1 pentomino and all empty squares filled ($\#_{3, 4} = 7$, Figure \ref{fig:3x4}). Placing zero pentominoes gets a length of 6, while with two pentominoes there are only 2 leftover squares, so the only solutions have 1 pentomino and all empty squares in the path.
+In the case of a $3 \times 4$ grid, we have solutions with 1 pentomino and all empty squares filled ($\#_{3, 4} = 7$, Figure \ref{fig:3x4}). Placing zero pentominoes gets a length of 6, while with two pentominoes there are only 2 leftover squares, so the only solutions have 1 pentomino and all empty squares in the path.
 
 \begin{figure}
     \centering
@@ -470,20 +564,6 @@ A polynomial's \badterm{contribution} is informally how much longer it makes a g
     \label{fig:nontrivialcontribution}
     \caption{If the I pentomino was already placed, then adding the W changes the path's length from 7 to 21. Nevertheless, W's contribution $C(\mathrm{W}) = 4$. Additionally, W helps by blocking the bottom row. So some squares are spent on setup, and some on lengthening the path.}
 \end{figure}
-
-% \subsection{How to add Tables}
-
-% Use the table and tabular environments for basic tables --- see Table~\ref{tab:widgets}, for example. For more information, please see this help article on \href{https://www.overleaf.com/learn/latex/tables}{tables}.
-
-% \begin{table}
-% \centering
-% \begin{tabular}{l|r}
-% Item & Quantity \\\hline
-% Widgets & 42 \\
-% Gadgets & 13
-% \end{tabular}
-% \caption{\label{tab:widgets}An example table.}
-% \end{table}
 
 % \subsection{How to add Comments and Track Changes}
 

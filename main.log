@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.3)  7 SEP 2024 10:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.3)  7 SEP 2024 18:26
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -663,6 +663,31 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks40
 \@floatcapt=\box61
 )
+(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen177
+\lightrulewidth=\dimen178
+\cmidrulewidth=\dimen179
+\belowrulesep=\dimen180
+\belowbottomsep=\dimen181
+\aboverulesep=\dimen182
+\abovetopsep=\dimen183
+\cmidrulesep=\dimen184
+\cmidrulekern=\dimen185
+\defaultaddspace=\dimen186
+\@cmidla=\count430
+\@cmidlb=\count431
+\@aboverulesep=\dimen187
+\@belowrulesep=\dimen188
+\@thisruleclass=\count432
+\@lastruleclass=\count433
+\@thisrulewidth=\dimen189
+)
+(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/marginnote\marginnote.
+sty
+Package: marginnote 2018/08/09 1.4b non floating margin notes for LaTeX
+\c@mn@abspage=\count434
+)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz
 .sty
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
@@ -680,8 +705,8 @@ e.tex
 .code.tex)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathpars
 er.code.tex
-\pgfmath@dimen=\dimen177
-\pgfmath@count=\count430
+\pgfmath@dimen=\dimen190
+\pgfmath@count=\count435
 \pgfmath@box=\box62
 \pgfmath@toks=\toks41
 \pgfmath@stack@operand=\toks42
@@ -709,39 +734,39 @@ tions.integerarithmetics.code.tex)
 .code.tex)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloa
 t.code.tex
-\c@pgfmathroundto@lastzeros=\count431
+\c@pgfmathroundto@lastzeros=\count436
 ))
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code
 .tex)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 repoints.code.tex
 File: pgfcorepoints.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@picminx=\dimen178
-\pgf@picmaxx=\dimen179
-\pgf@picminy=\dimen180
-\pgf@picmaxy=\dimen181
-\pgf@pathminx=\dimen182
-\pgf@pathmaxx=\dimen183
-\pgf@pathminy=\dimen184
-\pgf@pathmaxy=\dimen185
-\pgf@xx=\dimen186
-\pgf@xy=\dimen187
-\pgf@yx=\dimen188
-\pgf@yy=\dimen189
-\pgf@zx=\dimen190
-\pgf@zy=\dimen191
+\pgf@picminx=\dimen191
+\pgf@picmaxx=\dimen192
+\pgf@picminy=\dimen193
+\pgf@picmaxy=\dimen194
+\pgf@pathminx=\dimen195
+\pgf@pathmaxx=\dimen196
+\pgf@pathminy=\dimen197
+\pgf@pathmaxy=\dimen198
+\pgf@xx=\dimen199
+\pgf@xy=\dimen256
+\pgf@yx=\dimen257
+\pgf@yy=\dimen258
+\pgf@zx=\dimen259
+\pgf@zy=\dimen260
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 repathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@path@lastx=\dimen192
-\pgf@path@lasty=\dimen193
+\pgf@path@lastx=\dimen261
+\pgf@path@lasty=\dimen262
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 repathusage.code.tex
 File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@shorten@end@additional=\dimen194
-\pgf@shorten@start@additional=\dimen195
+\pgf@shorten@end@additional=\dimen263
+\pgf@shorten@start@additional=\dimen264
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 rescopes.code.tex
@@ -749,19 +774,19 @@ File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgfpic=\box63
 \pgf@hbox=\box64
 \pgf@layerbox@main=\box65
-\pgf@picture@serial@count=\count432
+\pgf@picture@serial@count=\count437
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 regraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgflinewidth=\dimen196
+\pgflinewidth=\dimen265
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 retransformations.code.tex
 File: pgfcoretransformations.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@pt@x=\dimen197
-\pgf@pt@y=\dimen198
-\pgf@pt@temp=\dimen199
+\pgf@pt@x=\dimen266
+\pgf@pt@y=\dimen267
+\pgf@pt@temp=\dimen268
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 requick.code.tex
@@ -778,14 +803,14 @@ File: pgfcorepathprocessing.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 rearrows.code.tex
 File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfarrowsep=\dimen256
+\pgfarrowsep=\dimen269
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 reshade.code.tex
 File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@max=\dimen257
-\pgf@sys@shading@range@num=\count433
-\pgf@shadingcount=\count434
+\pgf@max=\dimen270
+\pgf@sys@shading@range@num=\count438
+\pgf@shadingcount=\count439
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 reimage.code.tex
@@ -824,8 +849,8 @@ File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
 omp-version-0-65.sty
 Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
-\pgf@nodesepstart=\dimen258
-\pgf@nodesepend=\dimen259
+\pgf@nodesepstart=\dimen271
+\pgf@nodesepend=\dimen272
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
 omp-version-1-18.sty
@@ -843,8 +868,8 @@ e.tex))
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor
 .code.tex
 Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
-\pgffor@iter=\dimen260
-\pgffor@skip=\dimen261
+\pgffor@iter=\dimen273
+\pgffor@skip=\dimen274
 \pgffor@stack=\toks44
 \pgffor@toks=\toks45
 ))
@@ -855,34 +880,34 @@ Package: tikz 2023-01-15 v3.1.10 (3.1.10)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
 raryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@plot@mark@count=\count435
-\pgfplotmarksize=\dimen262
+\pgf@plot@mark@count=\count440
+\pgfplotmarksize=\dimen275
 )
-\tikz@lastx=\dimen263
-\tikz@lasty=\dimen264
-\tikz@lastxsaved=\dimen265
-\tikz@lastysaved=\dimen266
-\tikz@lastmovetox=\dimen267
-\tikz@lastmovetoy=\dimen268
-\tikzleveldistance=\dimen269
-\tikzsiblingdistance=\dimen270
+\tikz@lastx=\dimen276
+\tikz@lasty=\dimen277
+\tikz@lastxsaved=\dimen278
+\tikz@lastysaved=\dimen279
+\tikz@lastmovetox=\dimen280
+\tikz@lastmovetoy=\dimen281
+\tikzleveldistance=\dimen282
+\tikzsiblingdistance=\dimen283
 \tikz@figbox=\box68
 \tikz@figbox@bg=\box69
 \tikz@tempbox=\box70
 \tikz@tempbox@bg=\box71
-\tikztreelevel=\count436
-\tikznumberofchildren=\count437
-\tikznumberofcurrentchild=\count438
-\tikz@fig@count=\count439
+\tikztreelevel=\count441
+\tikznumberofchildren=\count442
+\tikznumberofcurrentchild=\count443
+\tikz@fig@count=\count444
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
 ematrix.code.tex
 File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfmatrixcurrentrow=\count440
-\pgfmatrixcurrentcolumn=\count441
-\pgf@matrix@numberofcolumns=\count442
+\pgfmatrixcurrentrow=\count445
+\pgfmatrixcurrentcolumn=\count446
+\pgf@matrix@numberofcolumns=\count447
 )
-\tikz@expandcount=\count443
+\tikz@expandcount=\count448
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
 kz/libraries\tikzlibrarytopaths.code.tex
@@ -896,7 +921,7 @@ File: tikzlibrarymatrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
 kz/libraries\tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
-\c@theorem=\count444
+\c@theorem=\count449
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2024-07-10 v7.01j Hypertext links for LaTeX
@@ -922,16 +947,16 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 tlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count445
+\c@section@level=\count450
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
 sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen271
-\Hy@linkcounter=\count446
-\Hy@pagecounter=\count447
+\@linkdim=\dimen284
+\Hy@linkcounter=\count451
+\Hy@pagecounter=\count452
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2024-07-10 v7.01j Hyperref: PDFDocEncoding definition (HO)
@@ -941,7 +966,7 @@ Now handling font encoding PD1 ...
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count448
+\Hy@SavedSpaceFactor=\count453
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2024-07-10 v7.01j Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -955,9 +980,9 @@ Package hyperref Info: Plain pages OFF on input line 4172.
 Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
-\c@Hy@tempcnt=\count449
+\c@Hy@tempcnt=\count454
 LaTeX Info: Redefining \url on input line 4763.
-\XeTeXLinkMargin=\dimen272
+\XeTeXLinkMargin=\dimen285
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -967,9 +992,9 @@ c.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count450
-\Field@Width=\dimen273
-\Fld@charsize=\dimen274
+\Fld@menulength=\count455
+\Field@Width=\dimen286
+\Fld@charsize=\dimen287
 Package hyperref Info: Hyper figures OFF on input line 6042.
 Package hyperref Info: Link nesting OFF on input line 6047.
 Package hyperref Info: Hyper index ON on input line 6050.
@@ -982,9 +1007,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6072.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count451
-\c@Item=\count452
-\c@Hfootnote=\count453
+\Hy@abspage=\count456
+\c@Item=\count457
+\c@Hfootnote=\count458
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
@@ -995,8 +1020,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count454
-\c@bookmark@seq@number=\count455
+\Fld@listcount=\count459
+\c@bookmark@seq@number=\count460
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
 lecheck.sty
@@ -1018,24 +1043,24 @@ Package csquotes Info: Redefining alias 'default' -> 'english'.
  (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1075,16 +1100,16 @@ LaTeX Font Info:    ... okay on input line 74.
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
 kii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count456
-\scratchdimen=\dimen275
+\scratchcounter=\count461
+\scratchdimen=\dimen288
 \scratchbox=\box72
-\nofMPsegments=\count457
-\nofMParguments=\count458
+\nofMPsegments=\count462
+\nofMParguments=\count463
 \everyMPshowfont=\toks46
-\MPscratchCnt=\count459
-\MPscratchDim=\dimen276
-\MPnumerator=\count460
-\makeMPintoPDFobject=\count461
+\MPscratchCnt=\count464
+\MPscratchDim=\dimen289
+\MPnumerator=\count465
+\makeMPintoPDFobject=\count466
 \everyMPtoPDFconversion=\toks47
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
@@ -1112,9 +1137,9 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 74.
-Package biblatex Info: Reference segment=0 on input line 74.
-Package hyperref Info: Link coloring ON on input line 74.
+Package biblatex Info: Reference section=0 on input line 76.
+Package biblatex Info: Reference segment=0 on input line 76.
+Package hyperref Info: Link coloring ON on input line 76.
  (main.out) (main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
@@ -1124,10 +1149,10 @@ Package hyperref Info: Link coloring ON on input line 74.
 \openout6 = `main.toc'.
 
 Package svg Info: Last page of `./svg-inkscape/All_18_Pentominoes_svg-tex.pdf' 
-is 1 on input line 95.
+is 1 on input line 97.
 
 (svg-inkscape/All_18_Pentominoes_svg-tex.pdf_tex
-<./svg-inkscape/All_18_Pentominoes_svg-tex.pdf, id=39, page=1, 604.50844pt x 19
+<./svg-inkscape/All_18_Pentominoes_svg-tex.pdf, id=34, page=1, 604.50844pt x 19
 0.46156pt>
 File: ./svg-inkscape/All_18_Pentominoes_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/All_18_Pentominoes_svg-tex.pdf, page 1>
@@ -1141,61 +1166,57 @@ used on input line 56.
 {C:/Users/Steven/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./svg-inksc
 ape/All_18_Pentominoes_svg-tex.pdf>]
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-
 [2]
 
 [3]
 
 [4]
 
-[5] (main.aux)
+[5]
+
+[6] (main.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-16>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 06576D1F197868E138626E8E14C282CF;711.
+(rerunfilecheck)             Checksum: 0CA76E0CD764FD59A25C001A36F982E0;562.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 30412 strings out of 473898
- 587545 string characters out of 5726008
- 1954960 words of memory out of 5000000
- 52778 multiletter control sequences out of 15000+600000
+ 30564 strings out of 473898
+ 590320 string characters out of 5726008
+ 1953960 words of memory out of 5000000
+ 52918 multiletter control sequences out of 15000+600000
  564373 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 94i,9n,93p,822b,1829s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 94i,9n,93p,822b,1852s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
 /cmbx10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
 msfonts/cm/cmbx12.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type
 1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX
 /fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Steven/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Steven/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Steven/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users
-/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-<C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mr5.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmr6.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmr7.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/amsfonts/cm/cmr8.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Steven/AppData/Local/Progra
-ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Steven/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Steven/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/User
-s/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/latxfont/las
-y6.pfb>
-Output written on main.pdf (5 pages, 246500 bytes).
+ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/Steven/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Steven/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/User
+s/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb
+><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmr17.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmr5.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmr6.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Steven/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Steven/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Steven/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/User
+s/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pf
+b><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/la
+txfont/lasy6.pfb>
+Output written on main.pdf (6 pages, 258239 bytes).
 PDF statistics:
- 219 PDF objects out of 1000 (max. 8388607)
- 39 named destinations out of 1000 (max. 500000)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 238 PDF objects out of 1000 (max. 8388607)
+ 43 named destinations out of 1000 (max. 500000)
+ 63 words of extra memory for PDF output out of 10000 (max. 10000000)
 
