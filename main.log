@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.3)  6 SEP 2024 16:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.3)  7 SEP 2024 10:03
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -897,7 +897,6 @@ kz/libraries\tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
 \c@theorem=\count444
-\c@corollary=\count445
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2024-07-10 v7.01j Hypertext links for LaTeX
@@ -923,7 +922,7 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 tlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count446
+\c@section@level=\count445
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
 sty
@@ -931,8 +930,8 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
 \@linkdim=\dimen271
-\Hy@linkcounter=\count447
-\Hy@pagecounter=\count448
+\Hy@linkcounter=\count446
+\Hy@pagecounter=\count447
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2024-07-10 v7.01j Hyperref: PDFDocEncoding definition (HO)
@@ -942,7 +941,7 @@ Now handling font encoding PD1 ...
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count449
+\Hy@SavedSpaceFactor=\count448
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2024-07-10 v7.01j Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -956,7 +955,7 @@ Package hyperref Info: Plain pages OFF on input line 4172.
 Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
-\c@Hy@tempcnt=\count450
+\c@Hy@tempcnt=\count449
 LaTeX Info: Redefining \url on input line 4763.
 \XeTeXLinkMargin=\dimen272
 
@@ -968,7 +967,7 @@ c.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count451
+\Fld@menulength=\count450
 \Field@Width=\dimen273
 \Fld@charsize=\dimen274
 Package hyperref Info: Hyper figures OFF on input line 6042.
@@ -983,9 +982,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6072.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count452
-\c@Item=\count453
-\c@Hfootnote=\count454
+\Hy@abspage=\count451
+\c@Item=\count452
+\c@Hfootnote=\count453
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
@@ -996,8 +995,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count455
-\c@bookmark@seq@number=\count456
+\Fld@listcount=\count454
+\c@bookmark@seq@number=\count455
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
 lecheck.sty
@@ -1019,24 +1018,24 @@ Package csquotes Info: Redefining alias 'default' -> 'english'.
  (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1076,16 +1075,16 @@ LaTeX Font Info:    ... okay on input line 64.
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
 kii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count457
+\scratchcounter=\count456
 \scratchdimen=\dimen275
 \scratchbox=\box72
-\nofMPsegments=\count458
-\nofMParguments=\count459
+\nofMPsegments=\count457
+\nofMParguments=\count458
 \everyMPshowfont=\toks46
-\MPscratchCnt=\count460
+\MPscratchCnt=\count459
 \MPscratchDim=\dimen276
-\MPnumerator=\count461
-\makeMPintoPDFobject=\count462
+\MPnumerator=\count460
+\makeMPintoPDFobject=\count461
 \everyMPtoPDFconversion=\toks47
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
@@ -1113,9 +1112,9 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 64.
-Package biblatex Info: Reference segment=0 on input line 64.
-Package hyperref Info: Link coloring ON on input line 64.
+Package biblatex Info: Reference section=0 on input line 74.
+Package biblatex Info: Reference segment=0 on input line 74.
+Package hyperref Info: Link coloring ON on input line 74.
  (main.out) (main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
@@ -1125,7 +1124,7 @@ Package hyperref Info: Link coloring ON on input line 64.
 \openout6 = `main.toc'.
 
 Package svg Info: Last page of `./svg-inkscape/All_18_Pentominoes_svg-tex.pdf' 
-is 1 on input line 85.
+is 1 on input line 95.
 
 (svg-inkscape/All_18_Pentominoes_svg-tex.pdf_tex
 <./svg-inkscape/All_18_Pentominoes_svg-tex.pdf, id=39, page=1, 604.50844pt x 19
@@ -1137,20 +1136,25 @@ used on input line 56.
 (pdftex.def)             Requested size: 213.39568pt x 67.23215pt.
 )
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-
 [1
 
 {C:/Users/Steven/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./svg-inksc
 ape/All_18_Pentominoes_svg-tex.pdf>]
 
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+
 [2]
 
 [3]
 
-[4] (main.aux)
+[4]
+
+[5] (main.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-16>
@@ -1162,13 +1166,13 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 30389 strings out of 473898
- 587237 string characters out of 5726008
+ 30412 strings out of 473898
+ 587545 string characters out of 5726008
  1954960 words of memory out of 5000000
- 52765 multiletter control sequences out of 15000+600000
+ 52778 multiletter control sequences out of 15000+600000
  564373 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 94i,9n,93p,780b,1829s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 94i,9n,93p,822b,1829s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
 /cmbx10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
 msfonts/cm/cmbx12.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type
@@ -1179,17 +1183,19 @@ cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Steven/A
 ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users
 /Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb>
 <C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mr6.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmr7.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmr8.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTe
-X/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Steven/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Steven/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Steven
-/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/latxfont/lasy6.pfb>
-Output written on main.pdf (4 pages, 228101 bytes).
+mr5.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr6.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmr7.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/amsfonts/cm/cmr8.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Steven/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Steven/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Steven/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/User
+s/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/latxfont/las
+y6.pfb>
+Output written on main.pdf (5 pages, 246500 bytes).
 PDF statistics:
- 191 PDF objects out of 1000 (max. 8388607)
- 29 named destinations out of 1000 (max. 500000)
+ 219 PDF objects out of 1000 (max. 8388607)
+ 39 named destinations out of 1000 (max. 500000)
  71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

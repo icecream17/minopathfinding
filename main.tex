@@ -41,22 +41,32 @@
 % = colorU
 \definecolor{color4I}{HTML}{88CCCC}
 
+\definecolor{colorSecondary}{HTML}{440044}
+
 % \theoremstyle{plain} % default
-\theoremstyle{definition} % not semantic, but removes italics
+\theoremstyle{definition}% not semantic, but removes italics
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{corollary}[theorem]{Corollary}% Corollaries and examples are not necessarily of the previous theorem. A subcounter can be used to eliminate a different bug.
 \newtheorem{lemma}[theorem]{Lemma}
 
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{property}[theorem]{Property}
+\newtheorem{example}[theorem]{Example}
 
-% \theoremstyle{remark} % not semantic to not have this, but keeps bold
+% \theoremstyle{remark}% not semantic to not have this, but keeps bold
 \newtheorem*{conclusion}{Conclusion}
 \newtheorem*{note}{Note}
 
 \newcommand{\minordetail}[1]{\textcolor{gray}{#1}}
 \newcommand{\newterm}[1]{\textit{#1}}
 \newcommand{\badterm}[1]{\textcolor{red}{\uwave{\textcolor{black}{#1}}}}
+
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\holes}{\operatorname{holes}}
+\newcommand{\border}{\operatorname{border}}
+\newcommand{\bound}{\operatorname{bound}}
+\newcommand{\caves}{\operatorname{caves}}
+\newcommand{\outside}{\operatorname{outside}}
 
 % place at end
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
@@ -98,10 +108,10 @@ The above notation is for the maximum length of any path given some placements $
 
 \subsection{No pentominoes}
 
-For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit: $\#_1 = 1, \#_2 = 3$.
-For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal: $\#_3 = 5$.% (Figure \ref{fig:no123})
+For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit.
+For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal. (Figure \ref{fig:no123})
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (1,1);
@@ -119,6 +129,7 @@ For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is o
         \draw (7.5,1.5) node{4};
         \draw (7.5,2.5) node{5};
     \end{tikzpicture}
+    \caption{$\#_1 = 1, \#_2 = 3, \#_3 = 5$ \cite{v1}}
     \label{fig:no123}
 \end{figure}
 
@@ -150,11 +161,48 @@ Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1
 \end{figure}
 
 \begin{definition}[Adjacency]
-Two squares are \newterm{adjacent} iff they are one square diagonally or orthogonally apart. Two squares are \newterm{orthogonal} iff they are adjacent but not diagonally so. Two set of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (footnote \footnote{Cartesian product}) such that $s$ and $t$ are adjacent.
+Two squares are \newterm{adjacent} iff they are one square diagonally or orthogonally apart. Two squares are \newterm{orthogonal} iff they are adjacent but not diagonally so. Two sets of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (Cartesian product) such that $s$ and $t$ are adjacent. The squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
 \end{definition}
 
-\begin{lemma}[Rectangle blockage]
-\label{lem:RectangleBlock}
+\begin{definition}[Platter]
+A \newterm{platter} is a (set of adjacent squares) not adjacent to another square. (I don't use the term "shape" because two squares diagonally adjacent doesn't really fit into most people's intuitions).% For this definition, the outside wall is considered a cycle of squares and can be part of the platter. (Doesn't work because holes and caves and convex)
+\end{definition}
+
+\begin{definition}[Outside]
+For a platter $P$, $\outside(P)$ = All squares reachable from the wall or other platters
+\end{definition}
+
+\begin{definition}[Border]
+A platter's \newterm{border} is the squares adjacent to the platter that are outside of it. $\border(P) = \adj(P) \cap \outside(P)$
+
+If a platter cuts the grid into subgrids, we may restrict the outside to squares reachable from just that subgrid $s$. This is denoted $\border(P)_s$
+\end{definition}
+
+\begin{lemma}[Border removal]
+\label{lem:Border removal}
+
+Say we have a platter $p_1$ with the following properties:
+
+\begin{enumerate}
+\item $\border(p_1) = \adj(p_1)$
+\item choosing any two squares on its border $A$ and $B$ where there is a path from $A$ to $B$, the shortest such path and the shortest such path upon removing the platter are the same length.
+\end{enumerate}
+
+Then the platter may be removed: $\#^{p}_{n, m} \le \#^{p - p_1}_{n, m}$
+\end{lemma}
+
+\begin{proof}
+Can any preexisting path get shorter by entering the platter? No. Any preexisting path starts and ends outside the platter, by property 1. If the path wants to enter the platter, it must reach its border, go inside, then exit from another square on the border. But by property 2, going \emph{along} the border is at least as efficient.
+
+So, any preexisting paths determining $\#^{p}_{n, m}$ will never enter the area where the platter disappeared from; i.e, such paths will not get shorter with the removal of the platter.
+\end{proof}
+
+\begin{note}
+We have the possibility of $\#^{p}_{n, m} < \#^{p - p_1}_{n, m}$ because in addition to the preexisting paths, there are new paths that go across or in the removed platter.
+\end{note}
+
+\begin{lemma}[Rectangle cut]
+\label{lem:Rectangle cut}
 
 Say we have an $n \times m$ grid, where pentominoes form a $k \times m$ rectangle ($r$) that is not adjacent to any other pentomino.
 
@@ -162,12 +210,8 @@ Then the rectangle may be removed: $\#^{p}_{n, m} \le \#^{p - r}_{n, m}$
 \end{lemma}
 
 \begin{proof}
-By construction, on the side of the rectangle facing any path $pa$ there is an empty column adjacent to the rectangle, which for now we'll call its \newterm{\badterm{border}}. The path $pa$ starts and ends on the same subgrid as this \badterm{border}. So if it crosses the \badterm{border}, it must cross back, essentially going to two squares on the \badterm{border}. However, it is always shorter to go \emph{along} the \badterm{border}, cause it's a straight line. So, any preexisting paths determining $\#^{p}_{n, m}$ will never enter the area where the rectangle disappeared from; i.e, such paths will not get shorter with the removal of the rectangle.
+The rectangle satisfies \ref{lem:Border removal}, since $adj(r)$ is zero, one, or two straight lines of squares by construction.
 \end{proof}
-
-\begin{note}
-We have the possibility of $\#^{p}_{n, m} < \#^{p - r}_{n, m}$ because in addition to the preexisting paths, there are new paths that go across the removed rectangle.
-\end{note}
 
 \begin{figure}[!h]
     \centering
@@ -178,7 +222,7 @@ We have the possibility of $\#^{p}_{n, m} < \#^{p - r}_{n, m}$ because in additi
         \draw (3.5,3.5) node{$C$};
         \filldraw[fill=color4I] (2,0) rectangle (3,4);
     \end{tikzpicture}
-    \caption{Illustration for Lemma \ref{lem:RectangleBlock}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
+    \caption{Illustration for Lemma \ref{lem:Rectangle cut}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
 \end{figure}
 
 \begin{conclusion}
@@ -186,7 +230,7 @@ And so, $\#_{1, n} = n$
 \end{conclusion}
 
 \begin{proof}
-The only piece that could possibly fit is the I piece, which is removable thanks to Lemma \ref{lem:RectangleBlock}.
+The only piece that could possibly fit is the I piece, which is removable thanks to Lemma \ref{lem:Rectangle cut}.
 \end{proof}
 
 \begin{figure}[!h]
@@ -198,7 +242,7 @@ The only piece that could possibly fit is the I piece, which is removable thanks
         \draw (1.5,0.5) node{$\cdots$};
         \draw (2.5,0.5) node{$n$};
     \end{tikzpicture}
-    \caption{$\#_{1, n} = n$ (where $1 < n$).}
+    \caption{$\#_{1, n} = n$ (where $1 < n$). \cite{sheet}}
 \end{figure}
 
 
@@ -206,15 +250,84 @@ The only piece that could possibly fit is the I piece, which is removable thanks
 
 \subsection{One pentomino}
 
+We know that Lemma \ref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner.
+
+\begin{theorem}
+\label{th:Corner removal}
+
+A platter $P$ is made of the set of squares $S$ and all squares to the bottom-left of any square in $S$. Then it satisfies \ref{lem:Border removal}.
+\end{theorem}
+
+\begin{proof}
+Informally, $adj(P)$ forms a staircase-like shape. So any path along $adj(P)$ will go in only two cardinal directions, and in fact will have the length of the Manhattan distance between its two endpoints, which cannot be improved upon.
+\end{proof}
+
+\begin{note}
+This construction may be rotated and reflected.
+\end{note}
+
+
+
 \subsubsection{\texorpdfstring{$2 \times n$}{2 \texttimes n} grids}
 
-\begin{corollary}[Convex border]
-\label{cor:Convexborder}
+%\begin{definition}[Bound]
+%A platter's \newterm{bound} are the squares of its border adjacent to some square that is outside and not part of the border. $\bound(P) = \border(P) \cap \adj(\outside(P) \setminus \border(P))$
+%\end{definition}
+%
+%\begin{definition}[Cave]
+%A platter's \newterm{caves} are made of the squares of its border that are not in its bound. $\caves(P) = \border(P) \setminus \bound(P)$
+%\end{definition}
+%
+%\begin{example}[Caves of pentominoes]
+%No pentomino has a hole, but there is one with a cave: U (Figure \ref{fig:ucave}). Although, any platter touching the wall has holes.
+%\end{example}
+%
+%\begin{figure}
+%    \centering
+%    \begin{tikzpicture}
+%        \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+%        \filldraw[fill=colorU,shift={(1,1)}] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
+%        \draw (0.5,0.5) node{$B$};
+%        \draw (1.5,0.5) node{$B$};
+%        \draw (2.5,0.5) node{$B$};
+%        \draw (3.5,0.5) node{$B$};
+%        \draw (4.5,0.5) node{$B$};
+%        \draw (4.5,1.5) node{$B$};
+%        \draw (4.5,2.5) node{$B$};
+%        \draw (4.5,3.5) node{$B$};
+%        \draw (3.5,3.5) node{$B$};
+%        \draw (2.5,3.5) node{$B$};
+%        \draw (1.5,3.5) node{$B$};
+%        \draw (0.5,3.5) node{$B$};
+%        \draw (0.5,2.5) node{$B$};
+%        \draw (0.5,1.5) node{$B$};
+%        \draw (2.5,2.5) node{$C$};
+%    \end{tikzpicture}
+%    \caption{U's border squares and sole cave square are marked $B$ and $C$ respectively.}
+%    \label{fig:ucave}
+%\end{figure}
+%
+%\begin{definition}[Convex]
+%A platter is \newterm{convex} iff it has no caves.
+%\end{definition}
+%
+%\begin{corollary}[Convex bound]
+%\label{cor:Convex bound}
+%
+%Lemma \ref{lem:Rectangle cut} extends to any shape, so long as the following statement holds: "the shortest path between any two squares along the border, if it exists, cannot get shorter upon removing the platter". This could be a similar construction to the rectangle blockage, but it extends more generally to include, for example, some placements of pentominoes at the corner.
+%\end{corollary}
+Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, P, N, U, and Y.
 
-Lemma \ref{lem:RectangleBlock} extends to any shape, so long as the statement "it is always shorter to go \emph{along} the border" holds. This could be a similar construction to the rectangle blockage, but it extends more generally to include, for example, some placements of pentominoes at the corner. The word "\badterm{convex}" is informal.
+\begin{corollary}[2-wide platters in $2 \times n$ areas are eliminable]
+\label{cor:2xn elim}
+L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas.
 \end{corollary}
 
-Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, N, and Y. However, by Corollary \ref{cor:Convexborder}, L, N, and Y can be removed. So, can \minordetail{the pentomino} I be used to increase $\#^p_{2, n}$? Yes. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 -- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
+\begin{proof}
+These pentominoes have one or more $2 \times 1$ areas, which will be converted into walls. In each subgrid formed, the remainder of \minordetail{the pentomino's} squares satisfy Theorem \ref{th:Corner removal}.\footnote{Proving the statement for platters in general is left as an exercise to the reader. Also, since we are subtracting a set of squares from the pentomino, one horrible way to describe this is a "difference of squares".}
+\end{proof}
+
+Only \minordetail{the pentomino} I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 -- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
 
 \begin{figure}[!h]
     \centering
@@ -245,7 +358,7 @@ Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, N, and Y. 
 If there is a cycle of empty squares in a grid, the path will not use all empty squares.
 \end{property}
 
-For $3 \times n$ grids, all pentominoes fit, but V, W, and Z can be removed by Corollary \ref{cor:Convexborder}. In the case of a $3 \times 4$ grid, we have solutions with 1 pentomino and all empty squares filled ($\#_{3, 4} = 7$, Figure \ref{fig:3x4}). Placing zero pentominoes gets a length of 6, while with two pentominoes there are only 2 leftover squares, so the only solutions have 1 pentomino and all empty squares in the path.
+For $3 \times n$ grids, all pentominoes fit, but V, W, and Z can be removed in a generalization of Corollary \ref{cor:2xn elim}. In the case of a $3 \times 4$ grid, we have solutions with 1 pentomino and all empty squares filled ($\#_{3, 4} = 7$, Figure \ref{fig:3x4}). Placing zero pentominoes gets a length of 6, while with two pentominoes there are only 2 leftover squares, so the only solutions have 1 pentomino and all empty squares in the path.
 
 \begin{figure}
     \centering
@@ -288,7 +401,7 @@ For $3 \times n$ grids, all pentominoes fit, but V, W, and Z can be removed by C
     \label{fig:3x4}
 \end{figure}
 
-Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$. Pentominoes that span a $1 \times 4$ area (L, N, Y) cannot have their $1 \times 4$ in the middle, but if it is on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino. So by \ref{prop:cycineff}, L, N, and Y are eliminated. U has 4 orientations (translations can be produced by rotation and reflection, there is 1 \minordetail{relevant} non-reflection for U, and 1 \minordetail{relevant} non-rotational symmetry for the $3 \times 4$), which all do not work for various reasons.
+Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center. Pentominoes that span a $1 \times 4$ area (L, N, Y) cannot have their $1 \times 4$ in the middle, but if it is on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino. So by \ref{prop:cycineff}, L, N, and Y are eliminated. U has 4 orientations (translations can be produced by rotation and reflection, there is 1 \minordetail{relevant} non-reflection for U, and 1 \minordetail{relevant} non-rotational symmetry for the $3 \times 4$), which all do not work for various reasons.
 
 \begin{figure}
     \centering
@@ -318,7 +431,45 @@ Pentominoes must be placed so that the grid is \emph{not} split into two. This i
 
 We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not split the grid in two. So the three solutions given by \cite[6:04]{v2} are the only ones.
 
-% Informally, we define a pentomino's \newterm{contribution} to be how much it lengthens a particular path.
+
+A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \ref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (9,9);
+        \draw (1.5,1.5) node{$A$};
+        \draw (1.5,2.5) node{2};
+        \draw (1.5,3.5) node{3};
+        \draw (1.5,4.5) node{4};
+        \draw (1.5,5.5) node{5};
+        \draw (1.5,6.5) node{6};
+        \draw (1.5,7.5) node{7};
+        \draw (1.5,8.5) node{8};
+        \draw (2.5,8.5) node{9};
+        \draw (3.5,8.5) node{10};
+        \draw (4.5,8.5) node{11};
+        \draw (5.5,8.5) node{12};
+        \draw (6.5,8.5) node{13};
+        \draw (7.5,8.5) node{14};
+        \draw (7.5,7.5) node{15};
+        \draw (7.5,6.5) node{16};
+        \draw (7.5,5.5) node{17};
+        \draw (7.5,4.5) node{18};
+        \draw (7.5,3.5) node{19};
+        \draw (7.5,2.5) node{20};
+        \filldraw[fill=colorI] (5,3) rectangle (6,8);
+        \filldraw[fill=colorW] (3,0) -- (3,1) -- (4,1) -- (4,2) -- (5,2) -- (5,3) -- (6,3) -- (6,1) -- (5,1) -- (5,0) -- cycle;
+        \draw (2.5,1.5) node{\textcolor{colorSecondary}{2}};
+        \draw (3.5,1.5) node{\textcolor{colorSecondary}{3}};
+        \draw (4.5,1.5) node{\textcolor{colorSecondary}{4}};
+        \draw (5.5,1.5) node{\textcolor{colorSecondary}{5}};
+        \draw (6.5,1.5) node{\textcolor{colorSecondary}{6}};
+        \draw (7.5,1.5) node{$B$};
+    \end{tikzpicture}
+    \label{fig:nontrivialcontribution}
+    \caption{If the I pentomino was already placed, then adding the W changes the path's length from 7 to 21. Nevertheless, W's contribution $C(\mathrm{W}) = 4$. Additionally, W helps by blocking the bottom row. So some squares are spent on setup, and some on lengthening the path.}
+\end{figure}
 
 % \subsection{How to add Tables}
 
@@ -353,13 +504,6 @@ We are left with the pentominoes P and T. If P does not touch the corner, after 
 % \item Like this,
 % \item and like this.
 % \end{itemize}
-
-% \subsection{How to write Mathematics}
-
-% \LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-% \[S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-%       = \frac{1}{n}\sum_{i}^{n} X_i\]
-% denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
 
 
 % \subsection{How to change the margins and paper size}
