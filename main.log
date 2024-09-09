@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.9)  9 SEP 2024 07:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.9)  9 SEP 2024 08:25
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -663,7 +663,10 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks40
 \@floatcapt=\box61
 )
-(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty
+Package: placeins 2005/04/18  v 2.2
+) (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.st
+y
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen177
 \lightrulewidth=\dimen178
@@ -683,11 +686,6 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count433
 \@thisrulewidth=\dimen189
 )
-(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/marginnote\marginnote.
-sty
-Package: marginnote 2018/08/09 1.4b non floating margin notes for LaTeX
-\c@mn@abspage=\count434
-)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz
 .sty
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
@@ -706,7 +704,7 @@ e.tex
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathpars
 er.code.tex
 \pgfmath@dimen=\dimen190
-\pgfmath@count=\count435
+\pgfmath@count=\count434
 \pgfmath@box=\box62
 \pgfmath@toks=\toks41
 \pgfmath@stack@operand=\toks42
@@ -734,7 +732,7 @@ tions.integerarithmetics.code.tex)
 .code.tex)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloa
 t.code.tex
-\c@pgfmathroundto@lastzeros=\count436
+\c@pgfmathroundto@lastzeros=\count435
 ))
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code
 .tex)
@@ -774,7 +772,7 @@ File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgfpic=\box63
 \pgf@hbox=\box64
 \pgf@layerbox@main=\box65
-\pgf@picture@serial@count=\count437
+\pgf@picture@serial@count=\count436
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 regraphicstate.code.tex
@@ -809,8 +807,8 @@ File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
 reshade.code.tex
 File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgf@max=\dimen270
-\pgf@sys@shading@range@num=\count438
-\pgf@shadingcount=\count439
+\pgf@sys@shading@range@num=\count437
+\pgf@shadingcount=\count438
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 reimage.code.tex
@@ -880,7 +878,7 @@ Package: tikz 2023-01-15 v3.1.10 (3.1.10)
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
 raryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@plot@mark@count=\count440
+\pgf@plot@mark@count=\count439
 \pgfplotmarksize=\dimen275
 )
 \tikz@lastx=\dimen276
@@ -895,19 +893,19 @@ File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \tikz@figbox@bg=\box69
 \tikz@tempbox=\box70
 \tikz@tempbox@bg=\box71
-\tikztreelevel=\count441
-\tikznumberofchildren=\count442
-\tikznumberofcurrentchild=\count443
-\tikz@fig@count=\count444
+\tikztreelevel=\count440
+\tikznumberofchildren=\count441
+\tikznumberofcurrentchild=\count442
+\tikz@fig@count=\count443
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
 ematrix.code.tex
 File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfmatrixcurrentrow=\count445
-\pgfmatrixcurrentcolumn=\count446
-\pgf@matrix@numberofcolumns=\count447
+\pgfmatrixcurrentrow=\count444
+\pgfmatrixcurrentcolumn=\count445
+\pgf@matrix@numberofcolumns=\count446
 )
-\tikz@expandcount=\count448
+\tikz@expandcount=\count447
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
 kz/libraries\tikzlibrarytopaths.code.tex
@@ -921,7 +919,7 @@ File: tikzlibrarymatrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
 kz/libraries\tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
-\c@theorem=\count449
+\c@theorem=\count448
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2024-07-10 v7.01j Hypertext links for LaTeX
@@ -947,7 +945,7 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 tlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count450
+\c@section@level=\count449
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
 sty
@@ -955,8 +953,8 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
 \@linkdim=\dimen284
-\Hy@linkcounter=\count451
-\Hy@pagecounter=\count452
+\Hy@linkcounter=\count450
+\Hy@pagecounter=\count451
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2024-07-10 v7.01j Hyperref: PDFDocEncoding definition (HO)
@@ -966,7 +964,7 @@ Now handling font encoding PD1 ...
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count453
+\Hy@SavedSpaceFactor=\count452
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2024-07-10 v7.01j Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -980,7 +978,7 @@ Package hyperref Info: Plain pages OFF on input line 4172.
 Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
-\c@Hy@tempcnt=\count454
+\c@Hy@tempcnt=\count453
 LaTeX Info: Redefining \url on input line 4763.
 \XeTeXLinkMargin=\dimen285
 
@@ -992,7 +990,7 @@ c.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count455
+\Fld@menulength=\count454
 \Field@Width=\dimen286
 \Fld@charsize=\dimen287
 Package hyperref Info: Hyper figures OFF on input line 6042.
@@ -1007,9 +1005,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6072.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count456
-\c@Item=\count457
-\c@Hfootnote=\count458
+\Hy@abspage=\count455
+\c@Item=\count456
+\c@Hfootnote=\count457
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
@@ -1020,8 +1018,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count459
-\c@bookmark@seq@number=\count460
+\Fld@listcount=\count458
+\c@bookmark@seq@number=\count459
 
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
 lecheck.sty
@@ -1043,24 +1041,24 @@ Package csquotes Info: Redefining alias 'default' -> 'english'.
  (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 76.
-LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1100,16 +1098,16 @@ LaTeX Font Info:    ... okay on input line 76.
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
 kii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count461
+\scratchcounter=\count460
 \scratchdimen=\dimen288
 \scratchbox=\box72
-\nofMPsegments=\count462
-\nofMParguments=\count463
+\nofMPsegments=\count461
+\nofMParguments=\count462
 \everyMPshowfont=\toks46
-\MPscratchCnt=\count464
+\MPscratchCnt=\count463
 \MPscratchDim=\dimen289
-\MPnumerator=\count465
-\makeMPintoPDFobject=\count466
+\MPnumerator=\count464
+\makeMPintoPDFobject=\count465
 \everyMPtoPDFconversion=\toks47
 )
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-
@@ -1137,9 +1135,9 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 76.
-Package biblatex Info: Reference segment=0 on input line 76.
-Package hyperref Info: Link coloring ON on input line 76.
+Package biblatex Info: Reference section=0 on input line 77.
+Package biblatex Info: Reference segment=0 on input line 77.
+Package hyperref Info: Link coloring ON on input line 77.
  (main.out) (main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
@@ -1149,7 +1147,7 @@ Package hyperref Info: Link coloring ON on input line 76.
 \openout6 = `main.toc'.
 
 Package svg Info: Last page of `./svg-inkscape/All_18_Pentominoes_svg-tex.pdf' 
-is 1 on input line 97.
+is 1 on input line 98.
 
 (svg-inkscape/All_18_Pentominoes_svg-tex.pdf_tex
 <./svg-inkscape/All_18_Pentominoes_svg-tex.pdf, id=34, page=1, 604.50844pt x 19
@@ -1188,10 +1186,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 30587 strings out of 473898
- 590784 string characters out of 5726008
- 1954960 words of memory out of 5000000
- 52931 multiletter control sequences out of 15000+600000
+ 30551 strings out of 473898
+ 590211 string characters out of 5726008
+ 1953960 words of memory out of 5000000
+ 52895 multiletter control sequences out of 15000+600000
  564708 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,9n,93p,695b,1852s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1217,9 +1215,9 @@ teven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><
 C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
 tt10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
 onts/latxfont/lasy6.pfb>
-Output written on main.pdf (7 pages, 266423 bytes).
+Output written on main.pdf (7 pages, 266770 bytes).
 PDF statistics:
- 262 PDF objects out of 1000 (max. 8388607)
+ 264 PDF objects out of 1000 (max. 8388607)
  52 named destinations out of 1000 (max. 500000)
  63 words of extra memory for PDF output out of 10000 (max. 10000000)
 

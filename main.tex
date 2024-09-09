@@ -10,13 +10,14 @@
 \usepackage{svg}
 \usepackage[normalem]{ulem}
 
-\usepackage{csquotes} % recommended to fix warning
+\usepackage{csquotes}% fix warning
 \usepackage[style=alphabetic,sorting=ndt]{biblatex}
 \addbibresource{sources.bib}
 
-\usepackage{float}
+\usepackage{float}% [H] on figures
+\usepackage{placeins}% \FloatBarrier - do not have floats interrupting references
 \usepackage{booktabs}
-\usepackage{marginnote}
+% \usepackage{marginnote}
 % \usepackage{subcaption}
 
 \usepackage{tikz}
@@ -305,7 +306,7 @@ Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, P, N, U, a
 
 By Theorem \ref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas, so only I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
 
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (6,2);
@@ -401,8 +402,12 @@ A square has 4 symmetries, so a platter has at most 8 orientations, ignoring loc
 \end{theorem}
 
 \begin{corollary}
-Theorem \ref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P and T, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, so we can reduce the number of orientations by a factor of four; the maximum number of orientations a pentomino could have goes from eight to two. (Figure \ref{fig:Reduced orientations})
+Theorem \ref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P, T, and U, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since Theorem \ref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (Figure \ref{fig:Reduced orientations})
 \end{corollary}
+
+\begin{note}
+U satisfies a general version of Theorem \ref{th:Cut corner removal} where both corners are covered.
+\end{note}
 
 \begin{figure}
     \centering
@@ -479,9 +484,9 @@ Say we know how many pentominoes are in a solution, and that all squares are use
 \end{lemma}
 
 \begin{proof}
-If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance.
+First, we take U from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since U has a cave square, we can say a path must end there. But if U is placed horizontally (2 rows by 3 columns, Figure \ref{fig:u3x4}), it is at least as good to just go around the U (removing any obstacles). And in a vertical placement, removing the U allows any path to go two steps further into the U.
 \begin{itemize}
-    \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center. For U, say a path ends in U's cave square. If U is placed horizontally (2 rows by 3 columns, Figure \ref{fig:u3x4}), it is at least as good to just go around the U (removing any obstacles). But in a vertical placement, removing the U allows any path to go two steps further into the U.
+    \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center.
     \item If a pentomino that spans a $1 \times 4$ area (L, N, Y) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \ref{prop:cycineff}. \qedhere
 \end{itemize}
 \end{proof}
@@ -513,17 +518,7 @@ If a path enters \minordetail{or exits} a cave square \minordetail{(enters witho
 
 \footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}
 
-\begin{theorem}
-$\#_{3, 4} = 7$
-\end{theorem}
-
-\begin{proof}
-By Figure \ref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \ref{lem:max3x3} applies. L, N, and Y can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
-
-We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
-\end{proof}
-
-\begin{figure}
+\begin{figure}[htbp!]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (4,3);
@@ -563,6 +558,16 @@ We are left with the pentominoes P and T. If P does not touch the corner, after 
     \caption{$\#_{3, 4} = 7$. \cite[6:04]{v2}}
     \label{fig:3x4}
 \end{figure}
+
+\begin{theorem}
+$\#_{3, 4} = 7$
+\end{theorem}
+
+\begin{proof}
+By Figure \ref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \ref{lem:max3x3} applies. L, N, and Y can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
+
+We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
+\end{proof}
 
 A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \ref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
 
@@ -642,6 +647,7 @@ A polynomial's \badterm{contribution} is informally how much longer it makes a g
 
 % We hope you find Overleaf useful, and do take a look at our \href{https://www.overleaf.com/learn}{help library} for more tutorials and user guides! Please also let us know if you have any feedback using the Contact Us link at the bottom of the Overleaf menu --- or use the contact form at \url{https://www.overleaf.com/contact}.
 
+\FloatBarrier
 \printbibliography
 
 \end{document}
