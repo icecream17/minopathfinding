@@ -152,6 +152,44 @@
       \verb https://commons.wikimedia.org/wiki/File:All_18_Pentominoes.svg
       \endverb
     \endentry
+    \entry{enwiki:separatingvertex}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=b6aea1a416c89509a7df1cbb69249cb6}{%
+           family={{Wikipedia contributors}},
+           familyi={W\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Wikipedia, The Free Encyclopedia}%
+      }
+      \strng{namehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{fullhash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{fullhashraw}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{bibnamehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authorbibnamehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authornamehash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authorfullhash}{b6aea1a416c89509a7df1cbb69249cb6}
+      \strng{authorfullhashraw}{b6aea1a416c89509a7df1cbb69249cb6}
+      \field{labelalpha}{Wik21}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{day}{27}
+      \field{month}{2}
+      \field{title}{Separating vertex}
+      \field{urlday}{9}
+      \field{urlmonth}{9}
+      \field{urlyear}{2024}
+      \field{year}{2021}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://en.wikipedia.org/w/index.php?title=Separating_vertex&oldid=1009216908
+      \endverb
+      \verb{url}
+      \verb https://en.wikipedia.org/w/index.php?title=Separating_vertex&oldid=1009216908
+      \endverb
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

@@ -164,6 +164,10 @@ Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1
 Two squares are \newterm{adjacent} iff they are one square diagonally or orthogonally apart. Two squares are \newterm{orthogonal} iff they are adjacent but not diagonally so. Two sets of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (Cartesian product) such that $s$ and $t$ are adjacent. The squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
 \end{definition}
 
+\begin{definition}[Subgrid]
+A subgrid is any connected subgraph of squares of the grid.
+\end{definition}
+
 \begin{definition}[Platter]
 A \newterm{platter} is a (set of adjacent squares) not adjacent to another square. (I don't use the term ``shape'' because two squares diagonally adjacent doesn't really fit into most people's intuitions).% For this definition, the outside wall is considered a cycle of squares and can be part of the platter. (Doesn't work because holes and caves and convex)
 \end{definition}
@@ -210,7 +214,7 @@ Then the rectangle may be removed: $\#^{p}_{n, m} \le \#^{p - r}_{n, m}$
 \end{lemma}
 
 \begin{proof}
-The rectangle satisfies \ref{lem:Border removal}, since $adj(r)$ is zero, one, or two straight lines of squares by construction.
+The rectangle satisfies \ref{lem:Border removal}, since $\adj(r)$ is zero, one, or two straight lines of squares by construction.
 \end{proof}
 
 \begin{figure}[htbp]
@@ -260,7 +264,7 @@ A platter $P$ is made of the set of squares $S$ and all squares to the bottom-le
 \end{theorem}
 
 \begin{proof}
-Informally, $adj(P)$ forms a staircase-like shape. So any path along $adj(P)$ will go in only two cardinal directions, and in fact will have the length of the Manhattan distance between its two endpoints, which cannot be improved upon.
+Informally, $\adj(P)$ forms a staircase-like shape. So any path along $\adj(P)$ will go in only two cardinal directions, and in fact will have the length of the Manhattan distance between its two endpoints, which cannot be improved upon.
 \end{proof}
 
 \begin{note}
@@ -270,18 +274,18 @@ This construction may be rotated and reflected.
 \begin{theorem}[Cut corner removal]
 \label{th:Cut corner removal}
 
-This extends Theorem \ref{th:Corner removal} to potentially apply to each "side" (i.e. subgrid border) of a platter that cuts the grid into subgrids.
+This extends Theorem \ref{th:Corner removal} to potentially apply to each ``\badterm{side}'' (i.e. subgrid border) of a platter that cuts the grid into subgrids.
 \end{theorem}
 
 \begin{proof}
-For each subgrid $s$, try applying Theorem \ref{th:Corner removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\border(P)_s$, so this is valid.
+For each subgrid $s$, try applying Theorem \ref{th:Corner removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\border(P)_s$, so this is valid for determining whether a path in $s$ can be improved.
 \end{proof}
 
 \begin{note}
 If Theorem \ref{th:Corner removal} applies to the entire border, then as a result the whole platter can be removed, since no path within any of the subgrids can be improved.
 \end{note}
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (6,2);
@@ -297,46 +301,6 @@ If Theorem \ref{th:Corner removal} applies to the entire border, then as a resul
 
 \subsection{\texorpdfstring{$2 \times n$}{2 \texttimes n} grids}
 
-%\begin{definition}[Bound]
-%A platter's \newterm{bound} are the squares of its border adjacent to some square that is outside and not part of the border. $\bound(P) = \border(P) \cap \adj(\outside(P) \setminus \border(P))$
-%\end{definition}
-%
-%\begin{definition}[Cave]
-%A platter's \newterm{caves} are made of the squares of its border that are not in its bound. $\caves(P) = \border(P) \setminus \bound(P)$
-%\end{definition}
-%
-%\begin{example}[Caves of pentominoes]
-%No pentomino has a hole, but there is one with a cave: U (Figure \ref{fig:ucave}). Although, any platter touching the wall has holes.
-%\end{example}
-%
-%\begin{figure}
-%    \centering
-%    \begin{tikzpicture}
-%        \draw[step=1cm,black,very thin] (0,0) grid (5,4);
-%        \filldraw[fill=colorU,shift={(1,1)}] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
-%        \draw (0.5,0.5) node{$B$};
-%        \draw (1.5,0.5) node{$B$};
-%        \draw (2.5,0.5) node{$B$};
-%        \draw (3.5,0.5) node{$B$};
-%        \draw (4.5,0.5) node{$B$};
-%        \draw (4.5,1.5) node{$B$};
-%        \draw (4.5,2.5) node{$B$};
-%        \draw (4.5,3.5) node{$B$};
-%        \draw (3.5,3.5) node{$B$};
-%        \draw (2.5,3.5) node{$B$};
-%        \draw (1.5,3.5) node{$B$};
-%        \draw (0.5,3.5) node{$B$};
-%        \draw (0.5,2.5) node{$B$};
-%        \draw (0.5,1.5) node{$B$};
-%        \draw (2.5,2.5) node{$C$};
-%    \end{tikzpicture}
-%    \caption{U's border squares and sole cave square are marked $B$ and $C$ respectively.}
-%    \label{fig:ucave}
-%\end{figure}
-%
-%\begin{definition}[Convex]
-%A platter is \newterm{convex} iff it has no caves.
-%\end{definition}
 Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, P, N, U, and Y.
 
 By Theorem \ref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas, so only I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
@@ -363,6 +327,48 @@ By Theorem \ref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y c
 \end{figure}
 
 \subsection{\texorpdfstring{$3 \times n$}{3 \texttimes n} grids}
+
+
+%\begin{definition}[Bound]
+%A platter's \newterm{bound} are the squares of its border adjacent to some square that is outside and not part of the border. $\bound(P) = \border(P) \cap \adj(\outside(P) \setminus \border(P))$
+%\end{definition}
+%
+\begin{definition}[Cave]
+A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgrid its in by one square. That square is called a \newterm{separating vertex} \cite{enwiki:separatingvertex}.
+\end{definition}
+%
+%\begin{example}[Caves of pentominoes]
+%No pentomino has a hole, but there is one with a cave: U (Figure \ref{fig:ucave}). Although, any platter touching the wall has holes.
+%\end{example}
+%
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+        \filldraw[fill=colorU,shift={(1,1)}] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
+%        \draw (0.5,0.5) node{$B$};
+%        \draw (1.5,0.5) node{$B$};
+%        \draw (2.5,0.5) node{$B$};
+%        \draw (3.5,0.5) node{$B$};
+%        \draw (4.5,0.5) node{$B$};
+%        \draw (4.5,1.5) node{$B$};
+%        \draw (4.5,2.5) node{$B$};
+%        \draw (4.5,3.5) node{$B$};
+%        \draw (3.5,3.5) node{$B$};
+%        \draw (2.5,3.5) node{$B$};
+%        \draw (1.5,3.5) node{$B$};
+%        \draw (0.5,3.5) node{$B$};
+%        \draw (0.5,2.5) node{$B$};
+%        \draw (0.5,1.5) node{$B$};
+        \draw (2.5,2.5) node{$C$};
+    \end{tikzpicture}
+    \caption{U is the unique pentomino with a cave square.}
+    \label{fig:ucave}
+\end{figure}
+%
+%\begin{definition}[Convex]
+%A platter is \newterm{convex} iff it has no caves.
+%\end{definition}
 
 \begin{theorem}[Ways to orient a pentomino]
 \label{th:Pentomino orientations}
@@ -395,10 +401,10 @@ A square has 4 symmetries, so a platter has at most 8 orientations, ignoring loc
 \end{theorem}
 
 \begin{corollary}
-Theorem \ref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P and T, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, so we can reduce the number of orientations by a factor of four; the maximum number of orientations goes from eight to two. (Figure \ref{fig:Reduced orientations})
+Theorem \ref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P and T, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, so we can reduce the number of orientations by a factor of four; the maximum number of orientations a pentomino could have goes from eight to two. (Figure \ref{fig:Reduced orientations})
 \end{corollary}
 
-\begin{figure}[htbp]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \begin{scope}[xshift=1cm]
@@ -440,11 +446,9 @@ Theorem \ref{th:Cut corner removal} works for V, W, Z, the vertical orientations
             \end{scope}
         \end{scope}
     \end{tikzpicture}
-    \caption{All orientations of F, V, W, Z, P, and T in a $3 \times n$ after reducing by symmetry. The left side of both F's are ignorable, as well as \minordetail{both sides of} the right P and T.}
+    \caption{All orientations of F, V, W, Z, P, and T in a $3 \times n$ after reducing by symmetry. The left side of both F's are ignorable, as well as \minordetail{both sides of} the right P and T. Additionally, the second F is strictly worse than the first F, since after filling in the ignorable subgrid, the first F practically replaces a wall with an empty square when compared to the second F.}
     \label{fig:Reduced orientations}
 \end{figure}
-
-Additionally, considering Figure \ref{fig:Reduced orientations}, the second F is strictly worse than the first F, since after filling in the ignorable subgrid, the first F practically replaces a wall with an empty square when compared to the second F.
 
 \begin{property}[Cycle inefficiency]
 \label{prop:cycineff}
@@ -452,7 +456,72 @@ Additionally, considering Figure \ref{fig:Reduced orientations}, the second F is
 If there is a cycle of empty squares in a grid, the path will not use all empty squares.
 \end{property}
 
-In the case of a $3 \times 4$ grid, we have solutions with 1 pentomino and all empty squares filled ($\#_{3, 4} = 7$, Figure \ref{fig:3x4}). Placing zero pentominoes gets a length of 6, while with two pentominoes there are only 2 leftover squares, so the only solutions have 1 pentomino and all empty squares in the path.
+\begin{property}[Zero pentomino result]
+\label{prop:zeroplace}
+
+With nothing placed, we have $\#^{\emptyset}_{n, m} = n + m - 1$
+\end{property}
+
+\begin{property}[One-pentomino solution]
+\label{prop:oneplace}
+
+Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any solution must contain one pentomino.
+\end{property}
+
+\begin{lemma}[Maximal solutions in $3 \times n$ grids]
+\label{lem:max3x3}
+
+Say we know how many pentominoes are in a solution, and that all squares are used. Then:
+\begin{itemize}
+    \item F, X, and U are not part of the solution.
+    \item L, N, and Y must have their $1 \times 4$ in the middle row, if they are not adjacent to other pentominoes.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance.
+\begin{itemize}
+    \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center. For U, say a path ends in U's cave square. If U is placed horizontally (2 rows by 3 columns, Figure \ref{fig:u3x4}), it is at least as good to just go around the U (removing any obstacles). But in a vertical placement, removing the U allows any path to go two steps further into the U.
+    \item If a pentomino that spans a $1 \times 4$ area (L, N, Y) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \ref{prop:cycineff}. \qedhere
+\end{itemize}
+\end{proof}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+        \filldraw[fill=colorU] (0,0) -- (0,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (2,1) -- (2,0) -- cycle;
+
+        \begin{scope}[xshift=5cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+            \filldraw[fill=colorU] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (0,2) -- (0,3) -- (2,3) -- (2,0) -- cycle;
+        \end{scope}
+
+        \begin{scope}[yshift=4cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+            \filldraw[fill=colorU] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
+        \end{scope}
+
+        \begin{scope}[shift={(5cm,4cm)}]
+            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+            \filldraw[fill=colorU] (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,2) -- (0,2) -- cycle;
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Orientations of U in a $3 \times 4$ (footnote: \protect\footnotemark)}
+    \label{fig:u3x4}
+\end{figure}
+
+\footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}
+
+\begin{theorem}
+$\#_{3, 4} = 7$
+\end{theorem}
+
+\begin{proof}
+By Figure \ref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \ref{lem:max3x3} applies. L, N, and Y can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
+
+We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
+\end{proof}
 
 \begin{figure}
     \centering
@@ -494,37 +563,6 @@ In the case of a $3 \times 4$ grid, we have solutions with 1 pentomino and all e
     \caption{$\#_{3, 4} = 7$. \cite[6:04]{v2}}
     \label{fig:3x4}
 \end{figure}
-
-Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center. Pentominoes that span a $1 \times 4$ area (L, N, Y) cannot have their $1 \times 4$ in the middle, but if it is on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino. So by \ref{prop:cycineff}, L, N, and Y are eliminated. U has 4 orientations (translations can be produced by rotation and reflection, there is 1 \minordetail{relevant} non-reflection for U, and 1 \minordetail{relevant} non-rotational symmetry for the $3 \times 4$), which all do not work for various reasons.
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-        \filldraw[fill=colorU] (0,0) -- (0,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (2,1) -- (2,0) -- cycle;
-
-        \begin{scope}[xshift=5cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-            \filldraw[fill=colorU] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (0,2) -- (0,3) -- (2,3) -- (2,0) -- cycle;
-        \end{scope}
-
-        \begin{scope}[yshift=4cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-            \filldraw[fill=colorU] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
-        \end{scope}
-
-        \begin{scope}[shift={(5cm,4cm)}]
-            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-            \filldraw[fill=colorU] (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,2) -- (0,2) -- cycle;
-        \end{scope}
-    \end{tikzpicture}
-    \caption{Orientations of U in a $3 \times 4$ (footnote: \protect\footnotemark)}
-\end{figure}
-
-\footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}
-
-We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not split the grid in two. So the three solutions given by \cite[6:04]{v2} are the only ones.
-
 
 A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \ref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
 
