@@ -46,6 +46,14 @@
 
 \definecolor{colorSecondary}{HTML}{440044}
 
+% place at end
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+% place after hyperref; exception
+\usepackage[capitalize,english]{cleveref}% english option is recommended in the Non-Bugs section
+
+% place newtheorem after cleveref, for proper detection
+
 % \theoremstyle{plain} % default
 \theoremstyle{definition}% not semantic, but removes italics
 \newtheorem{theorem}{Theorem}[section]
@@ -71,9 +79,6 @@
 \newcommand{\caves}{\operatorname{caves}}
 \newcommand{\outside}{\operatorname{outside}}
 
-% place at end
-\usepackage[colorlinks=true, allcolors=blue]{hyperref}
-
 \begin{document}
 \maketitle
 
@@ -91,9 +96,9 @@
 
 This paper will try to solve the Pentomino Pathfinding problem for various rectangular grids. See \cite{v1} and \cite{v2} for further introduction.
 
-\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares, place a subset of the twelve pentominoes (Figure~\ref{fig:pentominoes}), and endpoints A and B on the grid \minordetail{without overlaps} such that $\#^{p}_{n, m}$ = the length of (the shortest path \minordetail{of nonempty, orthogonal squares} from $A$ to $B$) is maximized.
+\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares, place a subset of the twelve pentominoes (\cref{fig:pentominoes}), and endpoints $A$ and $B$ on the grid \minordetail{without overlaps} such that $\#_{n, m}$ = the length of (the shortest path \minordetail{of nonempty, orthogonal squares} from $A$ to $B$) is maximized.
 
-The above notation is for the maximum length of any path given some placements $p$; the maximum length given all possible placements is denoted by $\#_{n, m}$, and when $n = m$, the notation is $\#_n$.
+The maximum length given some placements $p$ is denoted by $\#^{p}_{n, m}$; independently, when $n = m$, the row and column indices are collapsed: $\#_n$.
 
 \begin{figure}[htbp]
     \centering
@@ -112,7 +117,7 @@ The above notation is for the maximum length of any path given some placements $
 \section{No pentominoes}
 
 For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit.
-For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal. (Figure~\ref{fig:no123})
+For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal. (\Cref{fig:no123})
 
 \begin{figure}[htbp]
     \centering
@@ -217,7 +222,7 @@ Then the rectangle may be removed: $\#^{p}_{n, m} \le \#^{p - r}_{n, m}$
 \end{lemma}
 
 \begin{proof}
-The rectangle satisfies Lemma~\ref{lem:Border removal}, since $\adj(r)$ is zero, one, or two straight lines of squares by construction.
+The rectangle satisfies \cref{lem:Border removal}, since $\adj(r)$ is zero, one, or two straight lines of squares by construction.
 \end{proof}
 
 \begin{figure}[htbp!]
@@ -229,7 +234,7 @@ The rectangle satisfies Lemma~\ref{lem:Border removal}, since $\adj(r)$ is zero,
         \draw (3.5,3.5) node{$C$};
         \filldraw[fill=color4I] (2,0) rectangle (3,4);
     \end{tikzpicture}
-    \caption{Illustration for Lemma~\ref{lem:Rectangle cut}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
+    \caption{Illustration for \cref{lem:Rectangle cut}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
 \end{figure}
 
 \begin{conclusion}
@@ -237,7 +242,7 @@ And so, $\#_{1, n} = n$
 \end{conclusion}
 
 \begin{proof}
-The only piece that could possibly fit is the I~piece, which is removable thanks to Lemma~\ref{lem:Rectangle cut}.
+The only piece that could possibly fit is the I~piece, which is removable thanks to \cref{lem:Rectangle cut}.
 \end{proof}
 
 \begin{figure}[htbp!]
@@ -258,12 +263,12 @@ The only piece that could possibly fit is the I~piece, which is removable thanks
 
 \section{One pentomino}
 
-We know that Lemma~\ref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner.
+We know that \cref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner.
 
 \begin{theorem}
 \label{th:Corner removal}
 
-A platter $P$ is made of the set of squares $S$ and all squares to the bottom-left of any square in $S$. Then it satisfies Lemma~\ref{lem:Border removal}.
+A platter $P$ is made of the set of squares $S$ and all squares to the bottom-left of any square in $S$. Then it satisfies \cref{lem:Border removal}.
 \end{theorem}
 
 \begin{proof}
@@ -277,15 +282,15 @@ This construction may be rotated and reflected.
 \begin{theorem}[Cut corner removal]
 \label{th:Cut corner removal}
 
-This extends Theorem~\ref{th:Corner removal} to potentially apply to each ``\badterm{side}'' (i.e.\ subgrid border) of a platter that cuts the grid into subgrids.
+This extends \cref{th:Corner removal} to potentially apply to each ``\badterm{side}'' (i.e.\ subgrid border) of a platter that cuts the grid into subgrids.
 \end{theorem}
 
 \begin{proof}
-For each subgrid $s$, try applying Theorem~\ref{th:Corner removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\border(P)_s$, so this is valid for determining whether a path in $s$ can be improved.
+For each subgrid $s$, try applying \cref{th:Corner removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\border(P)_s$, so this is valid for determining whether a path in $s$ can be improved.
 \end{proof}
 
 \begin{note}
-If Theorem~\ref{th:Corner removal} applies to the entire border, then as a result the whole platter can be removed, since no path within any of the subgrids can be improved.
+If \cref{th:Corner removal} applies to the entire border, then as a result the whole platter can be removed, since no path within any of the subgrids can be improved.
 \end{note}
 
 \begin{figure}[htbp]
@@ -297,7 +302,7 @@ If Theorem~\ref{th:Corner removal} applies to the entire border, then as a resul
         \draw (2.5,0.5) node{$N$};
         \filldraw[fill=colorN] (0,1) -- (3,1) -- (3,0) -- (5,0) -- (5,1) -- (4,1) -- (4,2) -- (0,2) -- cycle;
     \end{tikzpicture}
-    \caption{Example for Theorem~\ref{th:Cut corner removal}: \minordetail{The pentomino} N divides the grid into two. For the purposes of the subgrid on the right, N may as well also include the subgrid on the left (marked with three $N$'s). This new platter satisfies Theorem~\ref{th:Corner removal}.}
+    \caption{Example for \cref{th:Cut corner removal}: \minordetail{The pentomino} N divides the grid into two. For the purposes of the subgrid on the right, N may as well also include the subgrid on the left (marked with three $N$'s). This new platter satisfies \cref{th:Corner removal}.}
 \end{figure}
 
 
@@ -306,7 +311,7 @@ If Theorem~\ref{th:Corner removal} applies to the entire border, then as a resul
 
 Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, P, N, U, and Y.
 
-By Theorem~\ref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas, so only I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
+By \cref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas, so only I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
 
 \begin{figure}[htbp!]
     \centering
@@ -377,7 +382,7 @@ A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgri
 \begin{theorem}[Ways to orient a pentomino]
 \label{th:Pentomino orientations}
 
-A square has 4 symmetries, so a platter has at most 8 orientations, ignoring location within a grid. However, some pentominoes have one or more symmetries, which reduce the possible orientations (Table~\ref{tab:pentomino orientations}).
+A square has 4 symmetries, so a platter has at most 8 orientations, ignoring location within a grid. However, some pentominoes have one or more symmetries, which reduce the possible orientations (\cref{tab:pentomino orientations}).
 
     \begin{table}[htbp]
         \centering
@@ -405,11 +410,11 @@ A square has 4 symmetries, so a platter has at most 8 orientations, ignoring loc
 \end{theorem}
 
 \begin{corollary}
-Theorem~\ref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P, T, and U, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since Theorem~\ref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (Figure \ref{fig:Reduced orientations})
+\Cref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P, T, and U, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since \cref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (\Cref{fig:Reduced orientations})
 \end{corollary}
 
 \begin{note}
-U satisfies a general version of Theorem~\ref{th:Cut corner removal} where both corners are covered.
+U satisfies a general version of \cref{th:Cut corner removal} where both corners are covered.
 \end{note}
 
 \begin{figure}
@@ -487,10 +492,10 @@ Say we know how many pentominoes are in a solution, and that all squares are use
 \end{lemma}
 
 \begin{proof}
-First, we take U from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since U has a cave square, we can say a path must end there. But if U is placed horizontally (2 rows by 3 columns, Figure~\ref{fig:u3x4}), it is at least as good to just go around the U (removing any obstacles).
+First, we take U from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since U has a cave square, we can say a path must end there. But if U is placed horizontally (2 rows by 3 columns, \cref{fig:u3x4}), it is at least as good to just go around the U (removing any obstacles).
 \begin{itemize}
     \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center.
-    \item If a pentomino that spans a $1 \times 4$ area (L, N, Y) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by Property~\ref{prop:cycineff}.\qedhere
+    \item If a pentomino that spans a $1 \times 4$ area (L, N, Y) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \cref{prop:cycineff}.\qedhere
 \end{itemize}
 \end{proof}
 
@@ -557,12 +562,12 @@ $\#_{3, 4} = 7$
 \end{theorem}
 
 \begin{proof}
-By Figure~\ref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, Lemma~\ref{lem:max3x3} applies. L, N, and Y can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
+By \cref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{lem:max3x3} applies. L, N, and Y can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
 
 We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
 \end{proof}
 
-A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But Figure~\ref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
+A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \cref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
 
 \begin{figure}
     \centering
