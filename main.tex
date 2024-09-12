@@ -6,7 +6,8 @@
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
+%\usepackage{soul}% highlight
 \usepackage{svg}
 \usepackage[normalem]{ulem}
 
@@ -16,7 +17,7 @@
 
 \usepackage{float}% [H] on figures
 \usepackage{placeins}% \FloatBarrier - do not have floats interrupting references
-\usepackage{booktabs}
+\usepackage{booktabs}% better tables
 \usepackage{marginnote}% parentheticals on the side
 % \usepackage{subcaption}% subfloats
 
@@ -43,14 +44,31 @@
 % tetromino colors
 % = colorU
 \definecolor{color4I}{HTML}{88CCCC}
+% = colorL
+\definecolor{color4O}{HTML}{CCCC88}
 
 \definecolor{colorSecondary}{HTML}{440044}
+
+% commands for pentominoes, to avoid needing to do "\@"
+% as a bonus this highlights them and clarifies that they are a pentomino
+\newcommand{\pentI}{\smash{\colorbox{colorI!50}{I}}}
+\newcommand{\pentF}{\smash{\colorbox{colorF!50}{F}}}% it fits AAA contrast a11y but still,
+\newcommand{\pentL}{\smash{\colorbox{colorL!50}{L}}}% 50% lighter for even further clarity
+\newcommand{\pentP}{\smash{\colorbox{colorP!50}{P}}}
+\newcommand{\pentN}{\smash{\colorbox{colorN!50}{N}}}
+\newcommand{\pentT}{\smash{\colorbox{colorT!50}{T}}}
+\newcommand{\pentU}{\smash{\colorbox{colorU!50}{U}}}
+\newcommand{\pentV}{\smash{\colorbox{colorV!50}{V}}}
+\newcommand{\pentW}{\smash{\colorbox{colorW!50}{W}}}
+\newcommand{\pentX}{\smash{\colorbox{colorX!50}{X}}}
+\newcommand{\pentY}{\smash{\colorbox{colorY!50}{Y}}}
+\newcommand{\pentZ}{\smash{\colorbox{colorZ!50}{Z}}}
 
 % place at end
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
 % place after hyperref; exception
-\usepackage[capitalize,english]{cleveref}% english option is recommended in the Non-Bugs section
+\usepackage[capitalize,noabbrev,english]{cleveref}% english option is recommended in the Non-Bugs section
 
 % place newtheorem after cleveref, for proper detection
 
@@ -72,6 +90,7 @@
 \newcommand{\newterm}[1]{\textit{#1}}
 \newcommand{\badterm}[1]{\textcolor{red}{\uwave{\textcolor{black}{#1}}}}
 
+% DeclareMathOperator but more simple
 \newcommand{\adj}{\operatorname{adj}}
 \newcommand{\holes}{\operatorname{holes}}
 \newcommand{\border}{\operatorname{border}}
@@ -104,8 +123,10 @@ The maximum length given some placements $p$ is denoted by $\#^{p}_{n, m}$; inde
     \centering
     \includesvg[width=0.5\linewidth]{All_18_Pentominoes.svg}
     \caption{The twelve pentominoes and their reflections \cite{pentominoes};
-    from left-to-right they are named I, F, L, P, N, T, U, V, W, X, Y, Z,
-    where F, L, P, N, Y, Z are chiral and have their reflections shown.}
+    from left-to-right they are named \pentI, \pentF, \pentL, \pentP, \pentN,
+    \pentT, \pentU, \pentV, \pentW, \pentX, \pentY, \pentZ, where
+    \pentF, \pentL, \pentP, \pentN, \pentY, \pentZ{} are chiral
+    and have their reflections shown.}
     \label{fig:pentominoes}
 \end{figure}
 
@@ -242,7 +263,7 @@ And so, $\#_{1, n} = n$
 \end{conclusion}
 
 \begin{proof}
-The only piece that could possibly fit is the I~piece, which is removable thanks to \cref{lem:Rectangle cut}.
+The only piece that could possibly fit is the \pentI~piece, which is removable thanks to \cref{lem:Rectangle cut}.
 \end{proof}
 
 \begin{figure}[htbp!]
@@ -302,16 +323,16 @@ If \cref{th:Corner removal} applies to the entire border, then as a result the w
         \draw (2.5,0.5) node{$N$};
         \filldraw[fill=colorN] (0,1) -- (3,1) -- (3,0) -- (5,0) -- (5,1) -- (4,1) -- (4,2) -- (0,2) -- cycle;
     \end{tikzpicture}
-    \caption{Example for \cref{th:Cut corner removal}: \minordetail{The pentomino} N divides the grid into two. For the purposes of the subgrid on the right, N may as well also include the subgrid on the left (marked with three $N$'s). This new platter satisfies \cref{th:Corner removal}.}
+    \caption{Example for \cref{th:Cut corner removal}: \minordetail{The pentomino} \pentN{} divides the grid into two. For the purposes of the subgrid on the right, \pentN{} may as well also include the subgrid on the left (marked with three $N$'s). This new platter satisfies \cref{th:Corner removal}.}
 \end{figure}
 
 
 
 \subsection{\texorpdfstring{$2 \times n$}{2 \texttimes\ n} grids}
 
-Consider a $2 \times n$ grid. The only pentominoes that fit are I, L, P, N, U, and Y.
+Consider a $2 \times n$ grid. The only pentominoes that fit are \pentI, \pentL, \pentP, \pentN, \pentU, and \pentY.
 
-By \cref{th:Cut corner removal} (Cut corner removal), L, P, N, U, and Y can be removed from consideration in $2 \times n$ areas, so only I is left. While placing I on the corner does not help, placing the I anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
+By \cref{th:Cut corner removal} (Cut corner removal), \pentL, \pentP, \pentN, \pentU, and \pentY{} can be removed from consideration in $2 \times n$ areas, so only \pentI{} is left. While placing \pentI{} on the corner does not help, placing \pentI{} anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
 
 \begin{figure}[htbp!]
     \centering
@@ -371,7 +392,7 @@ A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgri
 %        \draw (0.5,1.5) node{$B$};
         \draw (2.5,2.5) node{$C$};
     \end{tikzpicture}
-    \caption{U is the unique pentomino with a cave square.}
+    \caption{\pentU{} is the unique pentomino with a cave square.}
     \label{fig:ucave}
 \end{figure}
 %
@@ -391,18 +412,18 @@ A square has 4 symmetries, so a platter has at most 8 orientations, ignoring loc
             \toprule
             Pentomino & Symmetries & Orientations \\
             \midrule
-            X & 4 & 1 \\
-            I & 2 & 2 \\
-            T & 1 & 4 \\
-            U & 1 & 4 \\
-            V & 1 & 4 \\
-            W & 1 & 4 \\
-            Z & 1 & 4 \\
-            F & 0 & 8 \\
-            L & 0 & 8 \\
-            P & 0 & 8 \\
-            N & 0 & 8 \\
-            Y & 0 & 8 \\
+            \pentX{} & 4 & 1 \\
+            \pentI{} & 2 & 2 \\
+            \pentT{} & 1 & 4 \\
+            \pentU{} & 1 & 4 \\
+            \pentV{} & 1 & 4 \\
+            \pentW{} & 1 & 4 \\
+            \pentZ{} & 1 & 4 \\
+            \pentF{} & 0 & 8 \\
+            \pentL{} & 0 & 8 \\
+            \pentP{} & 0 & 8 \\
+            \pentN{} & 0 & 8 \\
+            \pentY{} & 0 & 8 \\
             \bottomrule
         \end{tabular}
         \label{tab:pentomino orientations}
@@ -410,11 +431,11 @@ A square has 4 symmetries, so a platter has at most 8 orientations, ignoring loc
 \end{theorem}
 
 \begin{corollary}
-\Cref{th:Cut corner removal} works for V, W, Z, the vertical orientations of P, T, and U, and one side of either orientation of F. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since \cref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (\Cref{fig:Reduced orientations})
+\Cref{th:Cut corner removal} works for \pentV, \pentW, \pentZ, the vertical orientations of \pentP, \pentT, and \pentU, and one side of either orientation of \pentF. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since \cref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (\Cref{fig:Reduced orientations})
 \end{corollary}
 
 \begin{note}
-U satisfies a general version of \cref{th:Cut corner removal} where both corners are covered.
+\pentU{} satisfies a general version of \cref{th:Cut corner removal} where both corners are covered.
 \end{note}
 
 \begin{figure}
@@ -459,7 +480,7 @@ U satisfies a general version of \cref{th:Cut corner removal} where both corners
             \end{scope}
         \end{scope}
     \end{tikzpicture}
-    \caption{All orientations of F, V, W, Z, P, and T in a $3 \times n$ after reducing by symmetry. The left side of both F's are ignorable, as well as \minordetail{both sides of} the right P and T. Additionally, the second F is strictly worse than the first F, since after filling in the ignorable subgrid, the first F practically replaces a wall with an empty square when compared to the second F.}
+    \caption{All orientations of \pentF, \pentV, \pentW, \pentZ, \pentP, and \pentT{} in a $3 \times n$ after reducing by symmetry. The left side of both \pentF's are ignorable, as well as \minordetail{both sides of} the right \pentP and \pentT. Additionally, the second \pentF{} is strictly worse than the first \pentF, since after filling in the ignorable subgrid, the first \pentF{} practically replaces a wall with an empty square when compared to the second \pentF.}
     \label{fig:Reduced orientations}
 \end{figure}
 
@@ -486,16 +507,16 @@ Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any soluti
 
 Say we know how many pentominoes are in a solution, and that all squares are used. Then:
 \begin{itemize}
-    \item F, X, and U are not part of the solution.
-    \item L, N, and Y must have their $1 \times 4$ in the middle row, if they are not adjacent to other pentominoes.
+    \item \pentF, \pentX, and \pentU{} are not part of the solution.
+    \item \pentL, \pentN, and \pentY{} must have their $1 \times 4$ in the middle row, if they are not adjacent to other pentominoes.
 \end{itemize}
 \end{lemma}
 
 \begin{proof}
-First, we take U from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since U has a cave square, we can say a path must end there. But if U is placed horizontally (2 rows by 3 columns, \cref{fig:u3x4}), it is at least as good to just go around the U (removing any obstacles).
+First, we take \pentU{} from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since \pentU{} has a cave square, we can say a path must end there. But if \pentU{} is placed horizontally (2 rows by 3 columns, \cref{fig:u3x4}), it is at least as good to just go around the \pentU{} (removing any obstacles).
 \begin{itemize}
-    \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for F and X, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center.
-    \item If a pentomino that spans a $1 \times 4$ area (L, N, Y) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \cref{prop:cycineff}.\qedhere
+    \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for \pentF{} and \pentX{}, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center.
+    \item If a pentomino that spans a $1 \times 4$ area (\pentL, \pentN, \pentY) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles (\cref{fig:1x4in3x4}) which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \cref{prop:cycineff}.\qedhere
 \end{itemize}
 \end{proof}
 
@@ -510,11 +531,23 @@ First, we take U from the first bullet point. If a path enters \minordetail{or e
             \filldraw[fill=colorU] (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,2) -- (0,2) -- cycle;
         \end{scope}
     \end{tikzpicture}
-    \caption{Horizontal orientations of U in a $3 \times 4$ (footnote: \protect\footnotemark)}
+    \caption{Horizontal orientations of \pentU{} in a $3 \times 4$ (footnote: \protect\footnotemark)}
     \label{fig:u3x4}
 \end{figure}
 
 \footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+        \filldraw[fill=color4I] (0,0) rectangle (4,1);
+        \draw[color4O] (0.5,1.5) rectangle (1.5,2.5);
+        \draw[color4O] (2.5,1.5) rectangle (3.5,2.5);
+    \end{tikzpicture}
+    \caption{Two disjoint $2 \times 2$ cycles existing after placing a $1 \times 4$ on the edge of a $3 \times 4$.}
+    \label{fig:1x4in3x4}
+\end{figure}
 
 \begin{figure}[htbp!]
     \centering
@@ -562,14 +595,14 @@ $\#_{3, 4} = 7$
 \end{theorem}
 
 \begin{proof}
-By \cref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{lem:max3x3} applies. L, N, and Y can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
+By \cref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{lem:max3x3} applies. \pentL, \pentN, and \pentY{} can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
 
-We are left with the pentominoes P and T. If P does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For T, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
+We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. If \pentP{} does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For \pentT, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
 \end{proof}
 
 A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \cref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (9,9);
@@ -602,15 +635,13 @@ A polynomial's \badterm{contribution} is informally how much longer it makes a g
         \draw (6.5,1.5) node{\textcolor{colorSecondary}{6}};
         \draw (7.5,1.5) node{$B$};
     \end{tikzpicture}
+    \caption{If the I pentomino was already placed, then adding the \pentW{} changes the path's length from 7 to 21. Nevertheless, \pentW's contribution $C($\pentW$) = 4$. Additionally, \pentW{} helps by blocking the bottom row. So some squares are spent on setup, and some on lengthening the path.}
     \label{fig:nontrivialcontribution}
-    \caption{If the I pentomino was already placed, then adding the W changes the path's length from 7 to 21. Nevertheless, W's contribution $C(\mathrm{W}) = 4$. Additionally, W helps by blocking the bottom row. So some squares are spent on setup, and some on lengthening the path.}
 \end{figure}
 
 % \subsection{How to add Comments and Track Changes}
 
 % Comments can be added to your project by highlighting some text and clicking ``Add comment'' in the top right of the editor pane. To view existing comments, click on the Review menu in the toolbar above. To reply to a comment, click on the Reply button in the lower right corner of the comment. You can close the Review pane by clicking its name on the toolbar when you're done reviewing for the time being.
-
-% Track changes are available on all our \href{https://www.overleaf.com/user/subscription/plans}{premium plans}, and can be toggled on or off using the option at the top of the Review pane. Track changes allow you to keep track of every change made to the document, along with the person making the change.
 
 % \subsection{How to add Lists}
 
