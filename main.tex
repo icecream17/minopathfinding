@@ -431,7 +431,9 @@ A square has 4 symmetries, so a platter has at most 8 orientations, ignoring loc
 \end{theorem}
 
 \begin{corollary}
-\Cref{th:Cut corner removal} works for \pentV, \pentW, \pentZ, the vertical orientations of \pentP, \pentT, and \pentU, and one side of either orientation of \pentF. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since \cref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (\Cref{fig:Reduced orientations})
+\label{cor:cutcorner3xn}
+
+In a $3 \times n$, \cref{th:Cut corner removal} works for \pentV, \pentW, \pentZ, the vertical orientations of \pentP, \pentT, and \pentU, and one side of either orientation of \pentF. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since \cref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (\Cref{fig:Reduced orientations})
 \end{corollary}
 
 \begin{note}
@@ -513,7 +515,7 @@ Say we know how many pentominoes are in a solution, and that all squares are use
 \end{lemma}
 
 \begin{proof}
-First, we take \pentU{} from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since \pentU{} has a cave square, we can say a path must end there. But if \pentU{} is placed horizontally (2 rows by 3 columns, \cref{fig:u3x4}), it is at least as good to just go around the \pentU{} (removing any obstacles).
+First, we take \pentU{} from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since \pentU{} has a cave square, we can say a path must end there. Placing \pentU{} vertically is eliminated by \cref{cor:cutcorner3xn}. But if \pentU{} is placed horizontally (2 rows by 3 columns, \cref{fig:u3x4}), it is at least as good to just go around the \pentU{} (removing any obstacles).
 \begin{itemize}
     \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for \pentF{} and \pentX{}, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center.
     \item If a pentomino that spans a $1 \times 4$ area (\pentL, \pentN, \pentY) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles (\cref{fig:1x4in3x4}) which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \cref{prop:cycineff}.\qedhere
