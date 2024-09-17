@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.9)  12 SEP 2024 10:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.9)  17 SEP 2024 07:17
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1215,17 +1215,11 @@ used on input line 56.
 
 {C:/Users/Steven/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./svg-inksc
 ape/All_18_Pentominoes_svg-tex.pdf>]
-Package marginnote Info: Margin note 2.1 is on absolute page 2 on input line 20
-2.
-Package marginnote Info: right page because not two side mode on input line 202
+Package marginnote Info: Margin note 2.1 is on absolute page 2 on input line 22
+6.
+Package marginnote Info: right page because not two side mode on input line 226
 .
-Package marginnote Info: xpos seems to be 512.14961pt on input line 202.
-
-Overfull \hbox (2.87578pt too wide) in paragraph at lines 266--267
-[]\OT1/cmr/m/n/10 The only piece that could pos-si-bly fit is the [] piece, whi
-ch is re-mov-able thanks to Lemma [][]2.7[][].
- []
-
+Package marginnote Info: xpos seems to be 512.14961pt on input line 226.
 
 
 [2]
@@ -1238,7 +1232,9 @@ ch is re-mov-able thanks to Lemma [][]2.7[][].
 
 [6]
 
-[7] (main.aux
+[7]
+
+[8] (main.aux
 Package cleveref Info: loaded `english' language definitions on input line 21.
 )
  ***********
@@ -1252,9 +1248,9 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32503 strings out of 473898
- 633509 string characters out of 5726008
- 1951960 words of memory out of 5000000
+ 32507 strings out of 473898
+ 633528 string characters out of 5726008
+ 1952960 words of memory out of 5000000
  54827 multiletter control sequences out of 15000+600000
  564708 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1267,23 +1263,24 @@ ts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/Steven/AppData/Local/Programs
 /MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Steven/AppData/Loca
 l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/Steven/Ap
 pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/
-Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><
+Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><
 C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-r12.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmr17.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmr5.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmr6.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Steven/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Steven/AppData/Local
-/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Steven/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/S
-teven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><
-C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-tt10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
-onts/latxfont/lasy6.pfb>
-Output written on main.pdf (7 pages, 271406 bytes).
+r10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr12.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmr17.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmr5.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Steven/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Steven/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Steven/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/S
+teven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
+:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmt
+i10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmtt10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/latxfont/lasy6.pfb>
+Output written on main.pdf (8 pages, 282847 bytes).
 PDF statistics:
- 269 PDF objects out of 1000 (max. 8388607)
- 53 named destinations out of 1000 (max. 500000)
+ 283 PDF objects out of 1000 (max. 8388607)
+ 57 named destinations out of 1000 (max. 500000)
  63 words of extra memory for PDF output out of 10000 (max. 10000000)
 

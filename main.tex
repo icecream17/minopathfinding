@@ -115,7 +115,7 @@
 
 This paper will try to solve the Pentomino Pathfinding problem for various rectangular grids. See \cite{v1} and \cite{v2} for further introduction.
 
-\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares, place a subset of the twelve pentominoes (\cref{fig:pentominoes}), and endpoints $A$ and $B$ on the grid \minordetail{without overlaps} such that $\#_{n, m}$ = the length of (the shortest path \minordetail{of nonempty, orthogonal squares} from $A$ to $B$) is maximized.
+\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares or \newterm{cells}, place a subset of the twelve pentominoes (\cref{fig:pentominoes}), and endpoints $A$ and $B$ on the grid \minordetail{without overlaps} such that $\#_{n, m}$ = the length of (the shortest path \minordetail{of nonempty, orthogonal cells} from $A$ to $B$) is maximized.
 
 The maximum length given some placements $p$ is denoted by $\#^{p}_{n, m}$; independently, when $n = m$, the row and column indices are collapsed: $\#_n$.
 
@@ -138,7 +138,7 @@ The maximum length given some placements $p$ is denoted by $\#^{p}_{n, m}$; inde
 \section{No pentominoes}
 
 For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit.
-For $n$ = 3, 9 squares minus a pentomino is 4 squares, so the length 5 path is optimal. (\Cref{fig:no123})
+For $n$ = 3, 9 cells minus a pentomino is 4 squares, so the length 5 path is optimal. (\Cref{fig:no123})
 
 \begin{figure}[htbp]
     \centering
@@ -188,6 +188,30 @@ Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1
     \end{tikzpicture}
     \label{fig:no2x5}
 \end{figure}
+
+And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, but using at least one pentomino only leaves you with at most one square to work with.
+
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (1,1);
+        \draw[step=1cm,black,very thin] (2,0) grid (3,1);
+        \draw (0.5,0.5) node{1};
+        \draw (1.5,0.5) node{$\cdots$};
+        \draw (2.5,0.5) node{$n$};
+    \end{tikzpicture}
+    \caption{$\#_{1, n} = n$ (footnote: \protect\footnotemark) \cite{sheet}}
+\end{figure}
+
+\footnotetext{The figure assumes $n > 1$ but that's not necessary of course.}
+
+
+
+
+
+\section{One pentomino}
+
+We'll start with proving some useful things about pentominoes in small grids.
 
 \begin{definition}[Adjacency]
 Two squares are \newterm{adjacent} iff they are one square diagonally or orthogonally apart. Two squares are \newterm{orthogonal} iff they are adjacent but not diagonally so. Two sets of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (Cartesian product) such that $s$ and $t$ are adjacent. The squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
@@ -258,33 +282,7 @@ The rectangle satisfies \cref{lem:Border removal}, since $\adj(r)$ is zero, one,
     \caption{Illustration for \cref{lem:Rectangle cut}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
 \end{figure}
 
-\begin{conclusion}
-And so, $\#_{1, n} = n$
-\end{conclusion}
-
-\begin{proof}
-The only piece that could possibly fit is the \pentI~piece, which is removable thanks to \cref{lem:Rectangle cut}.
-\end{proof}
-
-\begin{figure}[htbp!]
-    \centering
-    \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (1,1);
-        \draw[step=1cm,black,very thin] (2,0) grid (3,1);
-        \draw (0.5,0.5) node{1};
-        \draw (1.5,0.5) node{$\cdots$};
-        \draw (2.5,0.5) node{$n$};
-    \end{tikzpicture}
-    \caption{$\#_{1, n} = n$ (where $1 < n$). \cite{sheet}}
-\end{figure}
-
-
-
-
-
-\section{One pentomino}
-
-We know that \cref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner.
+We know that \cref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner:
 
 \begin{theorem}
 \label{th:Corner removal}
@@ -504,13 +502,19 @@ With nothing placed, we have $\#^{\emptyset}_{n, m} = n + m - 1$
 Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any solution must contain one pentomino.
 \end{property}
 
-\begin{lemma}[Maximal solutions in $3 \times n$ grids]
-\label{lem:max3x3}
+\begin{definition}[Brimming solution]
+\label{def:brimming}
 
-Say we know how many pentominoes are in a solution, and that all squares are used. Then:
+A solution is \newterm{brimming} when every square in the grid is used, i.e, every square corresponds to either a pentomino or the path.
+\end{definition}
+
+\begin{lemma}[Brimming solutions in $3 \times n$ grids]
+\label{lem:brim3xn}
+
+Say we know how many pentominoes are in a solution, and that all squares are used. Then we know any solution must be brimming, and so:
 \begin{itemize}
     \item \pentF, \pentX, and \pentU{} are not part of the solution.
-    \item \pentL, \pentN, and \pentY{} must have their $1 \times 4$ in the middle row, if they are not adjacent to other pentominoes.
+    \item \pentL, \pentN, and \pentY{} must have their $1 \times 4$ in the middle row, if none of the columns the pentomino is in contains any part of another pentomino.
 \end{itemize}
 \end{lemma}
 
@@ -551,7 +555,7 @@ First, we take \pentU{} from the first bullet point. If a path enters \minordeta
     \label{fig:1x4in3x4}
 \end{figure}
 
-\begin{figure}[htbp!]
+\begin{figure}
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (4,3);
@@ -597,11 +601,23 @@ $\#_{3, 4} = 7$
 \end{theorem}
 
 \begin{proof}
-By \cref{fig:3x4}, we have maximal solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{lem:max3x3} applies. \pentL, \pentN, and \pentY{} can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
+By \cref{fig:3x4}, we have brimming solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{prop:oneplace} and therefore \cref{lem:brim3xn} applies. \pentL, \pentN, and \pentY{} can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
 
-We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. If \pentP{} does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch the corner, and two work. For \pentT, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
+We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. If \pentP{} does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch a specific corner including symmetry, and two (the horizontal placements) work. For \pentT, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
 \end{proof}
 
+\begin{theorem}
+When a solution is brimming with only one pentomino, for grids with at least 3 columns and 4 rows, for any corner square, the pentomino must include the square diagonally adjacent to that corner square.
+\end{theorem}
+
+\begin{proof}
+
+\end{proof}
+
+
+
+
+\newpage
 A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \cref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
 
 \begin{figure}[htbp]
