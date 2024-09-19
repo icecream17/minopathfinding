@@ -22,6 +22,7 @@
 % \usepackage{subcaption}% subfloats
 
 \usepackage{tikz}
+\usetikzlibrary{patterns.meta}% striped cell
 \usetikzlibrary{matrix, positioning}
 
 \title{Pentomino Pathfinding}
@@ -189,7 +190,7 @@ Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1
     \label{fig:no2x5}
 \end{figure}
 
-And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, but using at least one pentomino only leaves you with at most one square to work with.
+And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, and as each pentomino costs 5 squares the best solution is 0 pentominoes.
 
 \begin{figure}[htbp!]
     \centering
@@ -555,6 +556,44 @@ First, we take \pentU{} from the first bullet point. If a path enters \minordeta
     \label{fig:1x4in3x4}
 \end{figure}
 
+\begin{theorem}
+\label{th:brimming1u}
+
+When a solution is brimming with only one pentomino, that pentomino is not \pentU.
+\end{theorem}
+
+\begin{proof}
+In a brimming solution, there are no empty cells adjacent to three other cells. This is because the graph of a brimming solution must be isomorphic to a straight line, as otherwise, either one end of the line ever became adjacent to some earlier square in the graph, forming a loop, or the graph has something that branches off like a fork in the road, and so any path will not include all squares.
+
+\pentU{} has a cave square. If the cave square is adjacent to some empty square, then a rectangular grid must include two more empty squares adjacent to it, violating the three other cells property. Therefore, the empty square is lonely. If it is the only empty square, the grid is a $2 \times 3$ so this holds. If it isn't, there are two subgrids of empty squares, so the placement is not brimming.
+\end{proof}
+
+\begin{theorem}
+\label{th:brimming1}
+
+When a solution is brimming with only one pentomino, for grids with at least 3 columns and 4 rows, the pentomino must include all squares diagonally adjacent to a corner square.
+\end{theorem}
+
+\begin{proof}
+%This is true for $3 \times 4$ as shown by \cref{fig:3x4}.
+Say one of the squares diagonally adjacent to a corner square is not part of the pentomino: one square diagonally from the top left square, for example without loss of generality.
+
+If we do not use the square to the right of that (the $C$ in \cref{fig:brimming1}), then within the $3 \times 4$ there is no way to include its $2 \times 2$ regions containing its corner squares. However, even starting from $C$ the only way to reach the left hand side $2 \times 2$'s is to use the \pentU{} \minordetail{pentomino}, which is not valid by \cref{th:brimming1u}.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+        \filldraw[white, postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray}] (1,1) rectangle (2,2);
+        \filldraw[fill=colorU] (1,0) -- (3,0) -- (3,3) -- (1,3) -- (1,2) -- (2,2) -- (2,1) -- (1,1) -- cycle;
+        \draw (1.5,0.5) node{$A$};
+        \draw (1.5,2.5) node{$B$};
+        \draw (2.5,1.5) node{$C$};
+    \end{tikzpicture}
+    \caption{Illustration for \cref{th:brimming1}: this is the top left $3 \times 4$ of a grid with size at least $3 \times 4$.}
+    \label{fig:brimming1}
+\end{figure}
+\end{proof}
+
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -603,15 +642,7 @@ $\#_{3, 4} = 7$
 \begin{proof}
 By \cref{fig:3x4}, we have brimming solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{prop:oneplace} and therefore \cref{lem:brim3xn} applies. \pentL, \pentN, and \pentY{} can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
 
-We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. If \pentP{} does not touch the corner, after placing the $2 \times 2$, the 5th square must divide the grid in two. There are four ways to touch a specific corner including symmetry, and two (the horizontal placements) work. For \pentT, there is only one orientation that does not cut the grid. So the three solutions given by \cite[6:04]{v2} are the only ones.
-\end{proof}
-
-\begin{theorem}
-When a solution is brimming with only one pentomino, for grids with at least 3 columns and 4 rows, for any corner square, the pentomino must include the square diagonally adjacent to that corner square.
-\end{theorem}
-
-\begin{proof}
-
+We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. By \cref{th:brimming1}, they must include the center two squares. All orientations of \pentP{} and \pentT{} with this restriction works, and so the three solutions given by \cite[6:04]{v2} are the only ones.
 \end{proof}
 
 

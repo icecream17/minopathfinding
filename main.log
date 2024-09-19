@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.9)  17 SEP 2024 07:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.9.9)  19 SEP 2024 07:08
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -935,6 +935,10 @@ kz/libraries\tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )))
 (C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarypatterns.meta.code.tex
+(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
+rarypatterns.meta.code.tex))
+(C:\Users\Steven\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
 kz/libraries\tikzlibrarymatrix.code.tex
 File: tikzlibrarymatrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
@@ -1083,24 +1087,24 @@ Package csquotes Info: Redefining alias 'default' -> 'english'.
 (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1185,9 +1189,9 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 101.
-Package biblatex Info: Reference segment=0 on input line 101.
-Package hyperref Info: Link coloring ON on input line 101.
+Package biblatex Info: Reference section=0 on input line 102.
+Package biblatex Info: Reference segment=0 on input line 102.
+Package hyperref Info: Link coloring ON on input line 102.
  (main.out) (main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
@@ -1199,7 +1203,7 @@ Package cleveref Info: loaded `english' language definitions on input line 1.
 \openout6 = `main.toc'.
 
 Package svg Info: Last page of `./svg-inkscape/All_18_Pentominoes_svg-tex.pdf' 
-is 1 on input line 124.
+is 1 on input line 125.
 
 (svg-inkscape/All_18_Pentominoes_svg-tex.pdf_tex
 <./svg-inkscape/All_18_Pentominoes_svg-tex.pdf, id=36, page=1, 604.50844pt x 19
@@ -1216,10 +1220,10 @@ used on input line 56.
 {C:/Users/Steven/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./svg-inksc
 ape/All_18_Pentominoes_svg-tex.pdf>]
 Package marginnote Info: Margin note 2.1 is on absolute page 2 on input line 22
-6.
-Package marginnote Info: right page because not two side mode on input line 226
+7.
+Package marginnote Info: right page because not two side mode on input line 227
 .
-Package marginnote Info: xpos seems to be 512.14961pt on input line 226.
+Package marginnote Info: xpos seems to be 512.14961pt on input line 227.
 
 
 [2]
@@ -1248,10 +1252,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 32507 strings out of 473898
- 633528 string characters out of 5726008
+ 32669 strings out of 473898
+ 638230 string characters out of 5726008
  1952960 words of memory out of 5000000
- 54827 multiletter control sequences out of 15000+600000
+ 54981 multiletter control sequences out of 15000+600000
  564708 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,11n,93p,970b,2142s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1278,9 +1282,9 @@ teven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C
 i10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
 nts/cm/cmtt10.pfb><C:/Users/Steven/AppData/Local/Programs/MiKTeX/fonts/type1/pu
 blic/amsfonts/latxfont/lasy6.pfb>
-Output written on main.pdf (8 pages, 282847 bytes).
+Output written on main.pdf (8 pages, 286251 bytes).
 PDF statistics:
- 283 PDF objects out of 1000 (max. 8388607)
- 57 named destinations out of 1000 (max. 500000)
- 63 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 291 PDF objects out of 1000 (max. 8388607)
+ 59 named destinations out of 1000 (max. 500000)
+ 67 words of extra memory for PDF output out of 10000 (max. 10000000)
 
