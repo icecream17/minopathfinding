@@ -506,7 +506,7 @@ Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any soluti
 \begin{definition}[Brimming solution]
 \label{def:brimming}
 
-A solution is \newterm{brimming} when every square in the grid is used, i.e, every square corresponds to either a pentomino or the path.
+A solution is \newterm{brimming} when every square in the grid is used, i.e, every square corresponds to either a pentomino or the path. In graph theory terms, the path is a Hamiltonian path among the empty squares.
 \end{definition}
 
 \begin{lemma}[Brimming solutions in $3 \times n$ grids]
@@ -542,7 +542,7 @@ First, we take \pentU{} from the first bullet point. If a path enters \minordeta
     \label{fig:u3x4}
 \end{figure}
 
-\footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}
+\footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}% \marginnote did not fit
 
 \begin{figure}
     \centering
@@ -571,7 +571,7 @@ In a brimming solution, there are no empty cells adjacent to three other cells. 
 \begin{theorem}
 \label{th:brimming1}
 
-When a solution is brimming with only one pentomino, for grids with at least 3 columns and 4 rows, the pentomino must include all squares diagonally adjacent to a corner square.
+When a solution is brimming with only one pentomino, for grids with at least 3 columns and 4 rows, the pentomino must include all squares diagonally adjacent to a corner square of any ($3 \times 4$)-subgrid.
 \end{theorem}
 
 \begin{proof}
@@ -598,28 +598,16 @@ If we do not use the square to the right of that (the $C$ in \cref{fig:brimming1
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-        \draw (2.5,2.5) node{1};
-        \draw (1.5,2.5) node{2};
-        \draw (0.5,2.5) node{3};
-        \draw (0.5,1.5) node{4};
-        \draw (0.5,0.5) node{5};
-        \draw (1.5,0.5) node{6};
-        \draw (2.5,0.5) node{7};
-        \filldraw[fill=colorT] (3,0) -- (4,0) -- (4,3) -- (3,3) -- (3,2) -- (1,2) -- (1,1) -- (3,1) -- cycle;
+        \draw (3.5,1.5) node{1};
+        \draw (3.5,2.5) node{2};
+        \draw (2.5,2.5) node{3};
+        \draw (1.5,2.5) node{4};
+        \draw (0.5,2.5) node{5};
+        \draw (0.5,1.5) node{6};
+        \draw (0.5,0.5) node{7};
+        \filldraw[fill=colorP] (1,2) -- (1,0) -- (4,0) -- (4,1) -- (3,1) -- (3,2) -- cycle;
 
         \begin{scope}[xshift=5cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-            \draw (3.5,1.5) node{1};
-            \draw (3.5,2.5) node{2};
-            \draw (2.5,2.5) node{3};
-            \draw (1.5,2.5) node{4};
-            \draw (0.5,2.5) node{5};
-            \draw (0.5,1.5) node{6};
-            \draw (0.5,0.5) node{7};
-            \filldraw[fill=colorP] (1,2) -- (1,0) -- (4,0) -- (4,1) -- (3,1) -- (3,2) -- cycle;
-        \end{scope}
-
-        \begin{scope}[xshift=10cm]
             \draw[step=1cm,black,very thin] (0,0) grid (4,3);
             \draw (3.5,2.5) node{1};
             \draw (2.5,2.5) node{2};
@@ -629,6 +617,18 @@ If we do not use the square to the right of that (the $C$ in \cref{fig:brimming1
             \draw (0.5,0.5) node{6};
             \draw (1.5,0.5) node{7};
             \filldraw[fill=colorP] (1,2) -- (1,1) -- (2,1) -- (2,0) -- (4,0) -- (4,2) -- cycle;
+        \end{scope}
+
+        \begin{scope}[xshift=10cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+            \draw (2.5,2.5) node{1};
+            \draw (1.5,2.5) node{2};
+            \draw (0.5,2.5) node{3};
+            \draw (0.5,1.5) node{4};
+            \draw (0.5,0.5) node{5};
+            \draw (1.5,0.5) node{6};
+            \draw (2.5,0.5) node{7};
+            \filldraw[fill=colorT] (3,0) -- (4,0) -- (4,3) -- (3,3) -- (3,2) -- (1,2) -- (1,1) -- (3,1) -- cycle;
         \end{scope}
     \end{tikzpicture}
     \caption{$\#_{3, 4} = 7$. \cite[6:04]{v2}}
@@ -640,10 +640,71 @@ $\#_{3, 4} = 7$
 \end{theorem}
 
 \begin{proof}
+\label{th:3x4}
+
 By \cref{fig:3x4}, we have brimming solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{prop:oneplace} and therefore \cref{lem:brim3xn} applies. \pentL, \pentN, and \pentY{} can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
 
 We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. By \cref{th:brimming1}, they must include the center two squares. All orientations of \pentP{} and \pentT{} with this restriction works, and so the three solutions given by \cite[6:04]{v2} are the only ones.
 \end{proof}
+
+
+\begin{theorem}
+$\#_{3, 5} = 10$
+\end{theorem}
+
+\begin{proof}
+We have a similar setup to \cref{th:3x4}, but with the examples from \cref{fig:3x5}, $3 + 5 - 1, 15 - 10 < 10$, and still \cref{prop:oneplace} and \cref{lem:brim3xn}; and by \cref{th:brimming1} all solutions must include the center three squares. If the two additional squares are not orthogonally adjacent, it would split the grid into two, so the three solutions given by \cite[6:10]{v2} are the only ones.
+\end{proof}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[step=1cm,black,very thin] (0,0) grid (5,3);
+        \draw (1.5,2.5) node{1};
+        \draw (2.5,2.5) node{2};
+        \draw (3.5,2.5) node{3};
+        \draw (4.5,2.5) node{4};
+        \draw (4.5,1.5) node{5};
+        \draw (4.5,0.5) node{6};
+        \draw (3.5,0.5) node{7};
+        \draw (2.5,0.5) node{8};
+        \draw (1.5,0.5) node{9};
+        \draw (0.5,0.5) node{10};
+        \filldraw[fill=colorL] (0,1) -- (0,3) -- (1,3) -- (1,2) -- (4,2) -- (4,1) -- cycle;
+
+        \begin{scope}[xshift=6cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (5,3);
+            \draw (2.5,2.5) node{1};
+            \draw (3.5,2.5) node{2};
+            \draw (4.5,2.5) node{3};
+            \draw (4.5,1.5) node{4};
+            \draw (4.5,0.5) node{5};
+            \draw (3.5,0.5) node{6};
+            \draw (2.5,0.5) node{7};
+            \draw (1.5,0.5) node{8};
+            \draw (0.5,0.5) node{9};
+            \draw (0.5,1.5) node{10};
+            \filldraw[fill=colorN] (0,2) -- (0,3) -- (2,3) -- (2,2) -- (4,2) -- (4,1) -- (1,1) -- (1,2) -- cycle;
+        \end{scope}
+
+        \begin{scope}[xshift=12cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (5,3);
+            \draw (3.5,2.5) node{10};
+            \draw (4.5,2.5) node{9};
+            \draw (4.5,1.5) node{8};
+            \draw (4.5,0.5) node{7};
+            \draw (3.5,0.5) node{6};
+            \draw (2.5,0.5) node{5};
+            \draw (1.5,0.5) node{4};
+            \draw (0.5,0.5) node{3};
+            \draw (0.5,1.5) node{2};
+            \draw (0.5,2.5) node{1};
+            \filldraw[fill=colorP] (1,1) -- (1,3) -- (3,3) -- (3,2) -- (4,2) -- (4,1) -- cycle;
+        \end{scope}
+    \end{tikzpicture}
+    \caption{$\#_{3, 5} = 10$. \cite[6:10]{v2}}
+    \label{fig:3x5}
+\end{figure}
 
 
 
