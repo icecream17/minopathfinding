@@ -399,92 +399,6 @@ A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgri
 %A platter is \newterm{convex} iff it has no caves.
 %\end{definition}
 
-\begin{theorem}[Ways to orient a pentomino]
-\label{th:Pentomino orientations}
-
-A square has 4 symmetries, so a platter has at most 8 orientations, ignoring location within a grid. However, some pentominoes have one or more symmetries, which reduce the possible orientations (\cref{tab:pentomino orientations}).
-
-    \begin{table}[htbp]
-        \centering
-        \caption{Number of ways to orient each pentomino. \cite[0:41]{v1}}
-        \begin{tabular}{ccc}
-            \toprule
-            Pentomino & Symmetries & Orientations \\
-            \midrule
-            \pentX{} & 4 & 1 \\
-            \pentI{} & 2 & 2 \\
-            \pentT{} & 1 & 4 \\
-            \pentU{} & 1 & 4 \\
-            \pentV{} & 1 & 4 \\
-            \pentW{} & 1 & 4 \\
-            \pentZ{} & 1 & 4 \\
-            \pentF{} & 0 & 8 \\
-            \pentL{} & 0 & 8 \\
-            \pentP{} & 0 & 8 \\
-            \pentN{} & 0 & 8 \\
-            \pentY{} & 0 & 8 \\
-            \bottomrule
-        \end{tabular}
-        \label{tab:pentomino orientations}
-    \end{table}
-\end{theorem}
-
-\begin{corollary}
-\label{cor:cutcorner3xn}
-
-In a $3 \times n$, \cref{th:Cut corner removal} works for \pentV, \pentW, \pentZ, the vertical orientations of \pentP, \pentT, and \pentU, and one side of either orientation of \pentF. Note that we may reflect the entire grid itself along both a vertical and horizontal axis, since \cref{th:Cut corner removal} works after reflection. This reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}. (\Cref{fig:Reduced orientations})
-\end{corollary}
-
-\begin{note}
-\pentU{} satisfies a general version of \cref{th:Cut corner removal} where both corners are covered.
-\end{note}
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{scope}[xshift=1cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (11,3);
-            \filldraw[fill=colorV] (0,0) -- (3,0) -- (3,1) -- (1,1) -- (1,3) -- (0,3) -- cycle;
-
-            \begin{scope}[xshift=4cm]
-            \filldraw[fill=colorW] (0,0) -- (2,0) -- (2,1) -- (3,1) -- (3,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (0,1) -- cycle;
-            \end{scope}
-
-            \begin{scope}[xshift=8cm]
-            \filldraw[fill=colorZ] (0,0) -- (2,0) -- (2,2) -- (3,2) -- (3,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
-            \end{scope}
-        \end{scope}
-
-        \begin{scope}[yshift=-4cm]
-            \draw[step=1cm,black,very thin] (-1,0) grid (14,3);
-            \filldraw[fill=colorP] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,2) -- (0,2) -- cycle;
-
-            \begin{scope}[xshift=4cm]
-            \filldraw[fill=colorP] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (2,2) -- (2,0) -- cycle;
-            \end{scope}
-
-            \begin{scope}[xshift=7cm]
-            \filldraw[fill=colorT] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (3,2) -- (3,1) -- (1,1) -- (1,0) -- cycle;
-            \end{scope}
-
-            \begin{scope}[xshift=11cm]
-            \filldraw[fill=colorT] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
-            \end{scope}
-        \end{scope}
-
-        \begin{scope}[shift={(3cm,4cm)}]
-            \draw[step=1cm,black,very thin] (0,0) grid (7,3);
-            \filldraw[fill=colorF] (0,0) -- (1,0) -- (1,1) -- (3,1) -- (3,2) -- (2,2) -- (2,3) -- (1,3) -- (1,2) -- (0,2) -- cycle;
-
-            \begin{scope}[xshift=4cm]
-            \filldraw[fill=colorF] (0,0) -- (0,1) -- (1,1) -- (1,3) -- (2,3) -- (2,2) -- (3,2) -- (3,1) -- (2,1) -- (2,0) -- cycle;
-            \end{scope}
-        \end{scope}
-    \end{tikzpicture}
-    \caption{All orientations of \pentF, \pentV, \pentW, \pentZ, \pentP, and \pentT{} in a $3 \times n$ after reducing by symmetry. The left side of both \pentF's are ignorable, as well as \minordetail{both sides of} the right \pentP and \pentT. Additionally, the second \pentF{} is strictly worse than the first \pentF, since after filling in the ignorable subgrid, the first \pentF{} practically replaces a wall with an empty square when compared to the second \pentF.}
-    \label{fig:Reduced orientations}
-\end{figure}
-
 \begin{property}[Cycle inefficiency]
 \label{prop:cycineff}
 
@@ -506,55 +420,14 @@ Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any soluti
 \begin{definition}[Brimming solution]
 \label{def:brimming}
 
-A solution is \newterm{brimming} when every square in the grid is used, i.e, every square corresponds to either a pentomino or the path. In graph theory terms, the path is a Hamiltonian path among the empty squares.
+A \newterm{solution} (set of placements) is \newterm{brimming} when every square in the grid is used, i.e, every square corresponds to either a pentomino or the path. \minordetail{In graph theory terms, the path is a Hamiltonian path among the empty squares.}
 \end{definition}
 
-\begin{lemma}[Brimming solutions in $3 \times n$ grids]
-\label{lem:brim3xn}
+\begin{property}[A brimming solution gives a strict upper bound for the number of pentominoes]
+\label{prop:brimmax}
 
-Say we know how many pentominoes are in a solution, and that all squares are used. Then we know any solution must be brimming, and so:
-\begin{itemize}
-    \item \pentF, \pentX, and \pentU{} are not part of the solution.
-    \item \pentL, \pentN, and \pentY{} must have their $1 \times 4$ in the middle row, if none of the columns the pentomino is in contains any part of another pentomino.
-\end{itemize}
-\end{lemma}
-
-\begin{proof}
-First, we take \pentU{} from the first bullet point. If a path enters \minordetail{or exits} a cave square \minordetail{(enters without loss of generality)}, it cannot exit since there is only one entrance. Since \pentU{} has a cave square, we can say a path must end there. Placing \pentU{} vertically is eliminated by \cref{cor:cutcorner3xn}. But if \pentU{} is placed horizontally (2 rows by 3 columns, \cref{fig:u3x4}), it is at least as good to just go around the \pentU{} (removing any obstacles).
-\begin{itemize}
-    \item Pentominoes must be placed so that the grid is \emph{not} split into two. This is impossible for \pentF{} and \pentX{}, which span a $1 \times 3$ area with two squares padding each side of the $1 \times 3$, forcing the $1 \times 3$ into the center.
-    \item If a pentomino that spans a $1 \times 4$ area (\pentL, \pentN, \pentY) has their $1 \times 4$ on the edge of the grid, there are two disjoint $2 \times 2$ cycles (\cref{fig:1x4in3x4}) which cannot be prevented by the remaining square of the pentomino and no help from other pentominoes. But this is not allowed by \cref{prop:cycineff}.\qedhere
-\end{itemize}
-\end{proof}
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-        \filldraw[fill=colorU] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
-
-        \begin{scope}[xshift=5cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-            \filldraw[fill=colorU] (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,2) -- (0,2) -- cycle;
-        \end{scope}
-    \end{tikzpicture}
-    \caption{Horizontal orientations of \pentU{} in a $3 \times 4$ (footnote: \protect\footnotemark)}
-    \label{fig:u3x4}
-\end{figure}
-
-\footnotetext{film2860 on discord used gpt-4o to try to remove pixel artifacts. It generated equivalent code, which did not fix the problem, but did illustrate the usage of scopes which was helpful as a beginner. So congrats on contributing!}% \marginnote did not fit
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-        \filldraw[fill=color4I] (0,0) rectangle (4,1);
-        \draw[color4O] (0.5,1.5) rectangle (1.5,2.5);
-        \draw[color4O] (2.5,1.5) rectangle (3.5,2.5);
-    \end{tikzpicture}
-    \caption{Two disjoint $2 \times 2$ cycles existing after placing a $1 \times 4$ on the edge of a $3 \times 4$.}
-    \label{fig:1x4in3x4}
-\end{figure}
+If a solution is brimming, any further placements can only decrease the path length.
+\end{property}
 
 \begin{theorem}
 \label{th:brimming1u}
@@ -563,40 +436,73 @@ When a solution is brimming with only one pentomino, that pentomino is not \pent
 \end{theorem}
 
 \begin{proof}
-In a brimming solution, there are no empty cells adjacent to three other cells. This is because the graph of a brimming solution must be isomorphic to a straight line, as otherwise, either one end of the line ever became adjacent to some earlier square in the graph, forming a loop, or the graph has something that branches off like a fork in the road, and so any path will not include all squares.
+In a brimming solution, there are no empty cells adjacent to three other cells. This is because the graph of a brimming solution must be isomorphic to a straight line, as otherwise, either one end of the line became adjacent to some earlier square in the graph, forming a loop, or the graph has something that branches off like a fork in the road, and so any path will not include all squares.
 
-\pentU{} has a cave square. If the cave square is adjacent to some empty square, then a rectangular grid must include two more empty squares adjacent to it, violating the three other cells property. Therefore, the empty square is lonely. If it is the only empty square, the grid is a $2 \times 3$ so this holds. If it isn't, there are two subgrids of empty squares, so the placement is not brimming.
+\pentU{} has a cave square. If the cave square is adjacent to some empty square, then a rectangular grid must include two more empty squares adjacent to it, violating the three other cells property. Therefore, the empty square is isolated. If it is the only empty square, the grid is a $2 \times 3$ so this holds. If it isn't, there are two subgrids of empty squares, so the placement is not brimming.
 \end{proof}
 
-\begin{theorem}
-\label{th:brimming1}
+\begin{lemma}
+\label{lem:brimming1}
 
-When a solution is brimming with only one pentomino, for grids with at least 3 columns and 4 rows, the pentomino must include all squares diagonally adjacent to a corner square of any ($3 \times 4$)-subgrid.
-\end{theorem}
+When a solution is brimming with only one pentomino, the pentomino must include the center two squares\footnote{the two squares diagonally adjacent to a corner} of any ($3 \times 4$)-subgrid.
+\end{lemma}
 
 \begin{proof}
 %This is true for $3 \times 4$ as shown by \cref{fig:3x4}.
-Say one of the squares diagonally adjacent to a corner square is not part of the pentomino: one square diagonally from the top left square, for example without loss of generality.
+Without loss of generality, say the left center square is not part of the pentomino.
 
-If we do not use the square to the right of that (the $C$ in \cref{fig:brimming1}), then within the $3 \times 4$ there is no way to include its $2 \times 2$ regions containing its corner squares. However, even starting from $C$ the only way to reach the left hand side $2 \times 2$'s is to use the \pentU{} \minordetail{pentomino}, which is not valid by \cref{th:brimming1u}.
+If we also do not include the right center square (the $C$ in \cref{fig:brimming1}), then within the $3 \times 4$ there is no way to include the four $2 \times 2$ regions containing its corner squares. However, even starting from $C$ the only ways to reach the left hand side $2 \times 2$'s is to use the \pentU{} \minordetail{pentomino}, which is not valid by \cref{th:brimming1u}.
 \begin{figure}
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (4,3);
-        \filldraw[white, postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray}] (1,1) rectangle (2,2);
+        \filldraw[white, postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,1) rectangle (2,2);
         \filldraw[fill=colorU] (1,0) -- (3,0) -- (3,3) -- (1,3) -- (1,2) -- (2,2) -- (2,1) -- (1,1) -- cycle;
-        \draw (1.5,0.5) node{$A$};
-        \draw (1.5,2.5) node{$B$};
+        \draw[color4O] (0.5,0.5) rectangle (1.5,1.5);
+        \draw[color4O] (0.5,1.5) rectangle (1.5,2.5);
+        \draw[color4O] (2.5,0.5) rectangle (3.5,1.5);
+        \draw[color4O] (2.5,1.5) rectangle (3.5,2.5);
         \draw (2.5,1.5) node{$C$};
+
+        \begin{scope}[xshift=5cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+            \filldraw[white, postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,1) rectangle (2,2);
+            \filldraw[fill=colorU] (0,0) -- (0,2) -- (1,2) -- (1,1) -- (2,1) -- (2,2) -- (3,2) -- (3,0) -- cycle;
+            \draw[color4O] (0.5,0.5) rectangle (1.5,1.5);
+            \draw[color4O] (0.5,1.5) rectangle (1.5,2.5);
+            \draw[color4O] (2.5,0.5) rectangle (3.5,1.5);
+            \draw[color4O] (2.5,1.5) rectangle (3.5,2.5);
+            \draw (2.5,1.5) node{$C$};
+        \end{scope}
     \end{tikzpicture}
-    \caption{Illustration for \cref{th:brimming1}: this is the top left $3 \times 4$ of a grid with size at least $3 \times 4$.}
+    \caption{Illustration for \cref{lem:brimming1}: the only ways to occlude all $2 \times 2$ cycles in a $3 \times 4$, given that the left center cell is kept empty.}
     \label{fig:brimming1}
 \end{figure}
 \end{proof}
 
-\begin{figure}
+\begin{definition}[Edge]
+The \newterm{edge} of the grid are the squares \badterm{adjacent} to the wall.
+\end{definition}
+
+\begin{corollary}
+\label{cor:brimming1}
+
+\cref{lem:brimming1} is equivalent to saying all non-edge squares are part of the pentomino. Additionally, the squares of the pentomino on the edge must be orthogonally adjacent, since the edges of the grid form a loop that cannot be cut into two separate subgrids.
+\end{corollary}
+
+\begin{theorem}
+$\#_{3, 4} = 7, \#_{3, 5} = 10, \#_{3, 6} = 13$
+\end{theorem}
+
+\begin{proof}
+\label{th:3x4,5,6}
+
+By \cref{fig:3x4}, \cref{fig:3x5}, and \cref{fig:3x6} respectively, we have brimming solutions with 1 pentomino, which is optimal by \cref{prop:oneplace} as $3 + 4 - 1, 12 - 10 < 7$. Therefore \cref{cor:brimming1} applies, and it turns out all possibilities with a pentomino containing all non-edge squares and some orthogonally-adjacent edge squares work out.
+\end{proof}
+
+\begin{figure}[htbp]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.9]
         \draw[step=1cm,black,very thin] (0,0) grid (4,3);
         \draw (3.5,1.5) node{1};
         \draw (3.5,2.5) node{2};
@@ -635,28 +541,7 @@ If we do not use the square to the right of that (the $C$ in \cref{fig:brimming1
     \label{fig:3x4}
 \end{figure}
 
-\begin{theorem}
-$\#_{3, 4} = 7$
-\end{theorem}
-
-\begin{proof}
-\label{th:3x4}
-
-By \cref{fig:3x4}, we have brimming solutions with 1 pentomino, and since $3 + 4 - 1, 12 - 10 < 7$, \cref{prop:oneplace} and therefore \cref{lem:brim3xn} applies. \pentL, \pentN, and \pentY{} can be eliminated since a $1 \times 4$ in the center row would divide the grid into two subgrids (this is not allowed; remember that every nonempty square must be in the path).
-
-We are left with \minordetail{the pentominoes} \pentP{} and \pentT{}. By \cref{th:brimming1}, they must include the center two squares. All orientations of \pentP{} and \pentT{} with this restriction works, and so the three solutions given by \cite[6:04]{v2} are the only ones.
-\end{proof}
-
-
-\begin{theorem}
-$\#_{3, 5} = 10$
-\end{theorem}
-
-\begin{proof}
-We have a similar setup to \cref{th:3x4}, but with the examples from \cref{fig:3x5}, $3 + 5 - 1, 15 - 10 < 10$, and still \cref{prop:oneplace} and \cref{lem:brim3xn}; and by \cref{th:brimming1} all solutions must include the center three squares. If the two additional squares are not orthogonally adjacent, it would split the grid into two, so the three solutions given by \cite[6:10]{v2} are the only ones.
-\end{proof}
-
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[scale=0.8]
         \draw[step=1cm,black,very thin] (0,0) grid (5,3);
@@ -706,6 +591,155 @@ We have a similar setup to \cref{th:3x4}, but with the examples from \cref{fig:3
     \label{fig:3x5}
 \end{figure}
 
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (6,3);
+        \draw (0.5,2.5) node{1};
+        \draw (1.5,2.5) node{2};
+        \draw (2.5,2.5) node{3};
+        \draw (3.5,2.5) node{4};
+        \draw (4.5,2.5) node{5};
+        \draw (5.5,2.5) node{6};
+        \draw (5.5,1.5) node{7};
+        \draw (5.5,0.5) node{8};
+        \draw (4.5,0.5) node{9};
+        \draw (3.5,0.5) node{10};
+        \draw (2.5,0.5) node{11};
+        \draw (1.5,0.5) node{12};
+        \draw (0.5,0.5) node{13};
+        \filldraw[fill=colorI] (0,1) rectangle (5,2);
+
+        \begin{scope}[xshift=7cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (6,3);
+            \draw (2.5,2.5) node{1};
+            \draw (3.5,2.5) node{2};
+            \draw (4.5,2.5) node{3};
+            \draw (5.5,2.5) node{4};
+            \draw (5.5,1.5) node{5};
+            \draw (5.5,0.5) node{6};
+            \draw (4.5,0.5) node{7};
+            \draw (3.5,0.5) node{8};
+            \draw (2.5,0.5) node{9};
+            \draw (1.5,0.5) node{10};
+            \draw (0.5,0.5) node{11};
+            \draw (0.5,1.5) node{12};
+            \draw (0.5,2.5) node{13};
+            \filldraw[fill=colorL] (1,1) -- (1,3) -- (2,3) -- (2,2) -- (5,2) -- (5,1) -- cycle;
+        \end{scope}
+
+        \begin{scope}[xshift=14cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (6,3);
+            \draw (3.5,2.5) node{1};
+            \draw (4.5,2.5) node{2};
+            \draw (5.5,2.5) node{3};
+            \draw (5.5,1.5) node{4};
+            \draw (5.5,0.5) node{5};
+            \draw (4.5,0.5) node{6};
+            \draw (3.5,0.5) node{7};
+            \draw (2.5,0.5) node{8};
+            \draw (1.5,0.5) node{9};
+            \draw (0.5,0.5) node{10};
+            \draw (0.5,1.5) node{11};
+            \draw (0.5,2.5) node{12};
+            \draw (1.5,2.5) node{13};
+            \filldraw[fill=colorY]  (1,1) -- (1,2) -- (2,2) -- (2,3) -- (3,3) -- (3,2) -- (5,2) -- (5,1) -- cycle;
+        \end{scope}
+    \end{tikzpicture}
+    \caption{$\#_{3, 6} = 13$. \cite[6:16]{v2}}
+    \label{fig:3x6}
+\end{figure}
+
+
+
+
+\newpage
+\begin{theorem}[Ways to orient a pentomino]
+\label{th:Pentomino orientations}
+
+A square has 4 symmetries, so a platter has at most 8 orientations, ignoring location within a grid. However, some pentominoes have one or more symmetries, which reduce the possible orientations (\cref{tab:pentomino orientations}).
+
+    \begin{table}
+        \centering
+        \caption{Number of ways to orient each pentomino. \cite[0:41]{v1}}
+        \begin{tabular}{ccc}
+            \toprule
+            Pentomino & Symmetries & Orientations \\
+            \midrule
+            \pentX{} & 4 & 1 \\
+            \pentI{} & 2 & 2 \\
+            \pentT{} & 1 & 4 \\
+            \pentU{} & 1 & 4 \\
+            \pentV{} & 1 & 4 \\
+            \pentW{} & 1 & 4 \\
+            \pentZ{} & 1 & 4 \\
+            \pentF{} & 0 & 8 \\
+            \pentL{} & 0 & 8 \\
+            \pentP{} & 0 & 8 \\
+            \pentN{} & 0 & 8 \\
+            \pentY{} & 0 & 8 \\
+            \bottomrule
+        \end{tabular}
+        \label{tab:pentomino orientations}
+    \end{table}
+\end{theorem}
+
+\begin{corollary}
+\label{cor:cutcorner3xn}
+
+The caption for \cref{fig:Reduced orientations} holds. This is partly thanks to the entire grid itself being symmetrical along both a vertical and horizontal axis: since \cref{th:Cut corner removal} works after reflection, this reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}.
+\end{corollary}
+
+\begin{note}
+\pentU{} satisfies a general version of \cref{th:Cut corner removal} where both corners are covered.
+\end{note}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \begin{scope}[xshift=1cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (11,3);
+            \filldraw[red,fill=colorV] (0,0) -- (3,0) -- (3,1) -- (1,1) -- (1,3) -- (0,3) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[red,fill=colorW] (0,0) -- (2,0) -- (2,1) -- (3,1) -- (3,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=8cm]
+            \filldraw[red,fill=colorZ] (0,0) -- (2,0) -- (2,2) -- (3,2) -- (3,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[yshift=-4cm]
+            \draw[step=1cm,black,very thin] (-1,0) grid (14,3);
+            \filldraw[fill=colorP] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,2) -- (0,2) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[red,fill=colorP] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (2,2) -- (2,0) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=7cm]
+            \filldraw[fill=colorT] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (3,2) -- (3,1) -- (1,1) -- (1,0) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=11cm]
+            \filldraw[red,fill=colorT] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[shift={(3cm,4cm)}]
+            \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+            \filldraw[fill=colorF] (0,0) -- (1,0) -- (1,1) -- (3,1) -- (3,2) -- (2,2) -- (2,3) -- (1,3) -- (1,2) -- (0,2) -- cycle;
+            \draw[red] (0,0) -- (0,2) -- (1,2) -- (1,3);
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[red,fill=colorF] (0,0) -- (0,1) -- (1,1) -- (1,3) -- (2,3) -- (2,2) -- (3,2) -- (3,1) -- (2,1) -- (2,0) -- cycle;
+            \end{scope}
+        \end{scope}
+    \end{tikzpicture}
+    \caption{All orientations of \pentF, \pentV, \pentW, \pentZ, \pentP, and \pentT{} in a $3 \times n$ after reducing by symmetry. The following satisfy \cref{th:Cut corner removal}: \pentV, \pentW, \pentZ, the right \pentP{} and \pentT{}, and the left side of both \pentF's. Additionally, the second \pentF{} is strictly worse than the first \pentF, since after filling in the ignorable subgrid, the first \pentF{} practically replaces a wall with an empty square when compared to the second \pentF.}
+    \label{fig:Reduced orientations}
+\end{figure}
 
 
 
