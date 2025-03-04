@@ -163,7 +163,7 @@ For $n$ = 3, 9 cells minus a pentomino is 4 squares, so the length 5 path is opt
     \label{fig:no123}
 \end{figure}
 
-Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1 \le 7$, while $2m - 5 \le m + 1 \le 7$, so you cannot do any better than placing nothing. It turns out there is enough room for the I~piece, and so for $m = 6$ there are two solutions ignoring symmetry:
+Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1 \le 7$, while $2m - 5 \le m + 1 \le 7$, so you cannot do any better than placing nothing. It turns out there is just enough room for the I~piece, and so for $m = 6$ there are two solutions ignoring symmetry:
 
 \begin{figure}[htbp]
     \centering
@@ -190,7 +190,7 @@ Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1
     \label{fig:no2x5}
 \end{figure}
 
-And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, and as each pentomino costs 5 squares the best solution is 0 pentominoes.
+And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, and since each pentomino costs 5 squares, the best solution is 0 pentominoes.
 
 \begin{figure}[htbp!]
     \centering
@@ -215,7 +215,7 @@ And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, an
 We'll start with proving some useful things about pentominoes in small grids.
 
 \begin{definition}[Adjacency]
-Two squares are \newterm{adjacent} iff they are one square diagonally or orthogonally apart. Two squares are \newterm{orthogonal} iff they are adjacent but not diagonally so. Two sets of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (Cartesian product) such that $s$ and $t$ are adjacent. The squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
+Two squares are \newterm{orthogonal} iff their Manhattan distance is 1. Two squares are \newterm{adjacent} iff their Chebyshev distance is 1 (i.e., they are diagonal or orthogonal). Two sets of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (Cartesian product) such that $s$ and $t$ are adjacent. The set of squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
 \end{definition}
 
 \begin{definition}[Subgrid]
