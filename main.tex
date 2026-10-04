@@ -5,6 +5,7 @@
 
 \usepackage{amsthm}
 \usepackage{amsmath}
+\usepackage{amssymb}%amsfonts + symbols
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
 %\usepackage{soul}% highlight
@@ -26,7 +27,7 @@
 \usetikzlibrary{matrix, positioning}
 
 \title{Pentomino Pathfinding}
-\author{Steven Nguyen (icecream17)}
+\author{Steven Nguyen (\textcolor{authorcolor}{icecream17})}
 
 % pentomino colors
 \definecolor{colorI}{HTML}{EEAAAA}
@@ -45,8 +46,28 @@
 % tetromino colors
 % = colorU
 \definecolor{color4I}{HTML}{88CCCC}
+% = colorV + darker + blue
+\definecolor{color4J}{HTML}{7799CC}
+% = colorF
+\definecolor{color4L}{HTML}{DDBB99}
 % = colorL
 \definecolor{color4O}{HTML}{CCCC88}
+% color4T CC88CC ?colorY or BB99DD ?colorX
+\definecolor{color4T}{HTML}{BB88CC}
+% = colorN
+\definecolor{color4S}{HTML}{AAEEAA}
+% = colorI
+\definecolor{color4Z}{HTML}{EEAAAA}
+
+% trimino colors!?
+% = colorW
+\definecolor{color3I}{HTML}{AAAAEE}
+% pink
+\definecolor{color3V}{HTML}{FFCCFF}
+
+% domino color
+% rebeccapurple / 3 (unassuming dark)
+\definecolor{color2}{HTML}{331122}
 
 \definecolor{colorSecondary}{HTML}{440044}
 
@@ -64,6 +85,14 @@
 \newcommand{\pentX}{\smash{\colorbox{colorX!50}{X}}}
 \newcommand{\pentY}{\smash{\colorbox{colorY!50}{Y}}}
 \newcommand{\pentZ}{\smash{\colorbox{colorZ!50}{Z}}}
+\newcommand{\highlight}[1]{\uline{#1}}
+
+% TODO: easyReview
+\definecolor{authorcolor}{HTML}{4A6E4A}
+\newcommand{\alert}[1]{\marginnote{\textcolor{red}{#1}}}
+\newcommand{\authornote}[1]{\marginnote{\textcolor{authorcolor}{#1}}}
+
+\usepackage{tcolorbox}[breakable]
 
 % place at end
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
@@ -87,9 +116,14 @@
 \newtheorem*{conclusion}{Conclusion}
 \newtheorem*{note}{Note}
 
+\newcommand{\markend}{\hfill{\large$\triangleleft$}}
+\newcommand{\markendmath}{\tag*{\large$\triangleleft$}}
+
+\newcommand{\techdetail}[1]{\textcolor{darkgray}{#1}}
 \newcommand{\minordetail}[1]{\textcolor{gray}{#1}}
-\newcommand{\newterm}[1]{\textit{#1}}
+\newcommand{\newterm}[1]{\textbf{\textit{#1}}}
 \newcommand{\badterm}[1]{\textcolor{red}{\uwave{\textcolor{black}{#1}}}}
+\newcommand{\unusednewterm}[1]{\badterm{\newterm{#1}}}
 
 % DeclareMathOperator but more simple
 \newcommand{\adj}{\operatorname{adj}}
@@ -98,6 +132,8 @@
 \newcommand{\bound}{\operatorname{bound}}
 \newcommand{\caves}{\operatorname{caves}}
 \newcommand{\outside}{\operatorname{outside}}
+\newcommand{\contribution}{\operatorname{contribution}}
+\newcommand{\thepath}{\text{the path}}
 
 \begin{document}
 \maketitle
@@ -110,17 +146,7 @@
 
 
 
-
-
-\section{Introduction}
-
-This paper will try to solve the Pentomino Pathfinding problem for various rectangular grids. See \cite{v1} and \cite{v2} for further introduction.
-
-\cite{v1} posed the following problem: Given a rectangular $n \times m$ grid of squares or \newterm{cells}, place a subset of the twelve pentominoes (\cref{fig:pentominoes}), and endpoints $A$ and $B$ on the grid \minordetail{without overlaps} such that $\#_{n, m}$ = the length of (the shortest path \minordetail{of nonempty, orthogonal cells} from $A$ to $B$) is maximized.
-
-The maximum length given some placements $p$ is denoted by $\#^{p}_{n, m}$; independently, when $n = m$, the row and column indices are collapsed: $\#_n$.
-
-\begin{figure}[htbp]
+\begin{figure}
     \centering
     \includesvg[width=0.5\linewidth]{All_18_Pentominoes.svg}
     \caption{The twelve pentominoes and their reflections \cite{pentominoes};
@@ -131,17 +157,108 @@ The maximum length given some placements $p$ is denoted by $\#^{p}_{n, m}$; inde
     \label{fig:pentominoes}
 \end{figure}
 
+\clearpage
 
+\section{Introduction}
 
+This paper will try to solve the Pentomino Pathfinding problem for various rectangular grids. See \cite{v1} and \cite{v2} for further introduction.
 
+The Pentomino Pathfinding problem is as follows:
 
+\begin{tcolorbox}[
+    sharp corners,
+    toprule=0pt,
+    bottomrule=0pt,
+    rightrule=0pt,
+    halign=justify,
+    colback=blue!5!white,
+    colframe=blue!20!white,
+]
+For a rectangular $n \times m$ grid of \hspace{-0.04em}\newterm{squares} or \hspace{-0.12em}\newterm{cells}, place a subset of the twelve pentominoes (\cref{fig:pentominoes}) on the grid \techdetail{without overlapping}.
 
-\section{No pentominoes}
+\begin{definition}[Empty]
+\techdetail{A square is \newterm{empty} without a pentomino.}\marginnote{Pentominoes are like walls.}
+\end{definition}
 
-For $n$ = 1 and 2, $n \times n < 5$, so no pentomino can fit.
-For $n$ = 3, 9 cells minus a pentomino is 4 squares, so the length 5 path is optimal. (\Cref{fig:no123})
+Now that we have some placements $p$, empty squares $A$ and $B$ are then automatically chosen such that $\#^{p}_{n, m}$ = the length of (the shortest path from $A$ to $B$) is maximized.
+
+\begin{definition}[Path]
+A \newterm{path} is an orthogonally-connected \minordetail{nonempty} sequence of empty cells.
+In particular, ``\newterm{the path}" is the above automatically chosen path, where the placements and grid size come from context.
+\end{definition}
+
+Let $\#_{n,m}$ be the maximum $\#^{p}_{n,m}$ for all placements $p$.
+
+Find $\#_{n,m}$.
+\end{tcolorbox}
+
+\begin{definition}[$\#$]
+$\#(s)$ is the size of a set or the length of a path or sequence. In addition, $\#(\thepath)$ given some placements $p$ is denoted $\#^{p}_{n, m}$. And $\#_{n,m}$ is the maximum $\#^{p}_{n,m}$ for all placements $p$. Finally, \highlight{the shorthand $\#_n$ refers to $\#_{n, n}$.}
+\end{definition}
+
+\begin{definition}[Solution]
+Consider some placements $p$, i.e., consider some placements of a subset of the twelve pentominoes in the grid whose size ($n \times m$) is given by context. Then $p$ is a valid \newterm{solution} if and only if $\#^p_{n,m} = \#_{n,m}$.
+\end{definition}
+
+\begin{definition}[Adjacency]
+Two squares are \newterm{adjacent} iff they are \newterm{diagonal} or \newterm{orthogonal} (\cref{fig:adj}).\footnote{In technical terms, squares are \newterm{orthogonal} when they have a Manhattan distance of 1, \newterm{adjacent} when they have a Chebyshev distance of 1, and \newterm{diagonal} when they are adjacent but not orthogonal, for distances ignoring nonempty cells.} Two sets of squares $S$ and $T$ \hspace{-0.05em}are \newterm{adjacent} iff there are two squares $s \in S$, $t \in T$ where $s$ and $t$ are adjacent \techdetail{(an individual square $s$ is the same as its singleton set \hspace{-0.05em}$\{s\}$\hspace{-0.05em} for this purpose)}. The squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
+\end{definition}
+
+\begin{definition}[Subgrid]
+\techdetail{A \newterm{subgrid} is a set of orthogonally adjacent squares.}\footnote{That is, a connected subgraph. \minordetail{(All squares are in some given or assumed given grid).}}\marginnote{\badterm{Wrong?}: it is the counterpart to a platter}
+\end{definition}
 
 \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (3,3);
+        \draw (1.5,1.5) node{$\star$};
+        \draw (0.5,0.5) node{$A$};
+        \draw (0.5,1.5) node{$A$};
+        \draw (0.5,2.5) node{$A$};
+        \draw (1.5,2.5) node{$A$};
+        \draw (2.5,2.5) node{$A$};
+        \draw (2.5,1.5) node{$A$};
+        \draw (2.5,0.5) node{$A$};
+        \draw (1.5,0.5) node{$A$};
+
+        \draw[step=1cm,black,very thin] (4,0) grid (7,3);
+        \draw (5.5,1.5) node{$\star$};
+        \draw (4.5,0.5) node{$D$};
+        \draw (4.5,2.5) node{$D$};
+        \draw (6.5,0.5) node{$D$};
+        \draw (6.5,2.5) node{$D$};
+
+        \draw[step=1cm,black,very thin] (8,0) grid (11,3);
+        \draw (9.5,1.5) node{$\star$};
+        \draw (9.5,0.5) node{$O$};
+        \draw (8.5,1.5) node{$O$};
+        \draw (10.5,1.5) node{$O$};
+        \draw (9.5,2.5) node{$O$};
+    \end{tikzpicture}
+    \caption{$\adj(\star)$, $\operatorname{diagonal}(\star)$, and $\operatorname{orthogonal}(\star)$}
+    \label{fig:adj}
+\end{figure}
+
+
+
+
+
+\clearpage
+\section{No pentominoes}
+
+\begin{property}[A largely brimming grid gives an upper bound]
+\label{prop:brimmax}
+After placing $n$ pentominoes, if $\#(\text{empty, non-path cells}) < 5$, \minordetail{then }$n$ upper bounds the optimal number of pentominoes\techdetail{, as any additional pentomino would use the squares that could lengthen the path}.
+
+Or, if $\#(\text{empty, non-path cells}) = 5$, then there may be additional solutions
+where $n + 1$ pentominoes are used, but these solutions at best tie with the
+$n$ pentomino solution. \marginnote{This triangle denotes the end of a multiple-paragraph entry.}\markend
+\end{property}
+
+With an upper bound of zero pentominoes, the grid sizes $n$ = 1, 2, and 3 are trivial. (\Cref{fig:no123})
+
+\begin{figure}[htbp!]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (1,1);
@@ -163,9 +280,26 @@ For $n$ = 3, 9 cells minus a pentomino is 4 squares, so the length 5 path is opt
     \label{fig:no123}
 \end{figure}
 
-Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1 \le 7$, while $2m - 5 \le m + 1 \le 7$, so you cannot do any better than placing nothing. It turns out there is just enough room for the I~piece, and so for $m = 6$ there are two solutions ignoring symmetry:
+More generally, it holds for $\#_{1, n} = n$ \techdetail{(because all squares are in the path)}... (\Cref{fig:1xn})
 
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}
+        \draw[step=1cm,black,very thin] (0,0) grid (1,1);
+        \draw[step=1cm,black,very thin] (2,0) grid (3,1);
+        \draw (0.5,0.5) node{1};
+        \draw (1.5,0.5) node{$\cdots$};
+        \draw (2.5,0.5) node{$n$};
+    \end{tikzpicture}
+    \caption{$\#_{1, n} = n$ \minordetail{(footnote: \hspace{-0.19em}\protect\footnotemark)} \cite{sheet}}
+    \label{fig:1xn}
+\end{figure}
+
+\footnotetext{The figure assumes $n > 1$; $n = 1$ is covered by \cref{fig:no123}.}
+
+...and for $n = 2$, $m < 6$. And when $m = 6$, there is an additional solution with the \pentI{}~piece. \minordetail{(This is the only place to put it)}\footnote{We count solutions ignoring symmetry.} (\cref{fig:2x7})
+
+\begin{figure}[htbp!]
     \centering
     \begin{tikzpicture}
         \draw[step=1cm,black,very thin] (0,0) grid (6,2);
@@ -187,142 +321,203 @@ Similar reasoning holds for $n = 2$, $m \le 6$: there is a path of length $m + 1
         \draw (12.5,1.5) node{7};
         \filldraw[fill=colorI] (7,1) rectangle (12,2);
     \end{tikzpicture}
-    \label{fig:no2x5}
+    \caption{$\#_{2,6} = 7$}
+    \label{fig:2x7}
 \end{figure}
 
-And this reasoning also holds for $\#_{1, n} = n$: the path uses all squares, and since each pentomino costs 5 squares, the best solution is 0 pentominoes.
+\begin{definition}[Brimming]
+\label{def:brimming}
+
+Given some placements $p$, the grid is \newterm{brimming} when every empty square is in the path. In other words, all squares are `used': part of a pentomino or the path.
+\end{definition}
+
+\begin{property}\label{prop:brimline}
+In a brimming grid, the empty squares form the path. They are isomorphic to a straight line. In particular, neither a \newterm{fork} (an empty cell orthogonally adjacent to three other empty cells) nor a \newterm{cycle} (where the path or subpath doesn't have two ends but zero as the two ends connect) (aka a \newterm{loop}) exist.
+\end{property}
+
+\begin{property}
+Given a brimming $n \times m$ grid, we have $\#^{p}_{n, m}$ = $nm - 5 \cdot \#(p)$ where $\#(p)$ upper bounds the optimal number of pentominoes by \cref{prop:brimmax}.
+\end{property}
+
+In the future, \cref{prop:brimmax} shall implicitly and automatically be used to show that
+a solution either cannot fit more pentominoes or is tied with the possibility of
+adding one pentomino. Upon showing such a solution with $n$ pentominoes,
+it only remains to show that using less than $n$ pentominoes is not better.
+This will be implicitly done by the structure of this paper: we shall show the best results
+using 0 pentominoes, 1 pentomino, 2 pentominoes, etc., even though these results are inefficient:
+
+\begin{property}[Zero pentomino result]
+\label{prop:zeroplace}
+
+With nothing placed, we have $\#^{\emptyset}_{n, m} = n + m - 1$
+\end{property}
+
+\begin{property}[One-pentomino solution]
+\label{prop:oneplace}
+
+Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any solution must contain one pentomino.
+\end{property}
+
+
+
+
+\clearpage
+\section{One pentomino}\label{sec:3}
+
+
+
+\subsection{Staircases}
+
+First we prove the sided staircase removal theorem.
+
+\begin{definition}[Mino]
+\newterm{Mino}: a single square of a pentomino; a nonempty square
+\end{definition}
+
+\begin{definition}[Platter]
+\newterm{Platter}: a (set of adjacent minos) not adjacent to another mino.\authornote{Past me noted why ``shape" wasn't a good choice, but honestly ``platter" is just more fun for maths.}
+\end{definition}
 
 \begin{figure}[htbp!]
     \centering
     \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (1,1);
-        \draw[step=1cm,black,very thin] (2,0) grid (3,1);
-        \draw (0.5,0.5) node{1};
-        \draw (1.5,0.5) node{$\cdots$};
-        \draw (2.5,0.5) node{$n$};
+        \begin{scope}[scale=0.5]
+            \draw[step=1cm,black,very thin] (0,0) grid (8,8);
+            \filldraw[fill=colorN,shift={(0,0)}] (0,2) -- (0,3) -- (2,3) -- (2,2) -- (4,2) -- (4,1) -- (1,1) -- (1,2) -- cycle;
+            \filldraw[fill=colorU,shift={(1,3)}] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
+            \filldraw[fill=colorL,shift={(4,4)}] (0,1) -- (0,3) -- (1,3) -- (1,2) -- (4,2) -- (4,1) -- cycle;
+            \filldraw[fill=colorP,shift={(4,5)}] (1,1) -- (1,3) -- (3,3) -- (3,2) -- (4,2) -- (4,1) -- cycle;%snail
+            \filldraw[fill=lightgray,shift={(6,0)}] (0,0) -- (0,1) -- (1,1) -- (2,1) -- (2,2) -- (1,2) -- (1,1) -- (1,0) -- cycle;
+        \end{scope}
     \end{tikzpicture}
-    \caption{$\#_{1, n} = n$ (footnote: \protect\footnotemark) \cite{sheet}}
+    \caption{Two example platters: the four pentominoes combined and: the two cells in the bottom right.}
 \end{figure}
 
-\footnotetext{The figure assumes $n > 1$ but that's not necessary of course.}
+\begin{definition}[Edge]
+\label{def:edge}
 
-
-
-
-
-\section{One pentomino}
-
-We'll start with proving some useful things about pentominoes in small grids.
-
-\begin{definition}[Adjacency]
-Two squares are \newterm{orthogonal} iff their Manhattan distance is 1. Two squares are \newterm{adjacent} iff their Chebyshev distance is 1 (i.e., they are diagonal or orthogonal). Two sets of squares $S$ and $T$ are \newterm{adjacent} if there is a pair of squares $(s, t) \in S \times T$ (Cartesian product) such that $s$ and $t$ are adjacent. The set of squares adjacent to a set of squares $S$ is denoted $\adj(S)$.
+\emph{The} \newterm{edge} of a subgrid is the sub-subgrid of squares adjacent to less than 8 squares of the subgrid.
+Alternatively, \emph{an} \newterm{edge} of a rectangular $n \times m$ subgrid is an $n \times 1$ or $1 \times m$ sub-subgrid \minordetail{completely} inside the edge of the subgrid.
 \end{definition}
 
-\begin{definition}[Subgrid]
-A subgrid is any connected subgraph of empty squares \minordetail{of the grid}. \minordetail{A square is empty iff it is does not have a pentomino.}
+\begin{definition}[Corner]
+The \newterm{corners} of a rectangular subgrid are the squares in two of its edges.
 \end{definition}
 
-\begin{definition}[Platter]
-A \newterm{platter} is a (set of adjacent squares) not adjacent to another square.\marginnote{I don't use the term ``shape'' because two squares diagonally adjacent doesn't usually match people's intuitions.}% For this definition, the outside wall is considered a cycle of squares and can be part of the platter. (Doesn't work because holes and caves and convex)
-\end{definition}
+\begin{note}
+By default, ``edge'' and ``corners'' respectively refer to the edge and corners of the entire grid.
+\end{note}
 
 \begin{definition}[Outside]
-For a platter $P$, $\outside(P)$ = All squares reachable from the wall or other platters
+For a platter $P$, $\outside(P)$ = All squares with a path to the edge if there were no other platters.
 \end{definition}
 
 \begin{definition}[Border]
 A platter's \newterm{border} is the squares adjacent to the platter that are outside of it. $\border(P) = \adj(P) \cap \outside(P)$
-
-If a platter cuts the grid into subgrids, we may restrict the outside to squares reachable from just that subgrid $s$. This is denoted $\border(P)_s$
 \end{definition}
 
 \begin{lemma}[Border removal]
 \label{lem:Border removal}
 
-Say we have a platter $p_1$ with the following properties:
+Say we have a platter $p_1$ with the following property:
 
-\begin{enumerate}
-\item $\border(p_1) = \adj(p_1)$
-\item choosing any two squares on its border $A$ and $B$ where there is a path from $A$ to $B$, the shortest such path and the shortest such path upon removing the platter are the same length.
-\end{enumerate}
+\begin{itemize}
+\item for any two squares $A$ and $B$ from $\adj(p_1)$ where there is a path from $A$ to $B$, the shortest such path and the shortest such path upon removing the platter are the same length.
+\end{itemize}
 
 Then the platter may be removed: $\#^{p}_{n, m} \le \#^{p - p_1}_{n, m}$
 \end{lemma}
 
 \begin{proof}
-Can any preexisting path get shorter by entering the platter? No. Any preexisting path starts and ends outside the platter, by property 1. If the path wants to enter the platter, it must reach its border, go inside, then exit from another square on the border. But by property 2, going \emph{along} the border is at least as efficient.
+The goal is to show that preexisting paths do not get shorter. Without loss of generality, consider a preexisting path that starts and ends outside of the platter. Can it become shorter by entering the platter? No. If the path wants to enter the platter, it must reach its border, go inside, then exit from another square on the border. But by the given property, going \emph{along} the border is at least as efficient.
 
 So, any preexisting paths determining $\#^{p}_{n, m}$ will never enter the area where the platter disappeared from; i.e, such paths will not get shorter with the removal of the platter.
+
+\minordetail{(This logic is then applied to paths which start and end inside the platter. Finally, paths moving between inside and outside stop existing.)}
 \end{proof}
 
 \begin{note}
-We have the possibility of $\#^{p}_{n, m} < \#^{p - p_1}_{n, m}$ because in addition to the preexisting paths, there are new paths that go across or in the removed platter.
+One way to show $\#^{p}_{n, m} < \#^{p - p_1}_{n, m}$ is possible is with a platter taking up every square. In essence, new paths that are longer than the preexisting paths may appear after removing a platter.
 \end{note}
 
-\begin{lemma}[Rectangle cut]
-\label{lem:Rectangle cut}
+%\begin{lemma}[Rectangle cut]
+%\label{lem:Rectangle cut}
+%
+%Say we have an $n \times m$ grid, with a $k \times m$ rectangular platter $r$.\marginnote{Note the shared ``$ \times m$''.}
+%
+%Then the rectangle may be removed: $\#^{p}_{n, m} \le \#^{p - r}_{n, m}$
+%\end{lemma}
+%
+%\begin{proof}
+%The rectangle satisfies \cref{lem:Border removal}, since $\adj(r)$ is zero, one, or two straight lines of squares by construction.
+%\end{proof}
+%
+%\begin{figure}[htbp!]
+%    \centering
+%    \begin{tikzpicture}
+%        \draw[step=1cm,black,very thin] (0,0) grid (4,4);
+%        \draw (0.5,0.5) node{$A$};% the y coordinates of A, B, C could be random
+%        \draw (1.5,2.5) node{$B$};% but I couldn't get it to work
+%        \draw (3.5,3.5) node{$C$};
+%        \filldraw[fill=color4I] (2,0) rectangle (3,4);
+%    \end{tikzpicture}
+%    \caption{Illustration for \cref{lem:Rectangle cut}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
+%    \label{fig:cut}
+%\end{figure}
+%
+%We know that \cref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner:
 
-Say we have an $n \times m$ grid, where pentominoes form a $k \times m$ rectangle ($r$) that is not adjacent to any other pentomino.
-
-Then the rectangle may be removed: $\#^{p}_{n, m} \le \#^{p - r}_{n, m}$
-\end{lemma}
-
-\begin{proof}
-The rectangle satisfies \cref{lem:Border removal}, since $\adj(r)$ is zero, one, or two straight lines of squares by construction.
-\end{proof}
-
-\begin{figure}[htbp!]
-    \centering
-    \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (4,4);
-        \draw (0.5,0.5) node{$A$};% the y coordinates of A, B, C could be random
-        \draw (1.5,2.5) node{$B$};% but I couldn't get it to work
-        \draw (3.5,3.5) node{$C$};
-        \filldraw[fill=color4I] (2,0) rectangle (3,4);
-    \end{tikzpicture}
-    \caption{Illustration for \cref{lem:Rectangle cut}: The path from $A$ to $B$ cannot be made any shorter by entering the rectangle since it could just go along the border. Meanwhile, removing the rectangle makes new paths $A$ to $C$ and $B$ to $C$.}
-\end{figure}
-
-We know that \cref{lem:Border removal} works for rectangles that span from one side to the other, but this also works for the corner:
-
-\begin{theorem}
-\label{th:Corner removal}
+\begin{theorem}[Staircase removal]
+\label{th:Staircase removal}
 
 A platter $P$ is made of the set of squares $S$ and all squares to the bottom-left of any square in $S$. Then it satisfies \cref{lem:Border removal}.
 \end{theorem}
 
 \begin{proof}
-Informally, $\adj(P)$ forms a staircase-like shape. So any path along $\adj(P)$ will go in only two cardinal directions, and in fact will have the length of the Manhattan distance between its two endpoints, which cannot be improved upon.
+Informally, $\adj(P)$ forms a staircase-like shape. So any path along $\adj(P)$ will go in only two cardinal directions and have length equal to the Manhattan distance between its two endpoints, which cannot be improved upon.
+\end{proof}
+
+\begin{theorem}[Double staircase removal]
+\label{th:Double staircase removal}
+
+A platter $P$ is made of the set of squares $S$ and all squares to the bottom-left of any square in $S$, plus the set of squares $T$ and all squares to the upper-left of any square in $T$. Then it satisfies \cref{lem:Border removal}.
+\end{theorem}
+
+\begin{proof}
+Informally, a staircase interrupting another looks like a sideways pyramid cutout, so it still preserves the property. Note that the staircases are defined such that they ``\badterm{begin}" at an edge.
 \end{proof}
 
 \begin{note}
 This construction may be rotated and reflected.
 \end{note}
 
-\begin{theorem}[Cut corner removal]
-\label{th:Cut corner removal}
+\begin{theorem}[Sided removal]
+\label{th: Sided removal}
 
-This extends \cref{th:Corner removal} to potentially apply to each ``\badterm{side}'' (i.e.\ subgrid border) of a platter that cuts the grid into subgrids.
+This extends \cref{lem:Border removal} to potentially apply to each ``\badterm{side}'' (i.e.\ $\adj(P) \cap \mathrm{subgrid}$) of a platter that cuts the grid into subgrids.
 \end{theorem}
 
 \begin{proof}
-For each subgrid $s$, try applying \cref{th:Corner removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\border(P)_s$, so this is valid for determining whether a path in $s$ can be improved.
+For each subgrid $s$, try applying \cref{th:Staircase removal} as if all the other subgrids were part of the platter. Including these other subgrids does not affect $\adj(P) \cap s$, so this is valid for determining whether a path in $s$ can be improved.
 \end{proof}
 
 \begin{note}
-If \cref{th:Corner removal} applies to the entire border, then as a result the whole platter can be removed, since no path within any of the subgrids can be improved.
+If this works for every side of the platter (i.e.\ the platter's entire border) then as a result the whole platter can be removed, since no path within any of the subgrids can be improved.
 \end{note}
+
+\begin{corollary}
+For $3 \times n$ grids, this removes the vertical orientation of \pentP, two orientations of \pentT, the vertical orientation of \pentU, and all orientations of \pentV, \pentW, and \pentZ{} from consideration.
+\end{corollary}
 
 \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (6,2);
+        \draw[step=1cm,black,very thin] (0,0) grid (5,2);
         \draw (0.5,0.5) node{$N$};
         \draw (1.5,0.5) node{$N$};
-        \draw (2.5,0.5) node{$N$};
-        \filldraw[fill=colorN] (0,1) -- (3,1) -- (3,0) -- (5,0) -- (5,1) -- (4,1) -- (4,2) -- (0,2) -- cycle;
+        \filldraw[fill=colorN] (0,1) -- (2,1) -- (2,0) -- (4,0) -- (4,1) -- (3,1) -- (3,2) -- (0,2) -- cycle;
     \end{tikzpicture}
-    \caption{Example for \cref{th:Cut corner removal}: \minordetail{The pentomino} \pentN{} divides the grid into two. For the purposes of the subgrid on the right, \pentN{} may as well also include the subgrid on the left (marked with three $N$'s). This new platter satisfies \cref{th:Corner removal}.}
+    \caption{Example for \cref{th: Sided removal}: \minordetail{The pentomino} \pentN{} divides the grid into two. For the purposes of the subgrid on the right, \pentN{} may as well also include the subgrid on the left (marked with two $N$'s). This new platter satisfies \cref{th:Staircase removal}.}
 \end{figure}
 
 
@@ -331,7 +526,7 @@ If \cref{th:Corner removal} applies to the entire border, then as a result the w
 
 Consider a $2 \times n$ grid. The only pentominoes that fit are \pentI, \pentL, \pentP, \pentN, \pentU, and \pentY.
 
-By \cref{th:Cut corner removal} (Cut corner removal), \pentL, \pentP, \pentN, \pentU, and \pentY{} can be removed from consideration in $2 \times n$ areas, so only \pentI{} is left. While placing \pentI{} on the corner does not help, placing \pentI{} anywhere else increases $\#^p_{2, n}$ by 1 --- the unique way to show $\#_{2, n} = n + 2$ for $n \ge 7$.
+By \cref{th: Sided removal}, \pentL, \pentP, \pentN, \pentU, and \pentY{} can be removed from consideration in $2 \times n$ areas, so only \pentI{} is left. While placing \pentI{} on the corner does not help, placing \pentI{} anywhere else increases $\#^p_{2, n}$ by 1 --- so $\#_{2, n} = n + 2$ for $n \ge 7$.
 
 \begin{figure}[htbp!]
     \centering
@@ -356,23 +551,11 @@ By \cref{th:Cut corner removal} (Cut corner removal), \pentL, \pentP, \pentN, \p
 
 
 
-\subsection{\texorpdfstring{$3 \times n$}{3 \texttimes\ n} grids}
+\subsection{Brimming grids} % \texorpdfstring{$3 \times n$}{3 \texttimes\ n}
 
-%\begin{definition}[Bound]
-%A platter's \newterm{bound} are the squares of its border adjacent to some square that is outside and not part of the border. $\bound(P) = \border(P) \cap \adj(\outside(P) \setminus \border(P))$
-%\end{definition}
-%
-\begin{definition}[Cave]
-A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgrid its in by one square. That square is called a \newterm{separating vertex}. \cite{enwiki:separatingvertex}
-\end{definition}
-%
-%\begin{example}[Caves of pentominoes]
-%No pentomino has a hole, but there is one with a cave: U (Figure \ref{fig:ucave}). Although, any platter touching the wall has holes.
-%\end{example}
-%
-\begin{figure}
+\begin{figure}[htbp]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.75]
         \draw[step=1cm,black,very thin] (0,0) grid (5,4);
         \filldraw[fill=colorU,shift={(1,1)}] (0,0) -- (3,0) -- (3,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
 %        \draw (0.5,0.5) node{$B$};
@@ -394,6 +577,18 @@ A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgri
     \caption{\pentU{} is the unique pentomino with a cave square.}
     \label{fig:ucave}
 \end{figure}
+%\begin{definition}[Bound]
+%A platter's \newterm{bound} are the squares of its border adjacent to some square that is outside and not part of the border. $\bound(P) = \border(P) \cap \adj(\outside(P) \setminus \border(P))$
+%\end{definition}
+%
+\begin{definition}[Cave]
+A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgrid its in by one square. That square is called a \unusednewterm{separating vertex}. \cite{enwiki:separatingvertex}
+\end{definition}
+%
+%\begin{example}[Caves of pentominoes]
+%No pentomino has a hole, but there is one with a cave: U (Figure \ref{fig:ucave}).
+%\end{example}
+%
 %
 %\begin{definition}[Convex]
 %A platter is \newterm{convex} iff it has no caves.
@@ -405,30 +600,6 @@ A subgrid is a \newterm{cave} iff it is only connected to the rest of the subgri
 If there is a cycle of empty squares in a grid, the path will not use all empty squares.
 \end{property}
 
-\begin{property}[Zero pentomino result]
-\label{prop:zeroplace}
-
-With nothing placed, we have $\#^{\emptyset}_{n, m} = n + m - 1$
-\end{property}
-
-\begin{property}[One-pentomino solution]
-\label{prop:oneplace}
-
-Say we place a pentomino and $n + m - 1, nm - 10 < \#^p_{n, m}$. Then any solution must contain one pentomino.
-\end{property}
-
-\begin{definition}[Brimming solution]
-\label{def:brimming}
-
-A \newterm{solution} (set of placements) is \newterm{brimming} when every square in the grid is used, i.e, every square corresponds to either a pentomino or the path. \minordetail{In graph theory terms, the path is a Hamiltonian path among the empty squares.}
-\end{definition}
-
-\begin{property}[A brimming solution gives a strict upper bound for the number of pentominoes]
-\label{prop:brimmax}
-
-If a solution is brimming, any further placements can only decrease the path length.
-\end{property}
-
 \begin{theorem}
 \label{th:brimming1u}
 
@@ -436,68 +607,69 @@ When a solution is brimming with only one pentomino, that pentomino is not \pent
 \end{theorem}
 
 \begin{proof}
-In a brimming solution, there are no empty cells adjacent to three other cells. This is because the graph of a brimming solution must be isomorphic to a straight line, as otherwise, either one end of the line became adjacent to some earlier square in the graph, forming a loop, or the graph has something that branches off like a fork in the road, and so any path will not include all squares.
+By \cref{prop:brimline}, there are no empty cells adjacent to three other cells.
 
-\pentU{} has a cave square. If the cave square is adjacent to some empty square, then a rectangular grid must include two more empty squares adjacent to it, violating the three other cells property. Therefore, the empty square is isolated. If it is the only empty square, the grid is a $2 \times 3$ so this holds. If it isn't, there are two subgrids of empty squares, so the placement is not brimming.
+\pentU{} has a cave square. If the cave square is up against the edge, it is alone, and cannot be in the path because we already covered solutions where $\#(\text{the path}) = 1$.
+
+So the \pentU{} must take a step back. But then the cell adjacent to the cave square is adjacent to at least three cells.
 \end{proof}
 
 \begin{lemma}
 \label{lem:brimming1}
 
-When a solution is brimming with only one pentomino, the pentomino must include the center two squares\footnote{the two squares diagonally adjacent to a corner} of any ($3 \times 4$)-subgrid.
+When a solution is brimming with only one pentomino, the pentomino must include the center of any ($3 \times 3$)-subgrid.
 \end{lemma}
 
 \begin{proof}
-%This is true for $3 \times 4$ as shown by \cref{fig:3x4}.
-Without loss of generality, say the left center square is not part of the pentomino.
+Say the center square is not part of the pentomino. Then the only pentominoes that fit are \pentU{} and \pentV{}. (\cref{fig:brimming1})
 
-If we also do not include the right center square (the $C$ in \cref{fig:brimming1}), then within the $3 \times 4$ there is no way to include the four $2 \times 2$ regions containing its corner squares. However, even starting from $C$ the only ways to reach the left hand side $2 \times 2$'s is to use the \pentU{} \minordetail{pentomino}, which is not valid by \cref{th:brimming1u}.
+But \pentV{} does not cover all the empty $2 \times 2$ cycles, and \pentU{} is not valid by \cref{th:brimming1u}.
+
+If less than 5 squares in the $3 \times 3$ are nonempty, there would be even less covering than from a \pentU{} or \pentV{}.
 \begin{figure}
     \centering
     \begin{tikzpicture}
-        \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+        \draw[step=1cm,black,very thin] (0,0) grid (3,3);
         \filldraw[white, postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,1) rectangle (2,2);
-        \filldraw[fill=colorU] (1,0) -- (3,0) -- (3,3) -- (1,3) -- (1,2) -- (2,2) -- (2,1) -- (1,1) -- cycle;
+        \filldraw[fill=colorV] (0,0) -- (3,0) -- (3,1) -- (1,1) -- (1,3) -- (0,3) -- cycle;
         \draw[color4O] (0.5,0.5) rectangle (1.5,1.5);
         \draw[color4O] (0.5,1.5) rectangle (1.5,2.5);
-        \draw[color4O] (2.5,0.5) rectangle (3.5,1.5);
-        \draw[color4O] (2.5,1.5) rectangle (3.5,2.5);
-        \draw (2.5,1.5) node{$C$};
+        \draw[color4O] (1.5,0.5) rectangle (2.5,1.5);
+        \draw[color4O] (1.5,1.5) rectangle (2.5,2.5);
 
         \begin{scope}[xshift=5cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (4,3);
+            \draw[step=1cm,black,very thin] (0,0) grid (3,3);
             \filldraw[white, postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,1) rectangle (2,2);
             \filldraw[fill=colorU] (0,0) -- (0,2) -- (1,2) -- (1,1) -- (2,1) -- (2,2) -- (3,2) -- (3,0) -- cycle;
             \draw[color4O] (0.5,0.5) rectangle (1.5,1.5);
             \draw[color4O] (0.5,1.5) rectangle (1.5,2.5);
-            \draw[color4O] (2.5,0.5) rectangle (3.5,1.5);
-            \draw[color4O] (2.5,1.5) rectangle (3.5,2.5);
-            \draw (2.5,1.5) node{$C$};
+            \draw[color4O] (1.5,0.5) rectangle (2.5,1.5);
+            \draw[color4O] (1.5,1.5) rectangle (2.5,2.5);
         \end{scope}
     \end{tikzpicture}
-    \caption{Illustration for \cref{lem:brimming1}: the only ways to occlude all $2 \times 2$ cycles in a $3 \times 4$, given that the left center cell is kept empty.}
+    \caption{Illustration for \cref{lem:brimming1}: all $2 \times 2$ cycles in a $3 \times 3$ and the only pentominoes that fit, given that the center cell is empty.}
     \label{fig:brimming1}
 \end{figure}
 \end{proof}
 
-\begin{definition}[Edge]
-The \newterm{edge} of the grid are the squares \badterm{adjacent} to the wall.
-\end{definition}
+\begin{property}\label{prop:loopbreaker}
+If the path is a subset of the squares in a cycle, then that cycle must be interrupted by orthogonally adjacent minos. (That is, the minos are contiguous). Otherwise, the cycle would be broken up into two different subgrids or more, which is not brimming.
+\end{property}
 
 \begin{corollary}
 \label{cor:brimming1}
 
-\cref{lem:brimming1} is equivalent to saying all non-edge squares are part of the pentomino. Additionally, the squares of the pentomino on the edge must be orthogonally adjacent, since the edges of the grid form a loop that cannot be cut into two separate subgrids.
+\cref{lem:brimming1} is equivalent to saying all non-edge squares are part of the pentomino. Additionally, the minos on the edge must be orthogonally adjacent by \cref{prop:loopbreaker}, since the edge of the grid is a loop.
 \end{corollary}
 
 \begin{theorem}
-$\#_{3, 4} = 7, \#_{3, 5} = 10, \#_{3, 6} = 13$
+$\#_{3, 4} = 7, \#_{3, 5} = 10, \#_{3, 6} = 13, \#_4 = 11$
 \end{theorem}
 
 \begin{proof}
-\label{th:3x4,5,6}
+\label{th:3x456,4x4}
 
-By \cref{fig:3x4}, \cref{fig:3x5}, and \cref{fig:3x6} respectively, we have brimming solutions with 1 pentomino, which is optimal by \cref{prop:oneplace} as $3 + 4 - 1, 12 - 10 < 7$. Therefore \cref{cor:brimming1} applies, and it turns out all possibilities with a pentomino containing all non-edge squares and some orthogonally-adjacent edge squares work out.
+In \cref{fig:3x4,fig:3x5,fig:3x6,fig:4x4}, we have brimming solutions with 1 pentomino, which are optimal by \cref{prop:oneplace}. Therefore \cref{cor:brimming1} applies, and it turns out all possibilities with a pentomino containing all non-edge squares and some orthogonally-adjacent edge squares work out.
 \end{proof}
 
 \begin{figure}[htbp]
@@ -650,105 +822,850 @@ By \cref{fig:3x4}, \cref{fig:3x5}, and \cref{fig:3x6} respectively, we have brim
     \label{fig:3x6}
 \end{figure}
 
-
-
-
-\newpage
-\begin{theorem}[Ways to orient a pentomino]
-\label{th:Pentomino orientations}
-
-A square has 4 symmetries, so a platter has at most 8 orientations, ignoring location within a grid. However, some pentominoes have one or more symmetries, which reduce the possible orientations (\cref{tab:pentomino orientations}).
-
-    \begin{table}
-        \centering
-        \caption{Number of ways to orient each pentomino. \cite[0:41]{v1}}
-        \begin{tabular}{ccc}
-            \toprule
-            Pentomino & Symmetries & Orientations \\
-            \midrule
-            \pentX{} & 4 & 1 \\
-            \pentI{} & 2 & 2 \\
-            \pentT{} & 1 & 4 \\
-            \pentU{} & 1 & 4 \\
-            \pentV{} & 1 & 4 \\
-            \pentW{} & 1 & 4 \\
-            \pentZ{} & 1 & 4 \\
-            \pentF{} & 0 & 8 \\
-            \pentL{} & 0 & 8 \\
-            \pentP{} & 0 & 8 \\
-            \pentN{} & 0 & 8 \\
-            \pentY{} & 0 & 8 \\
-            \bottomrule
-        \end{tabular}
-        \label{tab:pentomino orientations}
-    \end{table}
-\end{theorem}
-
-\begin{corollary}
-\label{cor:cutcorner3xn}
-
-The caption for \cref{fig:Reduced orientations} holds. This is partly thanks to the entire grid itself being symmetrical along both a vertical and horizontal axis: since \cref{th:Cut corner removal} works after reflection, this reduces the number of orientations \minordetail{a pentomino could have} by a factor of four; \minordetail{the maximum orientations goes from eight to two}.
-\end{corollary}
-
-\begin{note}
-\pentU{} satisfies a general version of \cref{th:Cut corner removal} where both corners are covered.
-\end{note}
-
-\begin{figure}[htbp]
+\begin{figure}
     \centering
-    \begin{tikzpicture}[scale=0.8]
-        \begin{scope}[xshift=1cm]
-            \draw[step=1cm,black,very thin] (0,0) grid (11,3);
-            \filldraw[red,fill=colorV] (0,0) -- (3,0) -- (3,1) -- (1,1) -- (1,3) -- (0,3) -- cycle;
-
-            \begin{scope}[xshift=4cm]
-            \filldraw[red,fill=colorW] (0,0) -- (2,0) -- (2,1) -- (3,1) -- (3,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (0,1) -- cycle;
-            \end{scope}
-
-            \begin{scope}[xshift=8cm]
-            \filldraw[red,fill=colorZ] (0,0) -- (2,0) -- (2,2) -- (3,2) -- (3,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
-            \end{scope}
-        \end{scope}
-
-        \begin{scope}[yshift=-4cm]
-            \draw[step=1cm,black,very thin] (-1,0) grid (14,3);
-            \filldraw[fill=colorP] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,2) -- (0,2) -- cycle;
-
-            \begin{scope}[xshift=4cm]
-            \filldraw[red,fill=colorP] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (2,2) -- (2,0) -- cycle;
-            \end{scope}
-
-            \begin{scope}[xshift=7cm]
-            \filldraw[fill=colorT] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (3,2) -- (3,1) -- (1,1) -- (1,0) -- cycle;
-            \end{scope}
-
-            \begin{scope}[xshift=11cm]
-            \filldraw[red,fill=colorT] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
-            \end{scope}
-        \end{scope}
-
-        \begin{scope}[shift={(3cm,4cm)}]
-            \draw[step=1cm,black,very thin] (0,0) grid (7,3);
-            \filldraw[fill=colorF] (0,0) -- (1,0) -- (1,1) -- (3,1) -- (3,2) -- (2,2) -- (2,3) -- (1,3) -- (1,2) -- (0,2) -- cycle;
-            \draw[red] (0,0) -- (0,2) -- (1,2) -- (1,3);
-
-            \begin{scope}[xshift=4cm]
-            \filldraw[red,fill=colorF] (0,0) -- (0,1) -- (1,1) -- (1,3) -- (2,3) -- (2,2) -- (3,2) -- (3,1) -- (2,1) -- (2,0) -- cycle;
-            \end{scope}
-        \end{scope}
+    \begin{tikzpicture}[scale=0.75]
+        \draw[step=1cm,black,very thin] (0,0) grid (4,4);
+        \draw (0.5,0.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,2.5) node{3};
+        \draw (0.5,3.5) node{4};
+        \draw (1.5,3.5) node{5};
+        \draw (2.5,3.5) node{6};
+        \draw (3.5,3.5) node{7};
+        \draw (3.5,2.5) node{8};
+        \draw (3.5,1.5) node{9};
+        \draw (3.5,0.5) node{10};
+        \draw (2.5,0.5) node{11};
+        \filldraw[fill=colorP,xshift=1cm] (0,0) -- (0,3) -- (2,3) -- (2,1) -- (1,1) -- (1,0) -- cycle;
     \end{tikzpicture}
-    \caption{All orientations of \pentF, \pentV, \pentW, \pentZ, \pentP, and \pentT{} in a $3 \times n$ after reducing by symmetry. The following satisfy \cref{th:Cut corner removal}: \pentV, \pentW, \pentZ, the right \pentP{} and \pentT{}, and the left side of both \pentF's. Additionally, the second \pentF{} is strictly worse than the first \pentF, since after filling in the ignorable subgrid, the first \pentF{} practically replaces a wall with an empty square when compared to the second \pentF.}
-    \label{fig:Reduced orientations}
+    \caption{$\#_4 = 11$. \cite[?:??]{v2}}
+    \label{fig:4x4}
 \end{figure}
 
 
 
-\newpage
-A polynomial's \badterm{contribution} is informally how much longer it makes a given path. But \cref{fig:nontrivialcontribution} shows a formal definition is still a ways away. In such examples, we must consider entire platters.
+\clearpage
+\subsection{Almost brimming grids}
 
-\begin{figure}[htbp]
+\subsubsection{$\#_{3,7} = 14$}
+
+In a $3 \times 7$ grid, the only way to cover the center of every $3 \times 3$ subgrid is to place \pentI{} in the middle, which fails (\cref{fig:3x7i}).
+
+\begin{figure}[htbp!]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+        \draw (0.5,2.5) node{1};
+        \draw (1.5,2.5) node{2};
+        \draw (2.5,2.5) node{3};
+        \draw (3.5,2.5) node{4};
+        \draw (4.5,2.5) node{5};
+        \draw (5.5,2.5) node{6};
+        \draw (6.5,2.5) node{7};
+        \draw (6.5,1.5) node{8};
+        \draw (6.5,0.5) node{9};
+        \filldraw[fill=colorI] (1,1) rectangle (6,2);
+    \end{tikzpicture}
+    \caption{The result of placing \pentI{} in the center.}
+    \label{fig:3x7i}
+\end{figure}
+
+Therefore, the two ($3 \times 2$)-subgrids at the very left and the very right cannot both be nonempty at the same time! At least one ($3 \times 2$)-subgrid will be empty.
+
+So the best we can do is:
+\begin{itemize}
+\item 4 out of 6 squares in the empty ($3 \times 2$)-subgrid is in the path, and
+\item the remaining squares are brimming: all of them are minos or in the path
+\end{itemize}
+
+Without loss of generality, let the empty subgrid be on the left.
+We have three options for tracing the path after symmetry (\cref{fig:3x7p1}).
+
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.6]
+        \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+        \draw (0.5,2.5) node{1};
+        \draw (1.5,2.5) node{2};
+        \draw (1.5,1.5) node{3};
+        \draw (1.5,0.5) node{4};
+
+        \begin{scope}[xshift=8cm]
+        \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+        \draw (0.5,2.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (1.5,1.5) node{3};
+        \draw (1.5,0.5) node{4};
+        \end{scope}
+
+        \begin{scope}[xshift=16cm]
+        \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+        \draw (0.5,2.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,0.5) node{3};
+        \draw (1.5,0.5) node{4};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Part 1}
+    \label{fig:3x7p1}
+\end{figure}
+
+But ultimately, it doesn't matter. To prevent any more empty ($3 \times 2$)-subgrids,
+four cells must be filled in as nonempty (\cref{fig:3x7p2}).
+
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+        \draw (0.5,2.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,0.5) node{3};
+        \draw (1.5,0.5) node{4};
+        \filldraw[fill=color4I] (2,1) rectangle (6,2);
+    \end{tikzpicture}
+    \caption{Part 2}
+    \label{fig:3x7p2}
+\end{figure}
+
+From there, there's only one way for the path to reach all but one cell, \cref{fig:3x7}.
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+        \draw (0.5,2.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,0.5) node{3};
+        \draw (1.5,0.5) node{4};
+        \draw (2.5,0.5) node{5};
+        \draw (3.5,0.5) node{6};
+        \draw (4.5,0.5) node{7};
+        \draw (5.5,0.5) node{8};
+        \draw (6.5,0.5) node{9};
+        \draw (6.5,1.5) node{10};
+        \draw (6.5,2.5) node{11};
+        \draw (5.5,2.5) node{12};
+        \draw (4.5,2.5) node{13};
+        \draw (3.5,2.5) node{14};
+        \filldraw[fill=colorL] (2,1) -- (2,3) -- (3,3) -- (3,2) -- (6,2) -- (6,1) -- cycle;
+    \end{tikzpicture}
+    \caption{$\#_{3,7} = 14$}
+    \label{fig:3x7}
+\end{figure}
+
+(This idea doesn't quite prove it but it is useful intuition:)
+\begin{property}
+Cells orthogonally adjacent to non-ends of the established path are \highlight{not} part of the path.
+\end{property}
+\begin{proof}
+If any were part of the path, then a preexisting cell in the path which had 2 neighboring path cells (i.e.\ not an end) would suddenly have 3 neighbors, which is impossible.
+\end{proof}
+
+\subsubsection{$\#_{3,8} = 15$}
+
+\begin{table}
+\centering
+\begin{tabular}{cc}
+\toprule
+Empty subgrid dimensions & $\#(\text{Unused cells})$ \\
+\midrule
+$1 \times n$ & 0 \\
+\midrule
+$2 \times 2$ & 1 \\
+$2 \times 3$ & 2 \\
+$2 \times 4$ & 3 \\
+$2 \times 5$ & 4 \\
+$2 \times 6$ & 5 \\
+\midrule
+$3 \times 3$ & 4 \\
+\bottomrule
+\end{tabular}
+\caption{Empty subgrid sizes where $\#(\text{Unused cells}) \le 5$}
+\label{tab:emun}
+\end{table}
+
+With similar reasoning as before, only 4 centers are covered, not 5. This leaves 4 empty columns. We can either have an empty ($3 \times 3$)-subgrid plus an empty column, or two empty ($3 \times 2$)-subgrids. Looking at \cref{tab:emun}, these both theoretically result in 4 unused squares. However, we shall show that the latter construction fails.
+
+\begin{definition}[Latter construction]\label{def:3814lc}
+A temporary definition. This refers to a solution with two empty columns on both sides of the grid, instead of 1 + 3 empty columns.
+\end{definition}
+
+\begin{definition}
+The cells with the two endpoints are also known as the two \newterm{ends} of the path.
+Additionally, the path may \newterm{end} in some subgrid. A subgrid is a \newterm{dead end} if a path cannot enter it without ending there.
+\end{definition}
+
+\begin{property}[Cave dead end] \label{prop:cavedend}
+Caves are dead ends.
+\end{property}
+
+\begin{theorem}[Double emptiness dead end] \label{th:2xndend}
+Say the path enters an empty subgrid $s$ whose adjacent cells are also all empty, and where:
+\begin{itemize}
+\item for any two squares $A$ and $B$ from $\adj(s)$ where there is a path from $A$ to $B$, the shortest such path and the shortest such path without entering $s$ are the same length.
+\end{itemize}
+
+Then the path ends there.
+\end{theorem}
+\begin{proof}
+The path cannot escape because instead of entering and exiting the empty subgrid, the path could have gone directly to any escape square.
+\end{proof}
+
+\begin{corollary}
+This applies to when an empty edge of the grid is only adjacent to empty squares.
+\end{corollary}
+
+\begin{corollary}
+If the path must optimally fill a rectangular empty region which includes an entire edge,
+at least one cell of the path must enter the edge, so the path ends there.
+\end{corollary}
+
+\begin{corollary}
+If this applies to non-intersecting edges, that is, opposite edges of the grid are both at least inside $2 \times n$ empty subgrids, the two ends of the path are within those two edges.
+\end{corollary}
+
+In other words, in a \hyperref[def:3814lc]{``latter construction"}, the two ends of the path are within those opposing edges.
+
+Now consider \cref{fig:3x8p1}. We know the path ends within the edges, so with only one more
+cell that can be part of a pentomino, there are at least 3 extra empty squares in the middle.
+So the latter construction fails.
+
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (8,3);
+        \draw (0.5,2.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,0.5) node{3};
+        \draw (1.5,0.5) node{4};
+        \draw (2.5,0.5) node{5};
+        \draw (3.5,0.5) node{6};
+        \draw (4.5,0.5) node{7};
+        \draw (5.5,0.5) node{8};
+        \draw (6.5,0.5) node{9};
+        \filldraw[fill=color4I] (2,1) rectangle (6,2);
+    \end{tikzpicture}
+    \caption{Part 1}
+    \label{fig:3x8p1}
+\end{figure}
+
+And so we are left with the former construction, which uniquely exists with the same logic as before. (\cref{fig:3x8})
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (8,3);
+        \draw (0.5,2.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,0.5) node{3};
+        \draw (1.5,0.5) node{4};
+        \draw (2.5,0.5) node{5};
+        \draw (3.5,0.5) node{6};
+        \draw (4.5,0.5) node{7};
+        \draw (5.5,0.5) node{8};
+        \draw (6.5,0.5) node{9};
+        \draw (7.5,0.5) node{10};
+        \draw (7.5,1.5) node{11};
+        \draw (7.5,2.5) node{12};
+        \draw (6.5,2.5) node{13};
+        \draw (5.5,2.5) node{14};
+        \draw (4.5,2.5) node{15};
+        \filldraw[fill=colorL] (3,1) -- (3,3) -- (4,3) -- (4,2) -- (7,2) -- (7,1) -- cycle;
+    \end{tikzpicture}
+    \caption{$\#_{3,8} = 15$}
+    \label{fig:3x8}
+\end{figure}
+
+
+\subsubsection{$\#_{4,5} = 13$}
+
+There are 6 center cells, and if 5 of those 6 cells are nonempty, the pentomino is basically in midair which certainly isn't optimal.
+
+So 4 out of 6 center cells are used. This either leaves empty two $2 \times 2$ subgrids, which results in 2 unused squares, or one $2 \times 3$ subgrid, which also results in 2 unused squares, or finally one $2 \times 4$ subgrid, which results in 3 unused squares. So any placement with 4 out of 6 center cells and one cell on the edge shall do, except \pentP. (\cref{fig:4x5})
+
+\begin{figure}[htbp!]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+        \draw (0.5,0.5) node{1};
+        \draw (0.5,1.5) node{2};
+        \draw (0.5,2.5) node{3};
+        \draw (0.5,3.5) node{4};
+        \draw (1.5,3.5) node{5};
+        \draw (2.5,3.5) node{6};
+        \draw (3.5,3.5) node{7};
+        \draw (4.5,3.5) node{8};
+        \draw (4.5,2.5) node{9};
+        \draw (4.5,1.5) node{10};
+        \draw (4.5,0.5) node{11};
+        \draw (3.5,0.5) node{12};
+        \draw (2.5,0.5) node{13};
+        \filldraw[fill=colorV,xshift=1cm] (0,0) -- (0,3) -- (3,3) -- (3,2) -- (1,2) -- (1,0) -- cycle;
+
+        \begin{scope}[xshift=5.2cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (0.5,2.5) node{1};
+          \draw (0.5,3.5) node{2};
+          \draw (1.5,3.5) node{3};
+          \draw (2.5,3.5) node{4};
+          \draw (3.5,3.5) node{5};
+          \draw (4.5,3.5) node{6};
+          \draw (4.5,2.5) node{7};
+          \draw (4.5,1.5) node{8};
+          \draw (4.5,0.5) node{9};
+          \draw (3.5,0.5) node{10};
+          \draw (2.5,0.5) node{11};
+          \draw (1.5,0.5) node{12};
+          \draw (0.5,0.5) node{13};
+          \filldraw[fill=colorN] (0,1) -- (0,2) -- (1,2) -- (1,3) -- (4,3) -- (4,2) -- (2,2) -- (2,1) -- cycle;
+        \end{scope}
+        \begin{scope}[xshift=10.4cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (0.5,3.5) node{1};
+          \draw (1.5,3.5) node{2};
+          \draw (2.5,3.5) node{3};
+          \draw (3.5,3.5) node{4};
+          \draw (4.5,3.5) node{5};
+          \draw (4.5,2.5) node{6};
+          \draw (4.5,1.5) node{7};
+          \draw (4.5,0.5) node{8};
+          \draw (3.5,0.5) node{9};
+          \draw (2.5,0.5) node{10};
+          \draw (1.5,0.5) node{11};
+          \draw (0.5,0.5) node{12};
+          \draw (0.5,1.5) node{13};
+          \filldraw[fill=colorY] (0,2) -- (0,3) -- (4,3) -- (4,2) -- (2,2) -- (2,1) -- (1,1) -- (1,2) -- cycle;
+        \end{scope}
+        \begin{scope}[xshift=15.6cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (2.5,3.5) node{13};
+          \draw (3.5,3.5) node{12};
+          \draw (4.5,3.5) node{11};
+          \draw (4.5,2.5) node{10};
+          \draw (4.5,1.5) node{9};
+          \draw (4.5,0.5) node{8};
+          \draw (3.5,0.5) node{7};
+          \draw (2.5,0.5) node{6};
+          \draw (1.5,0.5) node{5};
+          \draw (0.5,0.5) node{4};
+          \draw (0.5,1.5) node{3};
+          \draw (0.5,2.5) node{2};
+          \draw (0.5,3.5) node{1};
+          \filldraw[fill=colorT] (1,1) -- (1,4) -- (2,4) -- (2,3) -- (4,3) -- (4,2) -- (2,2) -- (2,1) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-4.2cm,xshift=2.5cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (3.5,3.5) node{13};
+          \draw (4.5,3.5) node{12};
+          \draw (4.5,2.5) node{11};
+          \draw (4.5,1.5) node{10};
+          \draw (4.5,0.5) node{9};
+          \draw (3.5,0.5) node{8};
+          \draw (2.5,0.5) node{7};
+          \draw (1.5,0.5) node{6};
+          \draw (0.5,0.5) node{5};
+          \draw (0.5,1.5) node{4};
+          \draw (0.5,2.5) node{3};
+          \draw (0.5,3.5) node{2};
+          \draw (1.5,3.5) node{1};
+          \filldraw[fill=colorF] (1,1) -- (1,3) -- (2,3) -- (2,4) -- (3,4) -- (3,3) -- (4,3) -- (4,2) -- (2,2) -- (2,1) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-4.2cm,xshift=7.7cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (4.5,3.5) node{13};
+          \draw (4.5,2.5) node{12};
+          \draw (4.5,1.5) node{11};
+          \draw (4.5,0.5) node{10};
+          \draw (3.5,0.5) node{9};
+          \draw (2.5,0.5) node{8};
+          \draw (1.5,0.5) node{7};
+          \draw (0.5,0.5) node{6};
+          \draw (0.5,1.5) node{5};
+          \draw (0.5,2.5) node{4};
+          \draw (0.5,3.5) node{3};
+          \draw (1.5,3.5) node{2};
+          \draw (2.5,3.5) node{1};
+          \filldraw[fill=colorZ] (1,1) -- (1,3) -- (3,3) -- (3,4) -- (4,4) -- (4,2) -- (2,2) -- (2,1) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-4.2cm,xshift=12.9cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (4.5,1.5) node{13};
+          \draw (4.5,0.5) node{12};
+          \draw (3.5,0.5) node{11};
+          \draw (2.5,0.5) node{10};
+          \draw (1.5,0.5) node{9};
+          \draw (0.5,0.5) node{8};
+          \draw (0.5,1.5) node{7};
+          \draw (0.5,2.5) node{6};
+          \draw (0.5,3.5) node{5};
+          \draw (1.5,3.5) node{4};
+          \draw (2.5,3.5) node{3};
+          \draw (3.5,3.5) node{2};
+          \draw (4.5,3.5) node{1};
+          \filldraw[fill=colorL] (1,1) -- (1,3) -- (5,3) -- (5,2) -- (2,2) -- (2,1) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-8.4cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (0.5,3.5) node{1};
+          \draw (1.5,3.5) node{2};
+          \draw (2.5,3.5) node{3};
+          \draw (3.5,3.5) node{4};
+          \draw (4.5,3.5) node{5};
+          \draw (4.5,2.5) node{6};
+          \draw (4.5,1.5) node{7};
+          \draw (4.5,0.5) node{8};
+          \draw (3.5,0.5) node{9};
+          \draw (2.5,0.5) node{10};
+          \draw (1.5,0.5) node{11};
+          \draw (0.5,0.5) node{12};
+          \draw (0.5,1.5) node{13};
+          \filldraw[fill=colorY] (0,2) -- (0,3) -- (4,3) -- (4,2) -- (3,2) -- (3,1) -- (2,1) -- (2,2) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-8.4cm,xshift=5.2cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (2.5,3.5) node{13};
+          \draw (3.5,3.5) node{12};
+          \draw (4.5,3.5) node{11};
+          \draw (4.5,2.5) node{10};
+          \draw (4.5,1.5) node{9};
+          \draw (4.5,0.5) node{8};
+          \draw (3.5,0.5) node{7};
+          \draw (2.5,0.5) node{6};
+          \draw (1.5,0.5) node{5};
+          \draw (0.5,0.5) node{4};
+          \draw (0.5,1.5) node{3};
+          \draw (0.5,2.5) node{2};
+          \draw (0.5,3.5) node{1};
+          \filldraw[fill=colorF] (1,2) -- (1,4) -- (2,4) -- (2,3) -- (4,3) -- (4,2) -- (3,2) -- (3,1) -- (2,1) -- (2,2) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-8.4cm,xshift=10.4cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (3.5,3.5) node{13};
+          \draw (4.5,3.5) node{12};
+          \draw (4.5,2.5) node{11};
+          \draw (4.5,1.5) node{10};
+          \draw (4.5,0.5) node{9};
+          \draw (3.5,0.5) node{8};
+          \draw (2.5,0.5) node{7};
+          \draw (1.5,0.5) node{6};
+          \draw (0.5,0.5) node{5};
+          \draw (0.5,1.5) node{4};
+          \draw (0.5,2.5) node{3};
+          \draw (0.5,3.5) node{2};
+          \draw (1.5,3.5) node{1};
+          \filldraw[fill=colorX] (1,2) -- (1,3) -- (2,3) -- (2,4) -- (3,4) -- (3,3) -- (4,3) -- (4,2) -- (3,2) -- (3,1) -- (2,1) -- (2,2) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-8.4cm,xshift=15.6cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (3.5,0.5) node{13};
+          \draw (4.5,0.5) node{12};
+          \draw (4.5,1.5) node{11};
+          \draw (4.5,2.5) node{10};
+          \draw (4.5,3.5) node{9};
+          \draw (3.5,3.5) node{8};
+          \draw (2.5,3.5) node{7};
+          \draw (1.5,3.5) node{6};
+          \draw (0.5,3.5) node{5};
+          \draw (0.5,2.5) node{4};
+          \draw (0.5,1.5) node{3};
+          \draw (0.5,0.5) node{2};
+          \draw (1.5,0.5) node{1};
+          \filldraw[fill=colorT] (1,2) -- (1,3) -- (4,3) -- (4,2) -- (3,2) -- (3,0) -- (2,0) -- (2,2) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-12.6cm,xshift=2.5cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (0.5,3.5) node{1};
+          \draw (1.5,3.5) node{2};
+          \draw (2.5,3.5) node{3};
+          \draw (3.5,3.5) node{4};
+          \draw (4.5,3.5) node{5};
+          \draw (4.5,2.5) node{6};
+          \draw (4.5,1.5) node{7};
+          \draw (4.5,0.5) node{8};
+          \draw (3.5,0.5) node{9};
+          \draw (2.5,0.5) node{10};
+          \draw (1.5,0.5) node{11};
+          \draw (0.5,0.5) node{12};
+          \draw (0.5,1.5) node{13};
+          \filldraw[fill=colorN] (0,2) -- (0,3) -- (3,3) -- (3,2) -- (4,2) -- (4,1) -- (2,1) -- (2,2) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-12.6cm,xshift=7.7cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (2.5,3.5) node{13};
+          \draw (3.5,3.5) node{12};
+          \draw (4.5,3.5) node{11};
+          \draw (4.5,2.5) node{10};
+          \draw (4.5,1.5) node{9};
+          \draw (4.5,0.5) node{8};
+          \draw (3.5,0.5) node{7};
+          \draw (2.5,0.5) node{6};
+          \draw (1.5,0.5) node{5};
+          \draw (0.5,0.5) node{4};
+          \draw (0.5,1.5) node{3};
+          \draw (0.5,2.5) node{2};
+          \draw (0.5,3.5) node{1};
+          \filldraw[fill=colorW] (1,2) -- (1,4) -- (2,4) -- (2,3) -- (3,3) -- (3,2) -- (4,2) -- (4,1) -- (2,1) -- (2,2) -- cycle;
+        \end{scope}
+        \begin{scope}[yshift=-12.6cm,xshift=12.9cm]
+          \draw[step=1cm,black,very thin] (0,0) grid (5,4);
+          \draw (3.5,3.5) node{13};
+          \draw (4.5,3.5) node{12};
+          \draw (4.5,2.5) node{11};
+          \draw (4.5,1.5) node{10};
+          \draw (4.5,0.5) node{9};
+          \draw (3.5,0.5) node{8};
+          \draw (2.5,0.5) node{7};
+          \draw (1.5,0.5) node{6};
+          \draw (0.5,0.5) node{5};
+          \draw (0.5,1.5) node{4};
+          \draw (0.5,2.5) node{3};
+          \draw (0.5,3.5) node{2};
+          \draw (1.5,3.5) node{1};
+          \filldraw[fill=colorF] (1,2) -- (1,3) -- (2,3) -- (2,4) -- (3,4) -- (3,2) -- (4,2) -- (4,1) -- (2,1) -- (2,2) -- cycle;
+        \end{scope}
+    \end{tikzpicture}
+    \caption{$\#_{4,5} = 13$}
+    \label{fig:4x5}
+\end{figure}
+
+
+\subsubsection{$\#_{4,6} = 14$}
+
+As it turns out, a four-by-six rectangle has both one-pentomino and two-pentomino solutions.
+
+I shall explain \cref{tab:pentomino sizes}.
+\begin{table}
+    \centering
+    \caption{Pentomino contangle and $4 \times 6$ data. \cite[?:??]{v1}}
+    \begin{tabular}{cccccc}
+        \toprule
+        Pentomino & Contangle & Required empty area in a $4 \times 6$ & Default loss & Saved & Actual loss \\
+        \midrule
+        \pentI{} & $1 \times 5$ & $2 \times 6$ & 0 & 0 & 0 \\
+        \pentL{} & $2 \times 4$ & $2 \times 6$ & 3 & 3 & 1 \\
+        \pentN{} & $2 \times 4$ & $2 \times 6$ & 3 & 3 & 1 \\
+        \pentY{} & $2 \times 4$ & $2 \times 6$ & 3 & 3 & 1 \\
+        \pentF{} & $3 \times 3$ & $2 \times 4$ & 4 & 2 & 2 \\
+        \pentT{} & $3 \times 3$ & $2 \times 4$ & 4 & 2 & 2 \\
+        \pentV{} & $3 \times 3$ & $2 \times 4$ & 4 & 2 & 2 \\
+        \pentW{} & $3 \times 3$ & $2 \times 4$ & 4 & 2 & 2 \\
+        \pentZ{} & $3 \times 3$ & $2 \times 4$ & 4 & 2 & 2 \\
+        \pentX{} & $3 \times 3$ & $2 \times 4$ & 4 & 1 & 3 \\
+        \pentP{} & $2 \times 3$ & $3 \times 4$ & 1 & 1 & 0 \\
+        \pentU{} & $2 \times 3$ & $3 \times 4$ & 1 & 0 & 1 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:pentomino sizes}
+\end{table}
+
+\begin{definition}
+First, the \newterm{contangle} of each pentomino.\authornote{Naming is hard}
+This is the smallest rectangle that contains the pentomino.
+``Contangle" is short for ``containing rectangle".
+\end{definition}
+
+\begin{property}
+We can simulate the pentomino as its contangle, with the exception of when the path
+goes inside it. For \pentI{} this never happens.
+\end{property}
+
+\begin{property}
+Each contangle is then associated with a ``required empty area".
+The idea is that no matter how we place the contangle, the $4 \times 6$ is big enough
+that an entire rectangle will be empty.
+\end{property}
+
+
+\alert{This layout is really fragile!}
+\vspace{0.4em}
+\noindent
+\begin{minipage}{300pt}
+\begin{property}
+And an \badterm{assumption} that the path does not enter the contangle causes ``losses" (empty squares inside the contangle) by default.
+For example, a $3 \times 3$~contangle has 9~squares. Only 5 are taken up by the pentomino.
+So 4~squares will be empty by default.
+
+\hspace{1em}
+On the right, you can find a table of the default amount of empty squares (``default losses") corresponding to each contangle.
+\end{property}
+\end{minipage}
+
+\vspace{-4.45em}
+\begin{flushright}
+\smash{
+\begin{tabular}{cc}
+    \toprule
+    Contangle & Default loss \\
+    \midrule
+    $1 \times 5$ & 0 \\
+    $2 \times 4$ & 3 \\
+    $3 \times 3$ & 4 \\
+    $2 \times 3$ & 1 \\
+    \bottomrule
+\end{tabular}}
+\end{flushright}
+\vspace{2em}
+
+\begin{property}
+However, some of the loss can be ``saved" as long as the path enters the contangle.\marginnote{Breaking the \badterm{assumption}.}
+
+As far as the middle of the path goes, it is useless to enter the contangle if
+not entering is just as efficient...\ \emph{or better} than moving along the platter's border.
+
+The proof is as follows:
+
+If the middle of the path enters the contangle, it enters and exits the contangle. The relevant part of the path starts and ends \emph{outside} of the contangle.\authornote{A path has two ends in this paper, not a start and end. But sure.}
+
+Intuitively, we can't move through the platter, so the most efficient path goes barely around it. So moving along the contangle's border is perfectly fine.
+
+Therefore the path must \highlight{end} within the contangle to save squares \textcolor{white!50!authorcolor}{from emptiness}.
+\end{property}
+
+\hrule\phantom{.}
+\hrule
+\begin{property}
+We finally know enough to calculate the actual loss for each pentomino.
+
+\begin{center}
+\begin{tikzpicture}
+    \draw[step=1cm,black,very thin] (0,0) grid (6,4);
+    \draw (0.5,0.5) node{1};
+    \draw (1.5,0.5) node{2};
+    \draw (2.5,0.5) node{3};
+    \draw (3.5,0.5) node{4};
+    \draw (4.5,0.5) node{5};
+    \draw (5.5,0.5) node{6};
+    \draw (5.5,1.5) node{7};
+    \draw (5.5,2.5) node{8};
+    \draw (5.5,3.5) node{9};
+    \draw (4.5,3.5) node{10};
+    \draw (3.5,3.5) node{11};
+    \draw (2.5,3.5) node{12};
+    \draw (1.5,3.5) node{13};
+    \draw (0.5,3.5) node{14};
+    \filldraw[fill=colorI] (0,1) rectangle (5,2);
+\end{tikzpicture}
+\end{center}
+
+First, \pentI{} has zero loss.\newline
+
+\hrule
+
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL!50!colorY] (1,0) rectangle (5,2);
+\draw (0.5,0.5) node{1};
+\draw (0.5,1.5) node{2};
+\draw (0.5,2.5) node{3};
+\draw (1.5,2.5) node{4};
+\draw (2.5,2.5) node{5};
+\draw (3.5,2.5) node{6};
+\draw (4.5,2.5) node{7};
+\draw (5.5,2.5) node{8};
+\draw (5.5,3.5) node{$\mathcolor{red}{\times}$};
+\draw (5.5,1.5) node{9};
+\draw (5.5,0.5) node{10};
+\draw (4.5,0.5) node{11};
+\draw (3.5,0.5) node{12};
+\draw (2.5,0.5) node{13};
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL!50!colorY!50!colorN] (0,1) rectangle (4,3);
+\draw (0.5,3.5) node{1};
+\draw (1.5,3.5) node{2};
+\draw (2.5,3.5) node{3};
+\draw (3.5,3.5) node{4};
+\draw (4.5,3.5) node{5};
+\draw (4.5,2.5) node{6};
+\draw (4.5,1.5) node{7};
+\draw (4.5,0.5) node{8};
+\draw (3.5,0.5) node{9};
+\draw (2.5,0.5) node{10};
+\draw (1.5,0.5) node{11};
+\draw (0.5,0.5) node{12};
+\draw (0.5,1.5) node{13};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+The $2 \times 4$ contangles manage to save all 3 of their default losses...\ but that requires the path to have 3 ends. In the end, one of these ends are sacrificed, leading to an actual loss of 1. There is also a placement with a $2 \times 4$ empty region and 2 losses, which ties.\newline
+
+\hrule
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorZ!50!colorW!50!colorV!50!colorT!50!colorF] (2,0) rectangle (5,3);
+\draw (0.5,0.5) node{1};
+\draw (0.5,1.5) node{2};
+\draw (0.5,2.5) node{3};
+\draw (0.5,3.5) node{4};
+\draw (1.5,3.5) node{5};
+\draw (2.5,3.5) node{6};
+\draw (3.5,3.5) node{7};
+\draw (4.5,3.5) node{8};
+\draw (5.5,3.5) node{9};
+\draw (5.5,2.5) node{10};
+\draw (5.5,1.5) node{11};
+\draw (5.5,0.5) node{12};
+\draw (4.5,0.5) node{13};
+\draw (3.5,0.5) node{14};
+
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorX] (2,1) -- (2,2) -- (3,2) -- (3,3) -- (4,3) -- (4,2) -- (5,2) -- (5,1) -- (4,1) -- (4,0) -- (3,0) -- (3,1) -- cycle;
+\draw (0.5,0.5) node{1};
+\draw (0.5,1.5) node{2};
+\draw (0.5,2.5) node{3};
+\draw (0.5,3.5) node{4};
+\draw (1.5,3.5) node{5};
+\draw (2.5,3.5) node{6};
+\draw (3.5,3.5) node{7};
+\draw (4.5,3.5) node{8};
+\draw (5.5,3.5) node{9};
+\draw (5.5,2.5) node{10};
+\draw (5.5,1.5) node{11};
+\draw (5.5,0.5) node{12};
+\draw (4.5,0.5) node{13};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+Starting from the unique maximized path for the outside squares, only one end of the path
+can enter the $3 \times 3$ contangle, so only two squares can be saved
+(three squares would require a hexomino). In the case of the \pentX{},
+only one square can be saved.\newline
+
+\hrule
+\phantom{.}\newline{}
+Finally, \pentP{} and \pentU{} have no chance to be a single pentomino solution.\newline
+
+\hrule\phantom{.}
+\hrule
+\end{property}
+
+
+And so the single pentomino solutions showing that $\#_{4,6}=14$ are as follows:
+\begin{center}
+\begin{tikzpicture}[scale=0.35]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,3) -- (0,3) -- (0,4) -- (6,4) -- (6,0) -- cycle;
+\filldraw[fill=colorI] (0,1) rectangle (5,2);
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,0) -- (5,0) -- (5,3) -- (1,3) -- (1,1) -- (3,1) -- (3,0) -- cycle;
+\filldraw[fill=colorV] (3,0) -- (3,2) -- (1,2) -- (1,3) -- (4,3) -- (4,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=14cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,0) -- (5,0) -- (5,3) -- (1,3) -- (1,1) -- (3,1) -- (3,0) -- cycle;
+\filldraw[fill=colorW] (3,0) -- (3,1) -- (2,1) -- (2,2) -- (1,2) -- (1,3) -- (3,3) -- (3,2) -- (4,2) -- (4,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=21cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,0) -- (5,0) -- (5,3) -- (1,3) -- (1,1) -- (3,1) -- (3,0) -- cycle;
+\filldraw[fill=colorZ] (3,0) -- (3,1) -- (1,1) -- (1,3) -- (2,3) -- (2,2) -- (4,2) -- (4,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=28cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,0) -- (5,0) -- (5,3) -- (1,3) -- (1,1) -- (3,1) -- (3,0) -- cycle;
+\filldraw[fill=colorF] (3,0) -- (3,1) -- (1,1) -- (1,2) -- (2,2) -- (2,3) -- (3,3) -- (3,2) -- (4,2) -- (4,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=35cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,0) -- (5,0) -- (5,3) -- (1,3) -- (1,1) -- (3,1) -- (3,0) -- cycle;
+\filldraw[fill=colorT] (3,0) -- (3,1) -- (1,1) -- (1,2) -- (3,2) -- (3,3) -- (4,3) -- (4,0) -- cycle;
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+
+\begin{table}[b]
+    \centering
+    \begin{tabular}{ccccc}
+        \toprule
+        $\#_{n,m}$ & 1 & 2 & 3 & 4 \\
+        \midrule
+        1 & $n$ & & & \\
+        2 & $\dots$ & $n+1$ & & \\
+        3 & $\dots$ & $\dots$ & 5 & \\
+        4 & $\dots$ & $\dots$ & 7 & 11 \\
+        5 & $\dots$ & $\dots$ & 10 & 13 \\
+        6 & $\dots$ & $\dots$ & 13 & 14 \\
+        7 & $\dots$ & $n+2$ & 14 & \\
+        8 & $\dots$ & $\dots$ & 15 & \\
+        \bottomrule
+    \end{tabular}
+    \caption{Summary of zero and single pentomino results}
+    \label{tab:single pentomino results}
+\end{table}
+
+\clearpage
+\subsection{Inefficient results}
+
+Looking at \cref{tab:single pentomino results}, it remains to show that one pentomino is too few pentominoes for larger grid sizes.
+
+While we could just continue like normal, when it gets to two, three, and more pentominoes,
+it seems that something more powerful is needed, otherwise we're going to be stuck
+bruteforcing everything manually, which is error-prone.
+
+Consider the temporary function $C$, which takes a pentomino and outputs how much the grid's path would shorten if the pentomino was gone:
+\[
+C(f) = \#^p_{n,m} - \#^{p \setminus {f}}_{n,m}
+\]
+
+We will assign a \newterm{contribution} to each pentomino in the set of placements $p$ - this assignment is not currently even defined or uniquely determined, but we know such an assignment of contribution only makes sense when the sum of contributions for each pentomino is the length of the path:
+\[
+\left[ \sum_{f \in p} f_{\mathrm{contribution}} \right] = \#^p_{n,m}
+\]
+
+Motivated by \crefrange{fig:redundantcontribution}{fig:equalcontribute} we start with a basic precedence algorithm:
+\begin{enumerate}
+\item
+First, the pentominoes where $C(f) = 0$, that is, they don't do anything to the path's length when removed or added back. Say they exist. We will arbitrarily assign one of them a contribution of \highlight{zero} and we \emph{remove} that pentomino from the grid. Then, if there are still pentominoes where $C(f) = 0$, we repeat the process until there are no more such pentominoes.
+\begin{enumerate}
+\item Note that $C(f)$ takes $p$ from context. In context, $p$ is changing, so $C(f)$ may change too even if some pentomino $f$ remains in place.
+\end{enumerate}
+\item Next, we can remove pentominoes which do not cause any other pentomino $g$ to have $C(g) = 0$. The contribution of a removed pentomino $r$ shall be $C(r)$ at the moment they are removed. By removing pentominoes one by one, we ensure that
+\[
+\left[ \sum_{f \in p} f_{\mathrm{contribution}} \right] = \#^p_{n,m}
+\]
+is indeed true.
+\item If the above heuristics fail, remove a random pentomino.
+\end{enumerate}
+
+\begin{figure}[p]
+    \centering
+    \begin{tikzpicture}[scale=0.75]
+        \draw[step=1cm,black,very thin] (0,0) grid (6,4);
+        \draw (0.5,0.5) node{$\star$};
+        \draw (0.5,1.5) node{$\star$};
+        \draw (0.5,2.5) node{$\star$};
+        \draw (0.5,3.5) node{$\star$};
+        \draw (1.5,3.5) node{$\star$};
+        \draw (2.5,3.5) node{$\star$};
+        \draw (3.5,3.5) node{$\star$};
+        \draw (4.5,3.5) node{$\star$};
+        \draw (5.5,3.5) node{$\star$};
+        \draw[fill=colorP,xshift=1cm] (0,0) -- (0,3) -- (2,3) -- (2,1) -- (1,1) -- (1,0) -- cycle;
+        \draw[fill=colorT,xshift=2cm] (0,0) -- (0,1) -- (1,1) -- (1,3) -- (2,3) -- (2,1) -- (3,1) -- (3,0) -- cycle;
+        \draw (5.5,2.5) node{\textcolor{colorSecondary}{+1}};
+        \draw (5.5,1.5) node{\textcolor{colorSecondary}{+2}};
+        \draw (5.5,0.5) node{\textcolor{colorSecondary}{+3}};
+    \end{tikzpicture}
+    \caption{A difficulty in defining contribution: one of the two pentominoes \pentP{} and \pentT{} are redundant, and the total contribution of the platter is 3.}
+    \label{fig:redundantcontribution}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.5]
         \draw[step=1cm,black,very thin] (0,0) grid (9,9);
         \draw (1.5,1.5) node{$A$};
         \draw (1.5,2.5) node{2};
@@ -779,13 +1696,1267 @@ A polynomial's \badterm{contribution} is informally how much longer it makes a g
         \draw (6.5,1.5) node{\textcolor{colorSecondary}{6}};
         \draw (7.5,1.5) node{$B$};
     \end{tikzpicture}
-    \caption{If the I pentomino was already placed, then adding the \pentW{} changes the path's length from 7 to 21. Nevertheless, \pentW's contribution $C($\pentW$) = 4$. Additionally, \pentW{} helps by blocking the bottom row. So some squares are spent on setup, and some on lengthening the path.}
+    \caption{If \pentI{} was already placed, then adding the \pentW{} changes the path's length from 7 to 21. Nevertheless, $\contribution($\pentW$) = 4$. Additionally, \pentW{} helps by blocking the bottom row.}
     \label{fig:nontrivialcontribution}
 \end{figure}
 
-% \subsection{How to add Comments and Track Changes}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \draw[step=1cm,black,very thin] (0,0) grid (8,3);
+        \draw (0.5,1.5) node{1};
+        \draw (0.5,2.5) node{2};
+        \draw (1.5,2.5) node{3};
+        \draw (2.5,2.5) node{4};
+        \draw (3.5,2.5) node{5};
+        \draw (3.5,1.5) node{6};
+        \draw (3.5,0.5) node{7};
+        \draw (4.5,0.5) node{8};
+        \draw (5.5,0.5) node{9};
+        \draw (6.5,0.5) node{10};
+        \draw (7.5,0.5) node{11};
+        \draw (7.5,1.5) node{12};
+        \filldraw[fill=colorP] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (3,2) -- (3,0) -- cycle;
+        \filldraw[fill=colorL] (4,1) -- (4,3) -- (8,3) -- (8,2) -- (5,2) -- (5,1) -- cycle;
+    \end{tikzpicture}
+    \caption{Both of the pentominoes contribute but it doesn't matter which order they are removed.}
+    \label{fig:equalcontribute}
+\end{figure}
 
-% Comments can be added to your project by highlighting some text and clicking ``Add comment'' in the top right of the editor pane. To view existing comments, click on the Review menu in the toolbar above. To reply to a comment, click on the Reply button in the lower right corner of the comment. You can close the Review pane by clicking its name on the toolbar when you're done reviewing for the time being.
+\clearpage
+\section{Two pentominoes}
+
+\subsection{Initial brimming grids}
+
+With one pentomino, a brimming solution required all non-edge squares
+to be in the pentomino (\cref{cor:brimming1}).
+
+The reasoning was that a single pentomino couldn't stretch to cover all
+empty $2 \times 2$ rectangles in a $3 \times 4$ without controlling the two
+centers. But with two pentominoes, this task is trivial since you can split the work.
+
+In particular, to prevent empty $2 \times 2$ rectangles in a $3 \times 2$ rectangle,
+all you need is two minos in different rows OR one mino in the center row!
+
+Nevertheless, let's try to show the grid sizes are big enough to cause limitations.
+
+The next grid sizes are: $3 \times 9$, $4 \times 6$, and $5 \times 5$.
+
+Starting with $5 \times 5$, what is the minimum amount of minos needed to prevent
+empty $2 \times 2$ cycles? Four:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (5,5);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (1,3) rectangle (2,4);
+\filldraw[fill=gray] (3,3) rectangle (4,4);
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[colorV,line width=0.05cm] (1.5,1.5) rectangle (2.5,2.5);
+\draw[colorV,line width=0.05cm] (2.5,1.5) rectangle (3.5,2.5);
+\draw[color4O,line width=0.05cm] (3.5,0.5) rectangle (4.5,1.5);
+\draw[color4O,line width=0.05cm] (0.5,3.5) rectangle (1.5,4.5);
+\draw[colorV,line width=0.05cm] (1.5,2.5) rectangle (2.5,3.5);
+\draw[colorV,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\draw[color4O,line width=0.05cm] (3.5,3.5) rectangle (4.5,4.5);
+\end{tikzpicture}
+\end{center}
+
+The outer yellow cycles provide a lower bound of 4, and the inner blue cycles pin the exact square of the yellow cycles. With similar intuition in mind, it seems $4 \times 6$ requires 6 minos but is less restrictive in the placement of them, while $3 \times 9$ has the same total as $5 \times 5$ did:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (1,2) rectangle (2,3);
+\filldraw[fill=gray] (3,3) rectangle (4,4);
+\filldraw[fill=gray] (4,2) rectangle (5,3);
+\filldraw[fill=gray] (5,1) rectangle (6,2);
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[color4O,line width=0.05cm] (2.5,0.5) rectangle (3.5,1.5);
+\draw[color4O,line width=0.05cm] (4.5,0.5) rectangle (5.5,1.5);
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\draw[color4O,line width=0.05cm] (4.5,2.5) rectangle (5.5,3.5);
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (5,1) rectangle (6,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[color4O,line width=0.05cm] (2.5,0.5) rectangle (3.5,1.5);
+\draw[color4O,line width=0.05cm] (4.5,0.5) rectangle (5.5,1.5);
+\draw[color4O,line width=0.05cm] (6.5,0.5) rectangle (7.5,1.5);
+\draw[colorV,line width=0.05cm] (1.5,1.5) rectangle (2.5,2.5);
+\draw[colorV,line width=0.05cm] (3.5,1.5) rectangle (4.5,2.5);
+\draw[colorV,line width=0.05cm] (5.5,1.5) rectangle (6.5,2.5);
+\draw[colorV,line width=0.05cm] (7.5,1.5) rectangle (8.5,2.5);
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+
+\subsubsection{$3 \times 9$ grid}
+
+The $3 \times 9$ grid seems particularly easy to bruteforce.
+
+\begin{lemma}\label{lem:3x93rdempty1}
+This cell is not empty:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (5,1) rectangle (6,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (2,1) rectangle (3,2);
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+\begin{proof}
+We prove this by contradiction.
+
+Say the cell is empty.
+
+Then we cannot connect the first and second minos, because the only way to do that is with \pentU{}, which makes the path want to have three ends:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorU] (1,1) -- (1,3) -- (4,3) -- (4,1) -- (3,1) -- (3,2) -- (2,2) -- (2,1) -- cycle;
+\filldraw[fill=gray] (5,1) rectangle (6,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (1,3) -- (1,1) -- (2,1) -- (2,2) -- (3,2) -- (3,1) -- (4,1) -- (4,0) -- cycle;
+\draw (0.5,2.5) node{1};
+\draw (2.5,1.5) node{2};
+\draw (3.5,0.5) node{$\dots$};
+\draw (4.5,0.5) node{(3)};
+\end{tikzpicture}
+\end{center}
+
+So we connect like so:\footnote{There are only two pentominoes, meaning one pentomino covers 1 mino and the other pentomino must cover the other 3.}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (2,1) rectangle (3,2);
+\end{tikzpicture}
+\end{center}
+
+To prevent the \pentI{} from floating in space, we at least must touch it diagonally\minordetail{, so wlog}:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color3V] (1,0) -- (1,2) -- (2,2) -- (2,1) -- (3,1) -- (3,0) -- cycle;
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (2,1) rectangle (3,2);
+\end{tikzpicture}
+\end{center}
+
+At this point, the emptiness graph has three ends. One of them is assumed empty.
+There's no way to fill up the other two ends by adding just two minos to the
+3-mino, though.
+
+So a brimming grid with the given cell empty is impossible.
+\end{proof}
+
+\begin{corollary}
+So we know that these cells are nonempty:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (5,1) rectangle (6,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\filldraw[fill=gray] (2,1) rectangle (3,2);
+\filldraw[fill=gray] (6,1) rectangle (7,2);
+\end{tikzpicture}
+\end{center}
+
+(The right one comes from symmetry. Also we don't know if the cells are connected.)
+\end{corollary}
+
+\begin{lemma}\label{lem:3x9center}
+This cell is not empty:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (5,1) rectangle (6,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\filldraw[fill=gray] (2,1) rectangle (3,2);
+\filldraw[fill=gray] (6,1) rectangle (7,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+\begin{proof}
+Again by contradiction.
+
+The two regions are indeed separate, so we can connect each platter of three $1 \times 1$ minos into a $1 \times 3$ 3-mino.
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color3I] (1,1) rectangle (4,2);
+\filldraw[fill=color3I] (5,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\end{tikzpicture}
+\end{center}
+
+Spawning from the empty square are four ends, so at least two of them must be covered:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color3I] (1,1) rectangle (4,2);
+\filldraw[fill=color3I] (5,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) -- (4,2) -- (3,2) -- (3,3) -- (6,3) -- (6,2) -- (5,2) -- (5,1) -- (6,1) -- (6,0) -- (3,0) -- (3,1) -- cycle;
+\draw (3.5,0.5) node{1};
+\draw (3.5,2.5) node{2};
+\draw (5.5,0.5) node{3};
+\draw (5.5,2.5) node{4};
+\end{tikzpicture}
+\end{center}
+
+Is there a way to do that?
+
+Not this:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorT] (1,1) -- (1,2) -- (3,2) -- (3,3) -- (4,3) -- (4,0) -- (3,0) -- (3,1) -- cycle;
+\filldraw[fill=color3I] (5,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,0) -- (4,3) -- (6,3) -- (6,2) -- (5,2) -- (5,1) -- (6,1) -- (6,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+This has too many ends:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color4J] (1,1) -- (1,2) -- (4,2) -- (4,0) -- (3,0) -- (3,1) -- cycle;
+\filldraw[fill=color4L] (5,0) -- (5,2) -- (8,2) -- (8,1) -- (6,1) -- (6,0) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) -- (4,2) -- (3,2) -- (3,3) -- (6,3) -- (6,2) -- (5,2) -- (5,1) -- cycle;
+\draw (3.5,2.5) node{1};
+\draw (4.5,1.5) node{2};
+\draw (5.5,2.5) node{3};
+\end{tikzpicture}
+\end{center}
+
+This one is so close:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color4J] (1,1) -- (1,2) -- (4,2) -- (4,0) -- (3,0) -- (3,1) -- cycle;
+\filldraw[fill=color4J] (5,1) -- (5,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- cycle;
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (1,1) -- (1,2) -- (4,2) -- (4,0) -- (2,0) -- (2,1) -- cycle;
+\filldraw[fill=colorP] (5,1) -- (5,3) -- (7,3) -- (7,2) -- (8,2) -- (8,1) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+All ways to place 2 minoes out of 4 have failed; there's no way to do it.
+\end{proof}
+
+
+
+\subsubsection{$\#_{3,9} = 17$}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (1,0) -- (1,2) -- (3,2) -- (3,1) -- (4,1) -- (4,0) -- cycle;
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- (5,1) -- (5,2) -- cycle;
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (3,2) -- (3,0) -- cycle;
+\filldraw[fill=colorL] (4,1) -- (4,3) -- (5,3) -- (5,2) -- (8,2) -- (8,1) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+...it seems we have actually proved\authornote{I was lost but then I figured it out. Proofs are like that.}
+\begin{theorem}
+if a solution contains those four cells, then it contains all center cells.\qed
+\end{theorem}
+
+But we have not actually shown that a solution must contain those four cells! So there are more solutions.
+
+As such, we have the following things to do:
+\begin{enumerate}
+\item Find all the ways to avoid having those four squares
+\item Give all the solutions which have those four squares
+\end{enumerate}
+
+\begin{lemma}
+There is a pentomino on the \badterm{left} and a pentomino on the \badterm{right}.
+\end{lemma}
+\begin{proof}
+The empty cycles in the leftmost two columns and the empty cycles in the rightmost two columns cannot be reached by one pentomino. Therefore there exists one pentomino for each side.
+\end{proof}
+
+\begin{lemma}\label{lem:3x9r2c2}
+This cell is not empty:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,1) rectangle (2,2);
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+\begin{proof}
+There is a pentomino which includes a cell in the rightmost two columns. It cannot
+reach the leftmost three columns.
+
+Since we only have one available pentomino to cover that $3 \times 3$, its center must be nonempty by \cref{lem:brimming1}.
+\end{proof}
+
+
+\begin{lemma}\label{lem:3x93rdempty2}
+This cell is not empty:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (2,1) rectangle (3,2);
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+\begin{proof}
+The cell directly to the right of the empty cell is either empty or nonempty.
+
+But if it is nonempty, we can just use \cref{lem:3x93rdempty1}, which didn't actually
+need the third mino.
+
+So it is empty.
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=gray] (1,1) rectangle (2,2);
+\filldraw[fill=gray] (7,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (2,1) rectangle (3,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\draw (2.5,2.5) node{A};
+\draw (3.5,2.5) node{A};
+\draw (2.5,0.5) node{B};
+\draw (3.5,0.5) node{B};
+\end{tikzpicture}
+\end{center}
+
+Consider the squares marked with A and B. Due to $2 \times 2$ cycles, both A and B require at least one mino. But if the mino on the left tries to expand to both, the only way to do that would be with \pentU{}, and the mino on the right cannot expand to either.
+
+(Recall that \cref{lem:3x9r2c2} showed the existence of a pentomino on the left and a pentomino on the right; they correspond to the minos we know exist)
+
+As such, a brimming solution is impossible, and the cell is nonempty.
+\end{proof}
+
+So we are now at:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=color2] (6,1) rectangle (8,2);
+\end{tikzpicture}
+\end{center}
+
+Consider the three unknown center cells A, B, and C. We will cover \minordetail{(}solutions where
+A and C (i.e.\ A, B, and C) are all minos\minordetail{)} in step 2. That leaves solutions where one of
+A or C are empty. Without loss of generality, we will have A be empty.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=color2] (6,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\draw (3.5,1.5) node{A};
+\draw (4.5,1.5) node{B};
+\draw (5.5,1.5) node{C};
+\end{tikzpicture}
+\end{center}
+
+\begin{lemma}
+If B is empty, then unlike before (\cref{lem:3x93rdempty2}), the right side pentomino \emph{can} reach the group of A cells, and even in two different ways:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=color2] (6,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\draw (3.5,2.5) node{A};
+\draw (4.5,2.5) node{A};
+\draw (3.5,0.5) node{B};
+\draw (4.5,0.5) node{B};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- (5,1) -- (5,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\draw (3.5,0.5) node{B};
+\draw (4.5,0.5) node{B};
+
+\begin{scope}[xshift=10cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (7,3) -- (7,2) -- (8,2) -- (8,1) -- (6,1) -- (6,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\draw (3.5,0.5) node{B};
+\draw (4.5,0.5) node{B};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+However, the second option requires a second \pentN{} to cover the empty $2 \times 3$, and is eliminated:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorN] (1,1) -- (1,2) -- (3,2) -- (3,1) -- (5,1) -- (5,0) -- (2,0) -- (2,1) -- cycle;
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (7,3) -- (7,2) -- (8,2) -- (8,1) -- (6,1) -- (6,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\end{tikzpicture}
+\end{center}
+
+Meanwhile, the first option continues:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color4Z] (1,1) -- (1,2) -- (3,2) -- (3,1) -- (4,1) -- (4,0) -- (2,0) -- (2,1) -- cycle;
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- (5,1) -- (5,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (4,1) rectangle (5,2);
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (1,0) -- (1,2) -- (3,2) -- (3,1) -- (4,1) -- (4,0) -- cycle;
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- (5,1) -- (5,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (4,3) -- (4,2) -- (5,2) -- (5,1) -- (8,1) -- (8,2) -- (6,2) -- (6,3) -- (9,3) -- (9,0) -- (4,0) -- (4,1) -- (3,1) -- (3,2) -- (1,2) -- (1,0) -- cycle;
+\end{tikzpicture}
+\end{center}\qed
+\end{lemma}
+
+\begin{lemma}
+The previous lemma covered when B is empty.
+
+So this one is about if B is not empty:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=color2] (6,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\filldraw[fill=gray] (4,1) rectangle (5,2);
+\draw (3.5,1.5) node{A};
+\draw (4.5,1.5) node{B};
+\draw (5.5,1.5) node{C};
+\end{tikzpicture}
+\end{center}
+
+The pentomino on the left cannot reach B, while the pentomino on the right can only reach B by going through C:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color2] (1,1) rectangle (3,2);
+\filldraw[fill=color4I] (4,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\draw (3.5,1.5) node{A};
+\draw (4.5,1.5) node{B};
+\draw (5.5,1.5) node{C};
+\end{tikzpicture}
+\end{center}
+
+Like before, the empty cell (A) has 4 different ends (\cref{lem:3x9center}). And like before,
+one end goes left and the other goes right (otherwise the path only goes to like half of the grid).
+
+And like before, it is invalid for both of these ends to be on the same row (because that
+would be like a fork in the road, see \cref{lem:3x9center} for a visual example).
+
+So we quickly find that \minordetail{wlog} the only possibility is
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=color3V] (1,1) -- (1,2) -- (3,2) -- (3,0) -- (2,0) -- (2,1) -- cycle;
+\filldraw[fill=colorL] (4,1) -- (4,3) -- (5,3) -- (5,2) -- (8,2) -- (8,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (3,1) rectangle (4,2);
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (3,2) -- (3,0) -- cycle;
+\filldraw[fill=colorL] (4,1) -- (4,3) -- (5,3) -- (5,2) -- (8,2) -- (8,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,1) -- (0,3) -- (4,3) -- (4,1) -- (8,1) -- (8,2) -- (5,2) -- (5,3) -- (9,3) -- (9,0) -- (3,0) -- (3,2) -- (1,2) -- (1,1) -- cycle;
+\end{tikzpicture}
+\end{center}\qed
+\end{lemma}
+
+\hrule
+
+\begin{center}
+\begin{tikzpicture}[scale=0.35]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (1,0) -- (1,2) -- (3,2) -- (3,1) -- (4,1) -- (4,0) -- cycle;
+\filldraw[fill=colorN] (4,2) -- (4,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- (5,1) -- (5,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (4,3) -- (4,2) -- (5,2) -- (5,1) -- (8,1) -- (8,2) -- (6,2) -- (6,3) -- (9,3) -- (9,0) -- (4,0) -- (4,1) -- (3,1) -- (3,2) -- (1,2) -- (1,0) -- cycle;
+
+\begin{scope}[xshift=10cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (3,2) -- (3,0) -- cycle;
+\filldraw[fill=colorL] (4,1) -- (4,3) -- (5,3) -- (5,2) -- (8,2) -- (8,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,1) -- (0,3) -- (4,3) -- (4,1) -- (8,1) -- (8,2) -- (5,2) -- (5,3) -- (9,3) -- (9,0) -- (3,0) -- (3,2) -- (1,2) -- (1,1) -- cycle;
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+This concludes step 1. Now onto step 2.
+
+\begin{enumerate}
+\item Find all the ways to avoid having those four squares
+\item Give all the solutions which have those four squares
+\end{enumerate}
+
+Recall that the second item implies all center squares are covered. Splitting the
+center squares 2 to 5 and 3 to 4 gets:
+\begin{center}
+\begin{tikzpicture}[scale=0.35]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorT] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (3,2) -- (3,1) -- (1,1) -- (1,0) -- cycle;
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,0) -- (1,1) -- (8,1) -- (8,2) -- (1,2) -- (1,3) -- (9,3) -- (9,0) -- cycle;
+
+\begin{scope}[xshift=10cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (0,1) -- (0,3) -- (2,3) -- (2,2) -- (3,2) -- (3,1) -- cycle;
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (8,1) -- (8,2) -- (2,2) -- (2,3) -- (9,3) -- (9,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=20cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (0,2) -- (0,3) -- (3,3) -- (3,1) -- (1,1) -- (1,2) -- cycle;
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,2) -- (1,2) -- (1,1) -- (8,1) -- (8,2) -- (3,2) -- (3,3) -- (9,3) -- (9,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=30cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (1,1) -- (1,3) -- (4,3) -- (4,2) -- (3,2) -- (3,1) -- cycle;
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (1,3) -- (1,1) -- (8,1) -- (8,2) -- (4,2) -- (4,3) -- (9,3) -- (9,0) -- cycle;
+\end{scope}
+
+\begin{scope}[yshift=-4cm,xshift=5cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorN] (1,1) -- (1,2) -- (2,2) -- (2,3) -- (5,3) -- (5,2) -- (3,2) -- (3,1) -- cycle;
+\filldraw[fill=colorI] (3,1) rectangle (8,2);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (8,1) -- (8,2) -- (5,2) -- (5,3) -- (9,3) -- (9,0) -- cycle;
+
+\begin{scope}[xshift=10cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorP] (1,1) -- (1,2) -- (2,2) -- (2,3) -- (4,3) -- (4,1) -- cycle;
+\filldraw[fill=colorL] (4,1) -- (4,3) -- (5,3) -- (5,2) -- (8,2) -- (8,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (8,1) -- (8,2) -- (5,2) -- (5,3) -- (9,3) -- (9,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=20cm]
+\draw[step=1cm,black,very thin] (0,0) grid (9,3);
+\filldraw[fill=colorN] (1,1) -- (1,2) -- (3,2) -- (3,3) -- (5,3) -- (5,2) -- (4,2) -- (4,1) -- cycle;
+\filldraw[fill=colorY] (4,1) -- (4,2) -- (5,2) -- (5,3) -- (6,3) -- (6,2) -- (8,2) -- (8,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (3,3) -- (3,2) -- (1,2) -- (1,1) -- (8,1) -- (8,2) -- (6,2) -- (6,3) -- (9,3) -- (9,0) -- cycle;
+\end{scope}
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+bringing the total to 9 solutions.
+
+\subsubsection{$4 \times 6$ grid}
+
+The $4 \times 6$ and $5 \times 5$ grids are harder, because unlike a $3 \times 9$ grid it is barely possible
+for a pentomino to cover two $2 \times 2$-s on opposite locations on the grid:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[color4O,line width=0.05cm] (2.5,0.5) rectangle (3.5,1.5);
+\draw[color4O,line width=0.05cm] (4.5,0.5) rectangle (5.5,1.5);
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\draw[color4O,line width=0.05cm] (4.5,2.5) rectangle (5.5,3.5);
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (5,5);
+\filldraw[fill=colorV] (1,1) -- (1,2) -- (3,2) -- (3,4) -- (4,4) -- (4,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[colorV,line width=0.05cm] (1.5,1.5) rectangle (2.5,2.5);
+\draw[colorV,line width=0.05cm] (2.5,1.5) rectangle (3.5,2.5);
+\draw[color4O,line width=0.05cm] (3.5,0.5) rectangle (4.5,1.5);
+\draw[color4O,line width=0.05cm] (0.5,3.5) rectangle (1.5,4.5);
+\draw[colorV,line width=0.05cm] (1.5,2.5) rectangle (2.5,3.5);
+\draw[colorV,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\draw[color4O,line width=0.05cm] (3.5,3.5) rectangle (4.5,4.5);
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+However, it is impossible for a single pentomino to cover \highlight{all four} $2 \times 2$ cycles on the very corner of the grid. And in fact, a pentomino covering two opposite corners must cover the third corner, otherwise the second pentomino also has a stretching across two opposite corners problem -- but where such problem is impossible due to the first pentomino blocking the way.
+
+For clarity, either:
+\begin{enumerate}
+\item One pentomino covers three corners, and the second pentomino covers the fourth one.
+\item One pentomino covers two corners which are \highlight{not} opposite each other, and the second pentomino covers the other two.
+\end{enumerate}
+
+Note that for $4 \times 6$ grids, the second possibility has two orientations. The non-opposite corners can either be horizontal or vertical.
+
+Let us start with possibility one.
+
+This is the furthest square reachable from the top middle empty cycle:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[color4O,line width=0.05cm] (2.5,0.5) rectangle (3.5,1.5);
+\draw[color4O,line width=0.05cm] (4.5,0.5) rectangle (5.5,1.5);
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\draw[color4O,line width=0.05cm] (4.5,2.5) rectangle (5.5,3.5);
+\filldraw[fill=colorV] (0,0) -- (0,3) -- (3,3) -- (3,2) -- (1,2) -- (1,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+This is the furthest square reachable from the top left empty cycle:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,0.5) rectangle (1.5,1.5);
+\draw[color4O,line width=0.05cm] (2.5,0.5) rectangle (3.5,1.5);
+\draw[color4O,line width=0.05cm] (4.5,0.5) rectangle (5.5,1.5);
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\draw[color4O,line width=0.05cm] (4.5,2.5) rectangle (5.5,3.5);
+\filldraw[fill=colorI] (1,3) rectangle (6,4);
+\end{tikzpicture}
+\end{center}
+
+Since these are unique placements and they fail to be solutions, a solution \minordetail{for possibility one} must have these cells in the path:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,4) -- (6,4) -- (6,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+\begin{lemma}
+The path is a subset of one of these two loops:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,3) -- (1,3) -- (1,1) -- (0,1) -- (0,4) -- (6,4) -- (6,0) -- cycle;
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\draw[color4O,line width=0.05cm] (0.5,2.5) rectangle (1.5,3.5);
+\draw[color4O,line width=0.05cm] (2.5,2.5) rectangle (3.5,3.5);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,3) -- (4,3) -- (4,2) -- (1,2) -- (1,1) -- (0,1) -- (0,3) -- (3,3) -- (3,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+\begin{proof}
+If it wasn't, it would have to have at least one cell from both this $1 \times 3$ in the first row and the $1 \times 3$ in the second row:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,4) -- (6,4) -- (6,0) -- cycle;
+\draw[color3I,line width=0.05cm] (0.5,3.5) -- (2.5,3.5);
+\draw[color3I,line width=0.05cm] (1.5,2.5) -- (3.5,2.5);
+\end{tikzpicture}
+\end{center}
+
+There aren't enough empty squares for the two ends of the path to enter one $1 \times 3$ each, so
+that means that exactly one end will enter the two $1 \times 3$-s.
+
+Meaning the path will include a cell in the $1 \times 3$ in the first row that is \emph{orthogonally adjacent} to a cell in the path in the $1 \times 3$ in the second row!
+
+So the only options are:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (1,3) -- (1,4) -- (2,4) -- (2,2) -- (1,2) -- (1,1) -- (5,1) -- (5,4) -- (6,4) -- (6,0) -- cycle;
+\draw[color3I,line width=0.05cm] (0.5,3.5) -- (2.5,3.5);
+\draw[color3I,line width=0.05cm] (1.5,2.5) -- (3.5,2.5);
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,3) -- (3,3) -- (3,2) -- (2,2) -- (2,4) -- (6,4) -- (6,0) -- cycle;
+\draw[color3I,line width=0.05cm] (0.5,3.5) -- (2.5,3.5);
+\draw[color3I,line width=0.05cm] (1.5,2.5) -- (3.5,2.5);
+\end{scope}
+\end{tikzpicture}
+\end{center}
+which both fail because they trap an empty corner cell!\footnote{Perhaps it's clearer to say that, with the requirement that the relevant cells are \emph{orthogonally adjacent}, either the remaining cells are split into two regions, or the path has a $2 \times 2$ square (invalid).}
+\end{proof}
+
+Noting that this is the same as saying that the second pentomino must contain one of those $1 \times 3$ rectangles. By further noting that a cycle can only be turned into a valid path when it is interrupted contiguously, we enumerate all the solutions for possibility one:\marginnote{Three potential solutions failed by duplicating the \pentL{}.}
+\begin{center}
+\begin{tikzpicture}[scale=0.35]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorV] (0,1) -- (0,4) -- (3,4) -- (3,3) -- (1,3) -- (1,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,1) -- (5,1) -- (5,3) -- (4,3) -- (4,2) -- (1,2) -- (1,3) -- (3,3) -- (3,4) -- (6,4) -- (6,0) -- cycle;
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorP] (0,2) -- (0,4) -- (3,4) -- (3,3) -- (2,3) -- (2,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,2) -- (1,2) -- (1,1) -- (5,1) -- (5,3) -- (4,3) -- (4,2) -- (2,2) -- (2,3) -- (3,3) -- (3,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=14cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorP] (0,3) -- (0,4) -- (3,4) -- (3,2) -- (1,2) -- (1,3) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (1,3) -- (1,1) -- (5,1) -- (5,3) -- (4,3) -- (4,2) -- (3,2) -- (3,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=21cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorN] (0,3) -- (0,4) -- (3,4) -- (3,3) -- (4,3) -- (4,2) -- (2,2) -- (2,3) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (5,1) -- (5,3) -- (3,3) -- (3,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=28cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorI] (0,3) rectangle (5,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (4,3) -- (4,2) -- (1,2) -- (1,1) -- (5,1) -- (5,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+
+\begin{scope}[yshift=-5cm,xshift=3.5cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorN] (0,3) -- (0,4) -- (2,4) -- (2,3) -- (4,3) -- (4,2) -- (1,2) -- (1,3) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,3) -- (1,3) -- (1,1) -- (5,1) -- (5,3) -- (2,3) -- (2,4) -- (6,4) -- (6,0) -- cycle;
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorP] (1,2) -- (1,4) -- (3,4) -- (3,3) -- (4,3) -- (4,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (1,4) -- (1,1) -- (5,1) -- (5,3) -- (3,3) -- (3,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=14cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorP] (1,2) -- (1,3) -- (2,3) -- (2,4) -- (4,4) -- (4,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (2,4) -- (2,3) -- (1,3) -- (1,1) -- (5,1) -- (5,3) -- (4,3) -- (4,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+
+\begin{scope}[xshift=21cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorL] (1,1) -- (1,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[fill=colorN] (1,2) -- (1,3) -- (3,3) -- (3,4) -- (5,4) -- (5,3) -- (4,3) -- (4,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (3,4) -- (3,3) -- (1,3) -- (1,1) -- (5,1) -- (5,4) -- (6,4) -- (6,0) -- cycle;
+\end{scope}
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+Now we continue with item 2:
+\begin{enumerate}
+\item One pentomino covers three corners, and the second pentomino covers the fourth one.
+\item One pentomino covers two corners which are \highlight{not} opposite each other, and the second pentomino covers the other two.
+\end{enumerate}
+
+Either the non-opposite corners are horizontal or they are vertical. But horizontal is impossible. The only way to stretch across horizontal corners is to include this $1 \times 4$ for each pentomino:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color4I] (1,1) rectangle (5,2);
+\filldraw[fill=color4I] (1,2) rectangle (5,3);
+\end{tikzpicture}
+\end{center}
+
+The remaining empty squares form a cycle and can only be interrupted contiguously. Each \fcolorbox{color4I}{white}{(4-mino) I} gains one mino, resulting in two duplicate \pentI{}s when those minos are contiguous.
+
+So:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\end{tikzpicture}
+\end{center}
+
+We can see that the path is a subset of these two cycles:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\draw[color4O,line width=0.05cm] (0.5,0.5) -- (0.5,3.5) -- (2.5,3.5) -- (2.5,0.5) -- cycle;
+\draw[color4O,line width=0.05cm] (3.5,0.5) -- (3.5,3.5) -- (5.5,3.5) -- (5.5,0.5) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+The path won't be in just half the grid, so it will cross between the two cycles.
+Three crossings would cause a $2 \times 2$ empty square, so there are either one or two crossings.
+
+In fact, the pentominoes can't cover the entire left or right column, so the path goes across all the columns.
+
+So looking at the middle four columns...
+
+The path can go straight across:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,3) rectangle (5,4);
+\end{tikzpicture}
+\end{center}
+
+It can go to the other opening like this:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,3) -- (1,4) -- (4,4) -- (4,1) -- (5,1) -- (5,0) -- (3,0) -- (3,3) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+(This one fails immediately:)
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorP] (1,1) -- (1,3) -- (3,3) -- (3,0) -- (2,0) -- (2,1) -- cycle;
+\filldraw[fill=colorP] (4,1) -- (4,4) -- (6,4) -- (6,2) -- (5,2) -- (5,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (4,4) -- (4,1) -- (5,1) -- (5,2) -- (6,2) -- (6,0) -- (3,0) -- (3,3) -- (1,3) -- (1,1) -- (2,1) -- (2,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+Or it zigzags a little:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,3) -- (1,4) -- (3,4) -- (3,3) -- (4,3) -- (4,1) -- (5,1) -- (5,0) -- (3,0) -- (3,2) -- (2,2) -- (2,3) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+(This one \highlight{succeeds} immediately:)
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorP] (1,0) -- (1,3) -- (2,3) -- (2,2) -- (3,2) -- (3,0) -- cycle;
+\filldraw[fill=colorT] (4,1) -- (4,3) -- (3,3) -- (3,4) -- (6,4) -- (6,3) -- (5,3) -- (5,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (3,4) -- (3,3) -- (4,3) -- (4,1) -- (5,1) -- (5,3) -- (6,3) -- (6,0) -- (3,0) -- (3,2) -- (2,2) -- (2,3) -- (1,3) -- (1,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+Finally, there's only one way for two crossings to fit:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,3) rectangle (5,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,0) rectangle (4,1);
+\end{tikzpicture}
+\end{center}
+
+Note that unlike the first crossing, the second crossing doesn't have to go all the way from the first column to the sixth, it just has to cross from the third to the fourth. And this doesn't work:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,3) rectangle (5,4);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,0) -- (1,1) -- (2,1) -- (2,2) -- (4,2) -- (4,1) -- (3,1) -- (3,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+because then the left pentomino doesn't have enough room. This is because the path can only connect by going through all four cells in the first column (the bottom end moving right would make a $2 \times 2$ square).
+
+This also applies to the actually possible arrangement due to a wlog argument. So:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (5,4) -- (5,3) -- (1,3) -- (1,1) -- (4,1) -- (4,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+The left pentomino can only be \pentP{} \minordetail{as \pentU{} traps an empty square}.
+If the bottom end of the path goes right one more square, it is symmetrical and it doesn't matter how the \pentP{} is arranged. So first the non-symmetrical solutions:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorP] (1,1) -- (1,3) -- (4,3) -- (4,2) -- (3,2) -- (3,1) -- cycle;
+\filldraw[fill=colorF] (3,1) -- (3,2) -- (4,2) -- (4,3) -- (5,3) -- (5,1) -- (6,1) -- (6,0) -- (4,0) -- (4,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,1) -- (5,1) -- (5,3) -- (1,3) -- (1,1) -- (4,1) -- (4,0) -- cycle;
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorP] (1,1) -- (1,3) -- (3,3) -- (3,2) -- (4,2) -- (4,1) -- cycle;
+\filldraw[fill=colorZ] (3,2) -- (3,3) -- (5,3) -- (5,1) -- (6,1) -- (6,0) -- (4,0) -- (4,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,1) -- (5,1) -- (5,3) -- (1,3) -- (1,1) -- (4,1) -- (4,0) -- cycle;
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+And now we wlog, not the \pentP{}, but whether the right pentomino covers the top right or bottom right corner \textcolor{authorcolor}{(easier to write in \LaTeX{} because I can almost copy-and-paste)}, resulting in the remaining solutions for this possibility:\marginnote{Not including any corner would just duplicate the \pentP{}.}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorP] (1,1) -- (1,3) -- (4,3) -- (4,2) -- (3,2) -- (3,1) -- cycle;
+\filldraw[fill=colorF] (3,1) -- (3,2) -- (4,2) -- (4,3) -- (5,3) -- (5,2) -- (6,2) -- (6,0) -- (5,0) -- (5,1) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,2) -- (5,2) -- (5,3) -- (1,3) -- (1,1) -- (5,1) -- (5,0) -- cycle;
+
+\begin{scope}[xshift=7cm]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorP] (1,1) -- (1,3) -- (3,3) -- (3,2) -- (4,2) -- (4,1) -- cycle;
+\filldraw[fill=colorW] (3,2) -- (3,3) -- (5,3) -- (5,2) -- (6,2) -- (6,0) -- (5,0) -- (5,1) -- (4,1) -- (4,2) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,2) -- (5,2) -- (5,3) -- (1,3) -- (1,1) -- (5,1) -- (5,0) -- cycle;
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+Going back to the first possibility: the path goes straight across but does not cross a second time:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (1,3) rectangle (5,4);
+\end{tikzpicture}
+\end{center}
+
+The furthest the left end \minordetail{(chosen wlog)} could go without crossing would be:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=color2] (1,1) rectangle (2,3);
+\filldraw[fill=color2] (4,1) rectangle (5,3);
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (5,4) -- (5,3) -- (1,3) -- (1,1) -- (2,1) -- (2,2) -- (3,2) -- (3,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+creating our first solution with \pentU{}:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[step=1cm,black,very thin] (0,0) grid (6,4);
+\filldraw[fill=colorU] (1,1) -- (1,3) -- (4,3) -- (4,1) -- (3,1) -- (3,2) -- (2,2) -- (2,1) -- cycle;
+\filldraw[fill=colorT] (3,0) -- (3,1) -- (4,1) -- (4,3) -- (5,3) -- (5,1) -- (6,1) -- (6,0) -- cycle;
+\filldraw[white,draw=gray,postaction={pattern={Lines[angle=45, distance=2mm, line width=1mm]},pattern color=gray!30}] (0,0) -- (0,4) -- (6,4) -- (6,1) -- (5,1) -- (5,3) -- (1,3) -- (1,1) -- (2,1) -- (2,2) -- (3,2) -- (3,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+$\mathbb{Proj}\mathbb{r}$
+
+
+
+
+
+
+\clearpage
+\section{Uncategorized}
+
+\subsection{Bounded aid}
+A pentomino's \newterm{contribution} is informally how much longer it makes the path --- such that the sum of the contributions of each individual pentomino is equal to $\#^p_{n, m} - \#^{\emptyset}_{n, m}$. However, there are some difficulties in defining this, as shown by \cref{fig:redundantcontribution,fig:nontrivialcontribution}. For now, the contribution is calculated by placing down an arbitrary sequence of pentominoes such that each pentomino placed makes the path longer, then placing down the redundant pentominoes. As such, the contribution depends on the order in which pentominoes are placed down, and is simply how much the path got longer when the pentomino was placed. Note that the path being made longer includes the possibility that the new path is completely different.
+
+\begin{lemma}
+The contribution of a platter $p$, given that the path starts and ends outside the platter, is upper bounded by $a - t$ where $a$ and $t$ are described below. In particular, since $a \le \#(\border(p))$ and $3 \le t$, $\contribution(p) \le \max(\#(\border(p)) - 3, 0)$.
+\end{lemma}
+
+\begin{proof}
+Let the original path be obstructed by a platter (if not, the contribution is zero so it is true thanks to the $\max$).
+
+More specifically, the original path enters the platter for a first time and some time later, exits it for the last time.\footnote{The arrow diagram does not include the possibility that $a$ and/or $b$ are on the border, or that the ``through platter'' sub-path may include multiple exits and entrances of the platter, but the logic still holds.}
+\[ A \to \border(p) \to \text{through platter} \to \border(p) \to B \]
+
+Instead, we modify the path to go around the platter. Here we go along the border:\marginnote{Following the border is not necessarily the most efficient route --- an example is \pentU{}.}
+\[ A \to \border(p) \to \text{along border} \to \border(p) \to B \]
+
+So the contribution becomes the difference between the lengths of the sub-paths that go (through the platter) and (along the border), notated $t$ and $a$ respectively.
+
+$t \ge 3$ since the path includes at least two cells on the border and one cell inside the platter, and $\#(\border(p)) \ge a$ since the path is along the border.
+\end{proof}
+
+\begin{note}
+If the platter is not on the edge, then its border forms a cycle and $a \le \lfloor\#(\border(p)) / 2\rfloor$, otherwise at least 3 cells of the border that would exist when the platter is not on the edge are now off the edge of the grid. Either way this further decreases the upper bound.
+\end{note}
+
+\begin{note}
+The new path may not necessarily be related to the path before the platter was placed. An example is if there were two paths of length 5 and 7, and a platter increased the first path by 3.
+\end{note}
+
+\badterm{\textbf{Unproven}}
+Given a set of placements $s$ and a pentomino $p$, the contribution of the pentomino is upper bounded by $\#^s_{n, m} - \#^{s-p}_{n, m}$.
+
+The maximum such upper bound is $\#(\border(p)) - 1$, however if the pentomino's platter is not adjacent to the wall, then only half of the entire platter's border and therefore the individual pentomino's border is useful (since it's a loop). Part of the reason why the contribution is so hard to describe is that the maximal minimal path's endpoints may change upon the addition of a pentomino.
+
+
+
+
+
+\clearpage
+\subsection{UNUSED}
+\begin{theorem}[Ways to orient a pentomino]
+\label{th:Pentomino orientations}
+
+A platter has at most 8 orientations\minordetail{, since the dihedral group for a regular polygon of $n$ sides (here, a square) has $2n$ elements and platters can be inscribed in some $m \times m$}. However, some pentominoes have one or more symmetries, which reduce the possible orientations (\cref{tab:pentomino orientations}).
+
+    \begin{table}
+        \centering
+        \caption{Number of ways to orient each pentomino. \cite[0:41]{v1}}
+        \begin{tabular}{ccc}
+            \toprule
+            Pentomino & Symmetries & Orientations \\
+            \midrule
+            \pentX{} & 4 & 1 \\
+            \pentI{} & 2 & 2 \\
+            \pentT{} & 1 & 4 \\
+            \pentU{} & 1 & 4 \\
+            \pentV{} & 1 & 4 \\
+            \pentW{} & 1 & 4 \\
+            \pentZ{} & 1 & 4 \\
+            \pentF{} & 0 & 8 \\
+            \pentL{} & 0 & 8 \\
+            \pentP{} & 0 & 8 \\
+            \pentN{} & 0 & 8 \\
+            \pentY{} & 0 & 8 \\
+            \bottomrule
+        \end{tabular}
+        \label{tab:pentomino orientations}
+    \end{table}
+\end{theorem}
+
+\begin{corollary}
+\label{cor:cutcorner3xn}
+
+The caption for \cref{fig:Reduced orientations} holds. This is partly thanks to the entire grid itself being symmetrical along both a vertical and horizontal axis: since \cref{th: Sided removal} works after reflection, this reduces the number of orientations by a factor of four\minordetail{; the maximum orientations goes from eight to two}.
+\end{corollary}
+
+\begin{note}
+\pentU{} satisfies a general version of \cref{th: Sided removal} where both corners are covered.
+\end{note}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.5]
+        \begin{scope}[xshift=1cm]
+            \draw[step=1cm,black,very thin] (0,0) grid (11,3);
+            \filldraw[red,fill=colorV] (0,0) -- (3,0) -- (3,1) -- (1,1) -- (1,3) -- (0,3) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[red,fill=colorW] (0,0) -- (2,0) -- (2,1) -- (3,1) -- (3,3) -- (2,3) -- (2,2) -- (1,2) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=8cm]
+            \filldraw[red,fill=colorZ] (0,0) -- (2,0) -- (2,2) -- (3,2) -- (3,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[yshift=-4cm]
+            \draw[step=1cm,black,very thin] (-1,0) grid (14,3);
+            \filldraw[fill=colorP] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,2) -- (0,2) -- cycle;
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[red,fill=colorP] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (2,2) -- (2,0) -- cycle;
+            \end{scope}
+
+            \begin{scope}[xshift=7cm]
+            \filldraw[fill=colorT] (0,0) -- (0,3) -- (1,3) -- (1,2) -- (3,2) -- (3,1) -- (1,1) -- (1,0) -- cycle;
+            \draw[red] (0,0) -- (0,3);
+            \end{scope}
+
+            \begin{scope}[xshift=11cm]
+            \filldraw[red,fill=colorT] (0,0) -- (3,0) -- (3,1) -- (2,1) -- (2,3) -- (1,3) -- (1,1) -- (0,1) -- cycle;
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[shift={(3cm,4cm)}]
+            \draw[step=1cm,black,very thin] (0,0) grid (7,3);
+            \filldraw[fill=colorF] (0,0) -- (1,0) -- (1,1) -- (3,1) -- (3,2) -- (2,2) -- (2,3) -- (1,3) -- (1,2) -- (0,2) -- cycle;
+            \draw[red] (0,0) -- (0,2) -- (1,2) -- (1,3);
+
+            \begin{scope}[xshift=4cm]
+            \filldraw[red,fill=colorF] (0,0) -- (0,1) -- (1,1) -- (1,3) -- (2,3) -- (2,2) -- (3,2) -- (3,1) -- (2,1) -- (2,0) -- cycle;
+            \end{scope}
+        \end{scope}
+    \end{tikzpicture}
+    \caption{All orientations of \pentF, \pentV, \pentW, \pentZ, \pentP, and \pentT{} in a $3 \times n$ after reducing by symmetry. The following satisfy \cref{th: Sided removal}: \pentV, \pentW, \pentZ, the second \pentP{} and \pentT{}, and the left side of both \pentF's. Additionally, the second \pentF{} is strictly worse than the first \pentF, since after filling in the ignorable subgrid, the first \pentF{} practically replaces a wall with an empty square when compared to the second \pentF. (A red border denotes \cref{th: Sided removal} is satisfied for the given side).}
+    \label{fig:Reduced orientations}
+\end{figure}
+
+
+
+
+\subsection{Almost}
+In a $3 \times 7$, with one pentomino there must be an empty $3 \times 2$ region, unless we place \pentI{} in the middle which is not optimal. We have $\#^{\emptyset}_{3, 2} = 4$, leaving two cells empty. Such a solution is almost brimming: less than 5 cells are empty, so no more pentominoes can be added.
+
+
+% A...........
+% !!!!!!!!!!!.
+%          B..
+
+
+
+\clearpage
+\appendix
+\section{Additional colors}
+
+A single mino is gray.
+\begin{center}
+\begin{tikzpicture}
+\fill[color=gray] (0,0) rectangle (1,1);
+\end{tikzpicture}
+\end{center}
+
+A domino is the HTML5 color ``rebeccapurple" with a third of the RGB values.
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color2] (0,0) rectangle (2,1);
+\end{tikzpicture}
+\end{center}
+
+The \fcolorbox{color3I}{white}{I 3-mino} is the same color as \pentW{}.
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color3I] (0,0) rectangle (3,1);
+\end{tikzpicture}
+\end{center}
+
+The \fcolorbox{color3V}{white}{V 3-mino} is pink (\verb|#CFC|).
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color3V] (0,0) -- (2,0) -- (2,1) -- (1,1) -- (1,2) -- (0,2) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+The tetrominoes (4-minos) should be familiar to any tetris player:
+%IJLOZ
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4I] (0,0) rectangle (4,1);
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4J] (0,0) -- (0,2) -- (1,2) -- (1,1) -- (3,1) -- (3,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4L] (0,0) -- (0,1) -- (2,1) -- (2,2) -- (3,2) -- (3,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4O] (0,0) rectangle (2,2);
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4S] (0,1) -- (0,2) -- (2,2) -- (2,1) -- (3,1) -- (3,0) -- (1,0) -- (1,1) -- cycle;
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4T] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (2,2) -- (2,1) -- (3,1) -- (3,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}
+\fill[color=color4Z] (0,0) -- (0,1) -- (1,1) -- (1,2) -- (3,2) -- (3,1) -- (2,1) -- (2,0) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+Their colors are: \pentU{}, \pentV{} but darker and more blue, \pentF{}, \pentL{}, \pentN{}, (for each of R, G, B, choose the minimum of \pentX{} and \pentY{}), and \pentI{}.
+
+\section{Technicalities not proven}
+
+The computer-proof-writer in me cannot help but notice these gaps that no one actually cares about when going through this humanly.
+
+\begin{enumerate}
+\item Introduction: the path: it was not proven that $A$ and $B$ can be derived from a set of placements. This is non-constructively trivial, but constructively, something like implementing a floodfill algorithm is the only solution I can think of.
+
+\item \Cref{def:edge}: If the ``sub-'' in ``sub-subgrid''  is taken to be like the ``sub'' in ``subgrid'', then it remains to show that the edge of a subgrid forms an orthogonally adjacent region, which happens to be true.
+\end{enumerate}
+
+\section{Style guide}\label{sec:style}
+
+A single sentence includes a citation:
+
+\begin{quote}
+We can see that this (\cref{sec:style}).
+\end{quote}
+
+A citation that applies to multiple sentences does not belong to the sentence:
+
+\begin{quote}
+We can see that this. Therefore that. (\cref{sec:style})
+\end{quote}
+
+Similarly, if a quote contains a sentence, it includes the punctuation. Otherwise it doesn't.
+\begin{quote}
+``Hello."
+\end{quote}
+
+A parenthesized sentence by default does not have the period, because you could also argue the sentence contains the parentheses, and it looks better, especially in a paragraph. But once the parentheses contain two or more sentences, the punctuation goes inside.
+\begin{quotation}
+My world is changing and I miss youuuuu.
+(Japanese sentence I do not remember).
+My world is changing and I miss youuuuu.
+(Insert more Japanese sentences. When you don't know what the lyrics mean, they are like an instrument but the best kind of instrument where you can imagine what the meaning could be. You can do that with regular instruments, but only to some extent. Also, the feeling when you see what the lyrics actually mean is quite something. I can't imagine that this song is anything other than wholesome though.)
+
+--- Sunglow (Yamajet feat. Hiura Masako)
+\end{quotation}
+
+In English grammar, the articles are ``the", ``a", and ``an". The use of articles wrt single letter pentominoes like \pentT{} and \pentY{} seem inconsistent, but actually all use of articles should be consistent with English grammar except for with \pentU{}, because the abruptness tickles a part of my mind.
 
 % \subsection{How to add Lists}
 
@@ -804,7 +2975,7 @@ A polynomial's \badterm{contribution} is informally how much longer it makes a g
 
 % \subsection{How to change the margins and paper size}
 
-% Usually the template you're using will have the page margins and paper size set correctly for that use-case. For example, if you're using a journal article template provided by the journal publisher, that template will be formatted according to their requirements. In these cases, it's best not to alter the margins directly.
+% Usually the template you're using will have the page margins and paper size set correctly for that use-case. For example, if you're using a journal article template provided by the journal publisher, t\texttt{}hat template will be formatted according to their requirements. In these cases, it's best not to alter the margins directly.
 
 % If however you're using a more general template, such as this one, and would like to alter the margins, a common way to do so is via the geometry package. You can find the geometry package loaded in the preamble at the top of this example file, and if you'd like to learn more about how to adjust the settings, please visit this help article on \href{https://www.overleaf.com/learn/latex/page_size_and_margins}{page size and margins}.
 
